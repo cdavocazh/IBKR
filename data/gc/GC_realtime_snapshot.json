@@ -1,0 +1,21 @@
+{
+  "symbol": "GC",
+  "localSymbol": "GCG6",
+  "timestamp": "2026-01-28T14:14:09.520176",
+  "bid": 5251.9,
+  "bidSize": 1.0,
+  "ask": 5252.4,
+  "askSize": 2.0,
+  "last": 5251.5,
+  "lastSize": 2.0,
+  "volume": 25925,
+  "open": 5179.0,
+  "high": 5259.3,
+  "low": 5154.8,
+  "close": 5082.6,
+  "futuresOpenInterest": 76948,
+  "histVolatility": null,
+  "impliedVolatility": 0.19104973174542803,
+  "spread": 0.5,
+  "midpoint": 5252.15
+}

@@ -1,0 +1,21 @@
+{
+  "symbol": "SI",
+  "localSymbol": "SIH6",
+  "timestamp": "2026-01-28T14:14:14.549794",
+  "bid": 114.905,
+  "bidSize": 1.0,
+  "ask": 114.945,
+  "askSize": 2.0,
+  "last": 114.91,
+  "lastSize": 1.0,
+  "volume": 37283,
+  "open": 112.44,
+  "high": 116.165,
+  "low": 110.77,
+  "close": 105.955,
+  "futuresOpenInterest": 100680,
+  "histVolatility": null,
+  "impliedVolatility": 1.0033057529536216,
+  "spread": 0.04,
+  "midpoint": 114.925
+}

@@ -1,0 +1,340 @@
+======================================================================
+FUTURES DATA EXTRACTION REPORT (ALL METRICS)
+Generated: 2026-01-28 14:20:00
+======================================================================
+
+This report summarizes all extracted data from IBKR API for ES, GC, and SI
+futures contracts.
+
+======================================================================
+ES (E-mini S&P 500) - Front Month: ESH6
+======================================================================
+
+1-MINUTE OHLCV DATA
+  File: ES_1min.parquet
+  Size: 2.51 MB
+  Rows: 189,042
+  Date range: 2025-01-31 to 2026-01-27
+  Volume Statistics:
+    Total: 35,874,239
+    Mean per bar: 189.8
+    Max: 86,760
+  Price Statistics (Close):
+    Latest: 7,026.75
+    Mean: 6,734.66
+
+5-MINUTE OHLCV DATA
+  File: ES_combined_5min.parquet
+  Size: 0.66 MB
+  Rows: 37,716
+  Date range: 2025-01-31 to 2026-01-27
+  Volume Statistics:
+    Total: 35,276,669
+    Mean per bar: 935.3
+    Max: 114,680
+
+HISTORICAL VOLATILITY (Daily, 30-day HV)
+  File: ES_historical_volatility_daily.parquet
+  Rows: 227
+  Date range: 2025-03-03 to 2026-01-26
+  Volatility Statistics:
+    Latest: 0.1143 (11.43%)
+    Mean: 0.1765 (17.65%)
+    Max: 0.3864 (38.64%)
+    Min: 0.0970 (9.70%)
+
+OPTION IMPLIED VOLATILITY (Daily)
+  File: ES_implied_volatility_daily.parquet
+  Rows: 365
+  Date range: 2024-08-23 to 2026-01-28
+  Volatility Statistics:
+    Latest: 0.1271 (12.71%)
+    Mean: 0.1467 (14.67%)
+    Max: 0.2532 (25.32%)
+    Min: 0.0008
+
+BID/ASK/MIDPOINT (Hourly, 30 days)
+  Files: ES_bid_hourly.parquet, ES_ask_hourly.parquet, ES_midpoint_hourly.parquet
+  Rows: 691 each
+  Date range: 2025-12-14 to 2026-01-28
+  Latest Bid: 7,034.25
+  Latest Ask: 7,034.25
+  Latest Midpoint: 7,034.25
+
+REAL-TIME SNAPSHOT (2026-01-28)
+  Last Price: 7,035.75
+  Bid/Ask: 7,035.50 / 7,035.75
+  Spread: 0.25
+  Daily Volume: 56,744
+  Open Interest: 1,886,728
+  Implied Volatility: 0.1271 (12.71%)
+
+======================================================================
+GC (Gold) - Front Month: GCG6
+======================================================================
+
+1-MINUTE OHLCV DATA
+  File: GC_1min.parquet
+  Size: 4.29 MB
+  Rows: 303,366
+  Date range: 2025-01-24 to 2026-01-27
+  Volume Statistics:
+    Total: 8,784,919
+    Mean per bar: 29.0
+    Max: 3,879
+  Price Statistics (Close):
+    Latest: 5,233.00
+    Mean: 3,744.19
+
+5-MINUTE OHLCV DATA
+  File: GC_combined_5mins.parquet
+  Size: 1.23 MB
+  Rows: 59,313
+  Date range: 2024-12-19 to 2026-01-27
+  Volume Statistics:
+    Total: 8,686,203
+    Mean per bar: 146.4
+    Max: 13,803
+
+HISTORICAL VOLATILITY (Daily, 30-day HV)
+  File: GC_historical_volatility_daily.parquet
+  Rows: 246
+  Date range: 2025-02-03 to 2026-01-26
+  Volatility Statistics:
+    Latest: 0.2426 (24.26%)
+    Mean: 0.1994 (19.94%)
+    Max: 0.2796 (27.96%)
+    Min: 0.1355 (13.55%)
+
+OPTION IMPLIED VOLATILITY (Daily)
+  File: GC_implied_volatility_daily.parquet
+  Rows: 364
+  Date range: 2024-08-23 to 2026-01-27
+  Volatility Statistics:
+    Latest: 0.1910 (19.10%)
+    Mean: 0.1730 (17.30%)
+    Max: 0.3249 (32.49%)
+    Min: 0.1443 (14.43%)
+
+BID/ASK/MIDPOINT (Hourly, 30 days)
+  Files: GC_bid_hourly.parquet, GC_ask_hourly.parquet, GC_midpoint_hourly.parquet
+  Rows: 693 each
+  Date range: 2025-12-14 to 2026-01-28
+  Latest Bid: 5,249.80
+  Latest Ask: 5,250.90
+  Latest Midpoint: 5,249.40
+
+REAL-TIME SNAPSHOT (2026-01-28)
+  Last Price: 5,251.50
+  Bid/Ask: 5,251.90 / 5,252.40
+  Spread: 0.50
+  Daily Volume: 25,925
+  Open Interest: 76,948
+  Implied Volatility: 0.1910 (19.10%)
+
+======================================================================
+SI (Silver) - Front Month: SIH6
+======================================================================
+
+1-MINUTE OHLCV DATA
+  File: SI_1min.parquet
+  Size: 3.72 MB
+  Rows: 266,928
+  Date range: 2025-01-21 to 2026-01-27
+  Volume Statistics:
+    Total: 5,619,962
+    Mean per bar: 21.1
+    Max: 2,499
+  Price Statistics (Close):
+    Latest: 114.77
+    Mean: 48.53
+
+5-MINUTE OHLCV DATA
+  File: SI_combined_5mins.parquet
+  Size: 1.06 MB
+  Rows: 53,956
+  Date range: 2024-12-19 to 2026-01-27
+  Volume Statistics:
+    Total: 5,537,126
+    Mean per bar: 102.6
+    Max: 6,345
+
+HISTORICAL VOLATILITY (Daily, 30-day HV)
+  File: SI_historical_volatility_daily.parquet
+  Rows: 227
+  Date range: 2025-03-03 to 2026-01-26
+  Volatility Statistics:
+    Latest: 0.8080 (80.80%)
+    Mean: 0.3391 (33.91%)
+    Max: 0.8080 (80.80%)
+    Min: 0.2154 (21.54%)
+
+OPTION IMPLIED VOLATILITY (Daily)
+  File: SI_implied_volatility_daily.parquet
+  Rows: 242
+  Date range: 2025-02-11 to 2026-01-27
+  Volatility Statistics:
+    Latest: 1.0013 (100.13%)
+    Mean: 0.3399 (33.99%)
+    Max: 1.0013 (100.13%)
+    Min: 0.1910 (19.10%)
+
+BID/ASK/MIDPOINT (Hourly, 30 days)
+  Files: SI_bid_hourly.parquet, SI_ask_hourly.parquet, SI_midpoint_hourly.parquet
+  Rows: 693 each
+  Date range: 2025-12-14 to 2026-01-28
+  Latest Bid: 114.83
+  Latest Ask: 114.90
+  Latest Midpoint: 114.80
+
+REAL-TIME SNAPSHOT (2026-01-28)
+  Last Price: 114.91
+  Bid/Ask: 114.91 / 114.94
+  Spread: 0.04
+  Daily Volume: 37,283
+  Open Interest: 100,680
+  Implied Volatility: 1.0033 (100.33%)
+
+======================================================================
+DATA TYPES EXTRACTED
+======================================================================
+
+HISTORICAL DATA (reqHistoricalData):
+  1. TRADES - 1-minute OHLCV with volume (~1 year)
+  2. TRADES - 5-minute OHLCV with volume (~1 year)
+  3. HISTORICAL_VOLATILITY - Daily 30-day HV (~1 year)
+  4. OPTION_IMPLIED_VOLATILITY - Daily IV (~1 year)
+  5. MIDPOINT - Hourly bid-ask midpoint (30 days)
+  6. BID - Hourly bid prices (30 days)
+  7. ASK - Hourly ask prices (30 days)
+
+REAL-TIME DATA (reqMktData):
+  1. Bid/Ask prices and sizes
+  2. Last trade price and size
+  3. Daily volume
+  4. Futures Open Interest (tick 588)
+  5. Implied Volatility (tick 106)
+  6. Historical Volatility (tick 411)
+
+======================================================================
+FILE SUMMARY
+======================================================================
+
+ES Data Files:
+  - ES_1min.parquet (2.51 MB) - 189,042 rows
+  - ES_combined_5min.parquet (0.66 MB) - 37,716 rows
+  - ES_historical_volatility_daily.parquet (0.02 MB) - 227 rows
+  - ES_implied_volatility_daily.parquet (0.02 MB) - 365 rows
+  - ES_bid_hourly.parquet (0.02 MB) - 691 rows
+  - ES_ask_hourly.parquet (0.02 MB) - 691 rows
+  - ES_midpoint_hourly.parquet (0.02 MB) - 691 rows
+  - ES_realtime_snapshot.json
+
+GC Data Files:
+  - GC_1min.parquet (4.29 MB) - 303,366 rows
+  - GC_combined_5mins.parquet (1.23 MB) - 59,313 rows
+  - GC_historical_volatility_daily.parquet (0.02 MB) - 246 rows
+  - GC_implied_volatility_daily.parquet (0.02 MB) - 364 rows
+  - GC_bid_hourly.parquet (0.02 MB) - 693 rows
+  - GC_ask_hourly.parquet (0.02 MB) - 693 rows
+  - GC_midpoint_hourly.parquet (0.02 MB) - 693 rows
+  - GC_realtime_snapshot.json
+
+SI Data Files:
+  - SI_1min.parquet (3.72 MB) - 266,928 rows
+  - SI_combined_5mins.parquet (1.06 MB) - 53,956 rows
+  - SI_historical_volatility_daily.parquet (0.02 MB) - 227 rows
+  - SI_implied_volatility_daily.parquet (0.02 MB) - 242 rows
+  - SI_bid_hourly.parquet (0.03 MB) - 693 rows
+  - SI_ask_hourly.parquet (0.03 MB) - 693 rows
+  - SI_midpoint_hourly.parquet (0.03 MB) - 693 rows
+  - SI_realtime_snapshot.json
+
+Combined:
+  - all_realtime_snapshots.json
+
+Total Data: ~14 MB across all files
+
+======================================================================
+NOTES
+======================================================================
+
+1. 1-minute data has ~66% zero-volume bars (outside RTH). Consider
+   filtering to regular trading hours for backtesting.
+
+2. Historical volatility is 30-day annualized volatility.
+
+3. Implied volatility is derived from options market.
+
+4. Open Interest represents total outstanding contracts.
+
+5. All timestamps are in exchange local time (US/Central for ES,
+   US/Eastern for GC/SI).
+
+6. Front-month contracts only have data from when they started
+   trading actively (varies by symbol).
+
+7. Real-time snapshot data is point-in-time and refreshes on each run
+   of get_realtime_snapshot.py.
+
+======================================================================
+BACKTEST STRATEGIES
+======================================================================
+
+Three trading strategies have been developed and backtested:
+
+1. ES_SCALP (ES Momentum Scalping)
+   - File: backtest/strategies/es_scalp_momentum.py
+   - Holding Period: ~20-60 minutes
+   - Approach: Trend-following with RSI pullback entries
+   - Results: 21 trades, 66.67% win rate, -0.09% return
+   - Report: reports/es_scalp_report.html
+
+2. ES_4H (ES 4-Hour Swing)
+   - File: backtest/strategies/es_4h.py
+   - Holding Period: 1-4 hours
+   - Approach: MACD + EMA trend filter + volume confirmation
+   - Results: 118 trades, 38.98% win rate, -0.53% return
+   - Report: reports/es_4h_report.html
+
+3. GC_BUY_DIP (Gold Buy-the-Dip)
+   - File: backtest/strategies/gc_buy_dip.py
+   - Holding Period: 1-2 hours
+   - Approach: Long-only mean reversion in uptrend
+   - Results: 229 trades, 50.22% win rate, +1.48% return
+   - Report: reports/gc_buy_dip_report.html
+
+======================================================================
+DATA AVAILABILITY NOTES
+======================================================================
+
+AGGTRADES:
+- IBKR API does not provide an "AGGTRADES" data type
+- For aggregated trade data, use reqHistoricalData with TRADES
+- Tick-by-tick data available via reqHistoricalTicks (limited history)
+
+OPEN INTEREST GRANULARITY:
+- Real-time OI: Point-in-time daily value (tick 588)
+- Historical OI: NOT available via IBKR API
+- CME publishes daily OI reports (free at cmegroup.com)
+- For historical OI, consider:
+  - Quandl/Nasdaq Data Link: ~$30-50/month for futures data
+  - Barchart: ~$25-100/month depending on tier
+  - Building your own database from daily snapshots
+
+======================================================================
+GENERATED REPORTS
+======================================================================
+
+HTML backtest reports are located in /reports/ directory:
+  - es_scalp_report.html
+  - es_4h_report.html
+  - gc_buy_dip_report.html
+
+Each report includes:
+  - Performance metrics (P&L, win rate, profit factor, etc.)
+  - Equity curve chart
+  - Drawdown chart
+  - Full trade log with entry/exit details
+
+======================================================================
