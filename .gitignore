@@ -1,9 +1,16 @@
 # Environment and credentials
 .env
+.env.*
 *.env.local
+.env.local
+.env.production
 credentials.json
+credentials.*
 *.pem
 *.key
+*.p12
+*.pfx
+secrets.*
 
 # Account data (may contain sensitive info)
 **/account_*.csv
@@ -33,9 +40,11 @@ wheels/
 *.egg
 
 # Virtual environments
+.venv/
 venv/
 ENV/
 env/
+node_modules/
 
 # IDE
 .idea/
@@ -43,6 +52,9 @@ env/
 *.swp
 *.swo
 *~
+
+# macOS launchd plists
+*.plist
 
 # OS files
 .DS_Store
