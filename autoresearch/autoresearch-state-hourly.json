@@ -1,0 +1,11 @@
+{
+  "iteration": 500,
+  "best_score": 0.43,
+  "baseline_score": 0.0,
+  "best_return": 0.61,
+  "best_dd": 29.96,
+  "total_keeps": 9,
+  "total_discards": 491,
+  "total_crashes": 0,
+  "started_at": "2026-03-27T10:16:35.095655"
+}

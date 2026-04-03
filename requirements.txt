@@ -5,3 +5,5 @@ python-dotenv>=1.0.0
 numpy>=1.24.0
 pyarrow>=14.0.0  # For parquet support
 yfinance>=0.2.36  # Yahoo Finance data
+arch>=6.0.0  # GARCH volatility modeling
+dcor>=0.6  # Distance correlation for indicator analysis

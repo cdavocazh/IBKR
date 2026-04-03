@@ -1,0 +1,32 @@
+services:
+  ib-gateway:
+    image: ghcr.io/gnzsnz/ib-gateway:latest
+    restart: unless-stopped
+    environment:
+      # IBKR credentials — UPDATE THESE
+      TWS_USERID: "YOUR_IBKR_USERNAME"
+      TWS_PASSWORD: "YOUR_IBKR_PASSWORD"
+      TRADING_MODE: "live"        # "paper" or "live"
+      READ_ONLY_API: "yes"        # "yes" for read-only, "no" for full trading
+      VNC_SERVER_PASSWORD: "YOUR_VNC_PASSWORD"
+      EXISTING_SESSION_DETECTED_ACTION: "primary"
+      # 2FA timeout: if 2FA not approved within 180s, exit and retry
+      RELOGIN_AFTER_TWOFA_TIMEOUT: "yes"
+      TWOFA_EXIT_INTERVAL: "60"
+      # Daily soft restart at 23:45 UTC (no re-auth needed)
+      AUTO_RESTART_TIME: "23:45"
+      # Sunday cold restart at 05:00 UTC (triggers 2FA)
+      TWS_COLD_RESTART: "05:00"
+      # Larger display to render Login Messages dialog
+      DISPLAY_WIDTH: "1920"
+      DISPLAY_HEIGHT: "1080"
+    ports:
+      # CRITICAL: Map host ports to socat ports (4003/4004), NOT directly to API ports (4001/4002)
+      # The gnzsnz image uses socat to proxy 4003->4001 from 127.0.0.1 (trusted).
+      # Direct mapping to 4001 fails because Docker bridge IP isn't in TrustedIPs.
+      - "127.0.0.1:4001:4003"     # Live trading API (via socat)
+      - "127.0.0.1:4002:4004"     # Paper trading API (via socat)
+      # VNC — localhost only (SSH tunnel to access)
+      - "127.0.0.1:5900:5900"     # VNC for manual login/2FA debug
+    volumes:
+      - ./ibc-config:/root/ibc

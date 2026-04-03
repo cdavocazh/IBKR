@@ -1,0 +1,32 @@
+{
+  "oos_period": "Apr 2023 - Jan 2025",
+  "forward_bars": 40,
+  "trading_days": 379,
+  "overall_regime_accuracy_pct": 58.31,
+  "regime_stats": {
+    "BULLISH": {
+      "count": 288,
+      "pct": 75.99,
+      "accuracy": 63.19,
+      "avg_fwd_return": 0.46
+    },
+    "BEARISH": {
+      "count": 91,
+      "pct": 24.01,
+      "accuracy": 42.86,
+      "avg_fwd_return": 0.69
+    },
+    "SIDEWAYS": {
+      "count": 0,
+      "pct": 0,
+      "accuracy": 0,
+      "avg_fwd_return": 0
+    }
+  },
+  "signal_count": 492,
+  "signal_hit_rate_pct": 46.14,
+  "avg_signal_return_pct": -0.3915,
+  "avg_hit_return_pct": 1.6021,
+  "avg_miss_return_pct": -2.0992,
+  "verdict": "MARGINAL"
+}

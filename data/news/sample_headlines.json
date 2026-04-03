@@ -1,0 +1,3797 @@
+[
+  {
+    "headline": "Rosenblatt reiterated Apple (AAPL) coverage with Neutral and target $268",
+    "provider": "BRFUPDN",
+    "time": "2026-03-05 13:07:36",
+    "articleId": "BRFUPDN$1dbe0f31",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9775911569595337
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9775911569595337}!Rosenblatt reiterated Apple (AAPL) coverage with Neutral and target $268"
+  },
+  {
+    "headline": "Barclays reiterated Apple (AAPL) coverage with Underweight and target $248",
+    "provider": "BRFUPDN",
+    "time": "2026-03-03 13:37:35",
+    "articleId": "BRFUPDN$1db64adf",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7744059562683105
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7744059562683105}!Barclays reiterated Apple (AAPL) coverage with Underweight and target $248"
+  },
+  {
+    "headline": "MoffettNathanson reiterated Apple (AAPL) coverage with Neutral and target $270",
+    "provider": "BRFUPDN",
+    "time": "2026-02-25 15:07:18",
+    "articleId": "BRFUPDN$1da64165",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9777254462242126
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9777254462242126}!MoffettNathanson reiterated Apple (AAPL) coverage with Neutral and target $270"
+  },
+  {
+    "headline": "Bernstein reiterated Apple (AAPL) coverage with Outperform and target $340",
+    "provider": "BRFUPDN",
+    "time": "2026-02-10 12:51:19",
+    "articleId": "BRFUPDN$1d814449",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.42",
+      "confidence": 0.41556066274642944
+    },
+    "raw": "{A:800015:L:en:K:0.42:C:0.41556066274642944}!Bernstein reiterated Apple (AAPL) coverage with Outperform and target $340"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.90:C:0.9041536450386047}Apple's \"Quarter for the Record Books\" Hits a Supply Snag",
+    "provider": "BRFG",
+    "time": "2026-01-30 14:53:42",
+    "articleId": "BRFG$1d658661",
+    "ticker": "AAPL",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.90:C:0.9041536450386047}Apple's \"Quarter for the Record Books\" Hits a Supply Snag"
+  },
+  {
+    "headline": "Barclays reiterated Apple (AAPL) coverage with Underweight and target $239",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 13:00:14",
+    "articleId": "BRFUPDN$1d649f07",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7744059562683105
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7744059562683105}!Barclays reiterated Apple (AAPL) coverage with Underweight and target $239"
+  },
+  {
+    "headline": "JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $325",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 13:00:02",
+    "articleId": "BRFUPDN$1d649f06",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6294717192649841
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6294717192649841}!JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $325"
+  },
+  {
+    "headline": "Rosenblatt reiterated Apple (AAPL) coverage with Neutral and target $267",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 12:59:51",
+    "articleId": "BRFUPDN$1d649f05",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9775911569595337
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9775911569595337}!Rosenblatt reiterated Apple (AAPL) coverage with Neutral and target $267"
+  },
+  {
+    "headline": "Monness Crespi &amp; Hardt reiterated Apple (AAPL) coverage with Buy and target $315",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 12:58:25",
+    "articleId": "BRFUPDN$1d649e17",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.33470600843429565
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.33470600843429565}!Monness Crespi &amp; Hardt reiterated Apple (AAPL) coverage with Buy and target $315"
+  },
+  {
+    "headline": "Maxim Group upgraded Apple (AAPL) to Buy with target $300",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 12:51:05",
+    "articleId": "BRFUPDN$1d64941b",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Maxim Group upgraded Apple (AAPL) to Buy with target $300"
+  },
+  {
+    "headline": "JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $315",
+    "provider": "BRFUPDN",
+    "time": "2026-01-26 14:21:37",
+    "articleId": "BRFUPDN$1d578704",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6294717192649841
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6294717192649841}!JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $315"
+  },
+  {
+    "headline": "Evercore ISI reiterated Apple (AAPL) coverage with Outperform and target $330",
+    "provider": "BRFUPDN",
+    "time": "2026-01-09 17:40:18",
+    "articleId": "BRFUPDN$1d345c51",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.51",
+      "confidence": 0.5086357593536377
+    },
+    "raw": "{A:800015:L:en:K:0.51:C:0.5086357593536377}!Evercore ISI reiterated Apple (AAPL) coverage with Outperform and target $330"
+  },
+  {
+    "headline": "Raymond James resumed Apple (AAPL) coverage with Mkt Perform",
+    "provider": "BRFUPDN",
+    "time": "2026-01-02 12:19:53",
+    "articleId": "BRFUPDN$1d2309d1",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9766327142715454
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9766327142715454}!Raymond James resumed Apple (AAPL) coverage with Mkt Perform"
+  },
+  {
+    "headline": "Citigroup reiterated Apple (AAPL) coverage with Buy and target $330",
+    "provider": "BRFUPDN",
+    "time": "2025-12-09 15:23:24",
+    "articleId": "BRFUPDN$1cf2284a",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.62",
+      "confidence": 0.6206440925598145
+    },
+    "raw": "{A:800015:L:en:K:0.62:C:0.6206440925598145}!Citigroup reiterated Apple (AAPL) coverage with Buy and target $330"
+  },
+  {
+    "headline": "Wedbush reiterated Apple (AAPL) coverage with Outperform and target $350",
+    "provider": "BRFUPDN",
+    "time": "2025-12-08 15:22:03",
+    "articleId": "BRFUPDN$1ceed1e2",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6264070868492126
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6264070868492126}!Wedbush reiterated Apple (AAPL) coverage with Outperform and target $350"
+  },
+  {
+    "headline": "Evercore ISI reiterated Apple (AAPL) coverage with Outperform and target $325",
+    "provider": "BRFUPDN",
+    "time": "2025-12-08 15:21:16",
+    "articleId": "BRFUPDN$1ceed0fa",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.51",
+      "confidence": 0.5086357593536377
+    },
+    "raw": "{A:800015:L:en:K:0.51:C:0.5086357593536377}!Evercore ISI reiterated Apple (AAPL) coverage with Outperform and target $325"
+  },
+  {
+    "headline": "CLSA reiterated Apple (AAPL) coverage with Outperform and target $330",
+    "provider": "BRFUPDN",
+    "time": "2025-12-05 13:28:33",
+    "articleId": "BRFUPDN$1cea6b22",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.37",
+      "confidence": 0.36948180198669434
+    },
+    "raw": "{A:800015:L:en:K:0.37:C:0.36948180198669434}!CLSA reiterated Apple (AAPL) coverage with Outperform and target $330"
+  },
+  {
+    "headline": "Loop Capital reiterated Apple (AAPL) coverage with Buy and target $325",
+    "provider": "BRFUPDN",
+    "time": "2025-12-02 15:15:16",
+    "articleId": "BRFUPDN$1ce1c6c8",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.2837313413619995
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.2837313413619995}!Loop Capital reiterated Apple (AAPL) coverage with Buy and target $325"
+  },
+  {
+    "headline": "DZ Bank upgraded Apple (AAPL) to Buy with target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-11-04 12:11:24",
+    "articleId": "BRFUPDN$1c997d91",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!DZ Bank upgraded Apple (AAPL) to Buy with target $300"
+  },
+  {
+    "headline": "Barclays reiterated Apple (AAPL) coverage with Underweight and target $230",
+    "provider": "BRFUPDN",
+    "time": "2025-11-03 15:18:51",
+    "articleId": "BRFUPDN$1c964a00",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7744059562683105
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7744059562683105}!Barclays reiterated Apple (AAPL) coverage with Underweight and target $230"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.90:C:0.897268533706665}Apple's Strong Q4 Sets Stage for Record Q1, But Investors Want More AI Clarity",
+    "provider": "BRFG",
+    "time": "2025-10-31 14:35:15",
+    "articleId": "BRFG$1c921f7c",
+    "ticker": "AAPL",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.90:C:0.897268533706665}Apple's Strong Q4 Sets Stage for Record Q1, But Investors Want More AI Clarity"
+  },
+  {
+    "headline": "Melius reiterated Apple (AAPL) coverage with Buy and target $345",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:53:37",
+    "articleId": "BRFUPDN$1c914489",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.33470600843429565
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.33470600843429565}!Melius reiterated Apple (AAPL) coverage with Buy and target $345"
+  },
+  {
+    "headline": "Wells Fargo reiterated Apple (AAPL) coverage with Overweight and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:53:26",
+    "articleId": "BRFUPDN$1c914488",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.6033366918563843
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.6033366918563843}!Wells Fargo reiterated Apple (AAPL) coverage with Overweight and target $300"
+  },
+  {
+    "headline": "Citigroup reiterated Apple (AAPL) coverage with Buy and target $315",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:53:15",
+    "articleId": "BRFUPDN$1c914487",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.62",
+      "confidence": 0.6206440925598145
+    },
+    "raw": "{A:800015:L:en:K:0.62:C:0.6206440925598145}!Citigroup reiterated Apple (AAPL) coverage with Buy and target $315"
+  },
+  {
+    "headline": "BofA Securities reiterated Apple (AAPL) coverage with Buy and target $325",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:53:06",
+    "articleId": "BRFUPDN$1c914486",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.36",
+      "confidence": 0.36172324419021606
+    },
+    "raw": "{A:800015:L:en:K:0.36:C:0.36172324419021606}!BofA Securities reiterated Apple (AAPL) coverage with Buy and target $325"
+  },
+  {
+    "headline": "Morgan Stanley reiterated Apple (AAPL) coverage with Overweight and target $305",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:52:55",
+    "articleId": "BRFUPDN$1c914485",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.70",
+      "confidence": 0.7000729441642761
+    },
+    "raw": "{A:800015:L:en:K:0.70:C:0.7000729441642761}!Morgan Stanley reiterated Apple (AAPL) coverage with Overweight and target $305"
+  },
+  {
+    "headline": "JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $305",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:52:45",
+    "articleId": "BRFUPDN$1c914484",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6294717192649841
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6294717192649841}!JP Morgan reiterated Apple (AAPL) coverage with Overweight and target $305"
+  },
+  {
+    "headline": "Barclays reiterated Apple (AAPL) coverage with Underweight and target $230",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:52:34",
+    "articleId": "BRFUPDN$1c914483",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7744059562683105
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7744059562683105}!Barclays reiterated Apple (AAPL) coverage with Underweight and target $230"
+  },
+  {
+    "headline": "Goldman reiterated Apple (AAPL) coverage with Buy and target $320",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:52:22",
+    "articleId": "BRFUPDN$1c914482",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.47",
+      "confidence": 0.4711117744445801
+    },
+    "raw": "{A:800015:L:en:K:0.47:C:0.4711117744445801}!Goldman reiterated Apple (AAPL) coverage with Buy and target $320"
+  },
+  {
+    "headline": "Robert W. Baird reiterated Apple (AAPL) coverage with Outperform and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 12:52:11",
+    "articleId": "BRFUPDN$1c914481",
+    "ticker": "AAPL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.698087215423584
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.698087215423584}!Robert W. Baird reiterated Apple (AAPL) coverage with Outperform and target $300"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.56:C:0.5579177141189575}NVIDIA Powers Up: Blowout Q4, Massive Q1 Guide, and AI Demand Still Hitting Full Throttle",
+    "provider": "BRFG",
+    "time": "2026-02-26 15:11:44",
+    "articleId": "BRFG$1daa6b77",
+    "ticker": "NVDA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.56:C:0.5579177141189575}NVIDIA Powers Up: Blowout Q4, Massive Q1 Guide, and AI Demand Still Hitting Full Throttle"
+  },
+  {
+    "headline": "RBC Capital Mkts initiated NVIDIA (NVDA) coverage with Outperform and target $240",
+    "provider": "BRFUPDN",
+    "time": "2026-01-15 13:38:49",
+    "articleId": "BRFUPDN$1d40b537",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.61",
+      "confidence": 0.6116554141044617
+    },
+    "raw": "{A:800015:L:en:K:0.61:C:0.6116554141044617}!RBC Capital Mkts initiated NVIDIA (NVDA) coverage with Outperform and target $240"
+  },
+  {
+    "headline": "Raymond James resumed NVIDIA (NVDA) coverage with Strong Buy and target $272",
+    "provider": "BRFUPDN",
+    "time": "2025-11-21 13:11:00",
+    "articleId": "BRFUPDN$1cc9c6ee",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.97}!Raymond James resumed NVIDIA (NVDA) coverage with Strong Buy and target $272"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.89:C:0.8906932473182678}NVIDIA Shocks the System: Q3 Results Prove AI Demand Is Still Compute-ing Higher",
+    "provider": "BRFG",
+    "time": "2025-11-20 15:15:31",
+    "articleId": "BRFG$1cc64fe9",
+    "ticker": "NVDA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.89:C:0.8906932473182678}NVIDIA Shocks the System: Q3 Results Prove AI Demand Is Still Compute-ing Higher"
+  },
+  {
+    "headline": "Robert W. Baird reiterated NVIDIA (NVDA) coverage with Outperform and target $275",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 14:03:39",
+    "articleId": "BRFUPDN$1cc5aa35",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7973688244819641
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7973688244819641}!Robert W. Baird reiterated NVIDIA (NVDA) coverage with Outperform and target $275"
+  },
+  {
+    "headline": "Jefferies reiterated NVIDIA (NVDA) coverage with Buy and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 14:03:13",
+    "articleId": "BRFUPDN$1cc5aa34",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.29",
+      "confidence": 0.29274648427963257
+    },
+    "raw": "{A:800015:L:en:K:0.29:C:0.29274648427963257}!Jefferies reiterated NVIDIA (NVDA) coverage with Buy and target $250"
+  },
+  {
+    "headline": "Truist reiterated NVIDIA (NVDA) coverage with Buy and target $255",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 13:28:49",
+    "articleId": "BRFUPDN$1cc594a6",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.29",
+      "confidence": 0.290201872587204
+    },
+    "raw": "{A:800015:L:en:K:0.29:C:0.290201872587204}!Truist reiterated NVIDIA (NVDA) coverage with Buy and target $255"
+  },
+  {
+    "headline": "The Benchmark Company reiterated NVIDIA (NVDA) coverage with Buy and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 13:28:32",
+    "articleId": "BRFUPDN$1cc594a5",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.47489896416664124
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.47489896416664124}!The Benchmark Company reiterated NVIDIA (NVDA) coverage with Buy and target $250"
+  },
+  {
+    "headline": "Deutsche Bank reiterated NVIDIA (NVDA) coverage with Hold and target $215",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:56:16",
+    "articleId": "BRFUPDN$1cc579a7",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.939242422580719
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.939242422580719}!Deutsche Bank reiterated NVIDIA (NVDA) coverage with Hold and target $215"
+  },
+  {
+    "headline": "Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $270",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:56:06",
+    "articleId": "BRFUPDN$1cc5799c",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.59",
+      "confidence": 0.5852798223495483
+    },
+    "raw": "{A:800015:L:en:K:0.59:C:0.5852798223495483}!Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $270"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated NVIDIA (NVDA) coverage with Overweight and target $275",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:55",
+    "articleId": "BRFUPDN$1cc5799a",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3113916516304016
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3113916516304016}!KeyBanc Capital Markets reiterated NVIDIA (NVDA) coverage with Overweight and target $275"
+  },
+  {
+    "headline": "Barclays reiterated NVIDIA (NVDA) coverage with Overweight and target $275",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:45",
+    "articleId": "BRFUPDN$1cc57999",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.405738890171051
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.405738890171051}!Barclays reiterated NVIDIA (NVDA) coverage with Overweight and target $275"
+  },
+  {
+    "headline": "Bernstein reiterated NVIDIA (NVDA) coverage with Outperform and target $275",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:36",
+    "articleId": "BRFUPDN$1cc57998",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.37",
+      "confidence": 0.3660767376422882
+    },
+    "raw": "{A:800015:L:en:K:0.37:C:0.3660767376422882}!Bernstein reiterated NVIDIA (NVDA) coverage with Outperform and target $275"
+  },
+  {
+    "headline": "Mizuho reiterated NVIDIA (NVDA) coverage with Outperform and target $245",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:24",
+    "articleId": "BRFUPDN$1cc57993",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.3330953121185303
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.3330953121185303}!Mizuho reiterated NVIDIA (NVDA) coverage with Outperform and target $245"
+  },
+  {
+    "headline": "Morgan Stanley reiterated NVIDIA (NVDA) coverage with Overweight and target $235",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:13",
+    "articleId": "BRFUPDN$1cc57992",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.67",
+      "confidence": 0.665145993232727
+    },
+    "raw": "{A:800015:L:en:K:0.67:C:0.665145993232727}!Morgan Stanley reiterated NVIDIA (NVDA) coverage with Overweight and target $235"
+  },
+  {
+    "headline": "JP Morgan reiterated NVIDIA (NVDA) coverage with Overweight and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:55:02",
+    "articleId": "BRFUPDN$1cc5798f",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.59",
+      "confidence": 0.5914536118507385
+    },
+    "raw": "{A:800015:L:en:K:0.59:C:0.5914536118507385}!JP Morgan reiterated NVIDIA (NVDA) coverage with Overweight and target $250"
+  },
+  {
+    "headline": "Susquehanna reiterated NVIDIA (NVDA) coverage with Positive and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-11-20 12:54:52",
+    "articleId": "BRFUPDN$1cc57988",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.93",
+      "confidence": 0.9302329421043396
+    },
+    "raw": "{A:800015:L:en:K:0.93:C:0.9302329421043396}!Susquehanna reiterated NVIDIA (NVDA) coverage with Positive and target $250"
+  },
+  {
+    "headline": "Oppenheimer reiterated NVIDIA (NVDA) coverage with Outperform and target $265",
+    "provider": "BRFUPDN",
+    "time": "2025-11-13 13:31:31",
+    "articleId": "BRFUPDN$1cb3f2d1",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6337940096855164
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6337940096855164}!Oppenheimer reiterated NVIDIA (NVDA) coverage with Outperform and target $265"
+  },
+  {
+    "headline": "Jefferies reiterated NVIDIA (NVDA) coverage with Buy and target $240",
+    "provider": "BRFUPDN",
+    "time": "2025-11-04 15:51:09",
+    "articleId": "BRFUPDN$1c9a2159",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.29",
+      "confidence": 0.29274648427963257
+    },
+    "raw": "{A:800015:L:en:K:0.29:C:0.29274648427963257}!Jefferies reiterated NVIDIA (NVDA) coverage with Buy and target $240"
+  },
+  {
+    "headline": "DA Davidson reiterated NVIDIA (NVDA) coverage with Buy and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-10-29 12:00:06",
+    "articleId": "BRFUPDN$1c899486",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3536178767681122
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3536178767681122}!DA Davidson reiterated NVIDIA (NVDA) coverage with Buy and target $250"
+  },
+  {
+    "headline": "HSBC Securities upgraded NVIDIA (NVDA) to Buy with target $320",
+    "provider": "BRFUPDN",
+    "time": "2025-10-15 12:11:01",
+    "articleId": "BRFUPDN$1c6768c3",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!HSBC Securities upgraded NVIDIA (NVDA) to Buy with target $320"
+  },
+  {
+    "headline": "Cantor Fitzgerald reiterated NVIDIA (NVDA) coverage with Overweight and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-09 12:38:47",
+    "articleId": "BRFUPDN$1c59e49b",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.56",
+      "confidence": 0.5594149231910706
+    },
+    "raw": "{A:800015:L:en:K:0.56:C:0.5594149231910706}!Cantor Fitzgerald reiterated NVIDIA (NVDA) coverage with Overweight and target $300"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated NVIDIA (NVDA) coverage with Overweight and target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-09-30 14:57:34",
+    "articleId": "BRFUPDN$1c44d4c8",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3113916516304016
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3113916516304016}!KeyBanc Capital Markets reiterated NVIDIA (NVDA) coverage with Overweight and target $250"
+  },
+  {
+    "headline": "Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $210",
+    "provider": "BRFUPDN",
+    "time": "2025-09-30 14:57:18",
+    "articleId": "BRFUPDN$1c44d4c0",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.59",
+      "confidence": 0.5852798223495483
+    },
+    "raw": "{A:800015:L:en:K:0.59:C:0.5852798223495483}!Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $210"
+  },
+  {
+    "headline": "Barclays reiterated NVIDIA (NVDA) coverage with Overweight and target $240",
+    "provider": "BRFUPDN",
+    "time": "2025-09-25 12:51:24",
+    "articleId": "BRFUPDN$1c394ad0",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.405738890171051
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.405738890171051}!Barclays reiterated NVIDIA (NVDA) coverage with Overweight and target $240"
+  },
+  {
+    "headline": "Evercore ISI reiterated NVIDIA (NVDA) coverage with Outperform and target $225",
+    "provider": "BRFUPDN",
+    "time": "2025-09-23 12:07:34",
+    "articleId": "BRFUPDN$1c33adad",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.46",
+      "confidence": 0.459497332572937
+    },
+    "raw": "{A:800015:L:en:K:0.46:C:0.459497332572937}!Evercore ISI reiterated NVIDIA (NVDA) coverage with Outperform and target $225"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.99:C:0.9859780073165894}NVIDIA faces China chip ban amid antitrust probe, but AI demand remains robust",
+    "provider": "BRFG",
+    "time": "2025-09-17 14:16:59",
+    "articleId": "BRFG$1c27e5ab",
+    "ticker": "NVDA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.99:C:0.9859780073165894}NVIDIA faces China chip ban amid antitrust probe, but AI demand remains robust"
+  },
+  {
+    "headline": "DA Davidson upgraded NVIDIA (NVDA) to Buy with target $210",
+    "provider": "BRFUPDN",
+    "time": "2025-09-11 12:35:57",
+    "articleId": "BRFUPDN$1c1abc65",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!DA Davidson upgraded NVIDIA (NVDA) to Buy with target $210"
+  },
+  {
+    "headline": "Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $200",
+    "provider": "BRFUPDN",
+    "time": "2025-09-08 15:32:39",
+    "articleId": "BRFUPDN$1c126cdf",
+    "ticker": "NVDA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.59",
+      "confidence": 0.5852798223495483
+    },
+    "raw": "{A:800015:L:en:K:0.59:C:0.5852798223495483}!Citigroup reiterated NVIDIA (NVDA) coverage with Buy and target $200"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.97:C:0.9724642038345337}NVIDIA Q2 Earnings: Data Center Miss Overshadowed Strong Underlying AI Growth",
+    "provider": "BRFG",
+    "time": "2025-08-28 15:55:48",
+    "articleId": "BRFG$1bfb7a28",
+    "ticker": "NVDA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.97:C:0.9724642038345337}NVIDIA Q2 Earnings: Data Center Miss Overshadowed Strong Underlying AI Growth"
+  },
+  {
+    "headline": "Melius downgraded Microsoft (MSFT) to Hold",
+    "provider": "BRFUPDN",
+    "time": "2026-02-09 14:07:17",
+    "articleId": "BRFUPDN$1d7d8b70",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Melius downgraded Microsoft (MSFT) to Hold"
+  },
+  {
+    "headline": "Stifel downgraded Microsoft (MSFT) to Hold with target $392",
+    "provider": "BRFUPDN",
+    "time": "2026-02-05 11:54:22",
+    "articleId": "BRFUPDN$1d74b5a5",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Stifel downgraded Microsoft (MSFT) to Hold with target $392"
+  },
+  {
+    "headline": "Piper Sandler resumed Microsoft (MSFT) coverage with Overweight and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-02-03 11:55:42",
+    "articleId": "BRFUPDN$1d6d1579",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.97}!Piper Sandler resumed Microsoft (MSFT) coverage with Overweight and target $600"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.17843015491962433}Microsoft AI Engine Is Revving, Yet Cap-Ex Costs Put the Brakes on MSFT",
+    "provider": "BRFG",
+    "time": "2026-01-29 15:15:14",
+    "articleId": "BRFG$1d6211e7",
+    "ticker": "MSFT",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.17843015491962433}Microsoft AI Engine Is Revving, Yet Cap-Ex Costs Put the Brakes on MSFT"
+  },
+  {
+    "headline": "Barclays reiterated Microsoft (MSFT) coverage with Overweight and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:40:14",
+    "articleId": "BRFUPDN$1d618414",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.54",
+      "confidence": 0.535152792930603
+    },
+    "raw": "{A:800015:L:en:K:0.54:C:0.535152792930603}!Barclays reiterated Microsoft (MSFT) coverage with Overweight and target $600"
+  },
+  {
+    "headline": "Robert W. Baird reiterated Microsoft (MSFT) coverage with Outperform and target $540",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:40:04",
+    "articleId": "BRFUPDN$1d618413",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.30133846402168274
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.30133846402168274}!Robert W. Baird reiterated Microsoft (MSFT) coverage with Outperform and target $540"
+  },
+  {
+    "headline": "Goldman reiterated Microsoft (MSFT) coverage with Buy and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:39:54",
+    "articleId": "BRFUPDN$1d618412",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.81",
+      "confidence": 0.8059825897216797
+    },
+    "raw": "{A:800015:L:en:K:0.81:C:0.8059825897216797}!Goldman reiterated Microsoft (MSFT) coverage with Buy and target $600"
+  },
+  {
+    "headline": "Wells Fargo reiterated Microsoft (MSFT) coverage with Overweight and target $615",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:39:41",
+    "articleId": "BRFUPDN$1d618411",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.34",
+      "confidence": 0.3418863117694855
+    },
+    "raw": "{A:800015:L:en:K:0.34:C:0.3418863117694855}!Wells Fargo reiterated Microsoft (MSFT) coverage with Overweight and target $615"
+  },
+  {
+    "headline": "Citigroup reiterated Microsoft (MSFT) coverage with Buy and target $635",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:39:32",
+    "articleId": "BRFUPDN$1d618410",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.87",
+      "confidence": 0.8733767867088318
+    },
+    "raw": "{A:800015:L:en:K:0.87:C:0.8733767867088318}!Citigroup reiterated Microsoft (MSFT) coverage with Buy and target $635"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Microsoft (MSFT) coverage with Overweight and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:39:21",
+    "articleId": "BRFUPDN$1d61840f",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.64",
+      "confidence": 0.6405075788497925
+    },
+    "raw": "{A:800015:L:en:K:0.64:C:0.6405075788497925}!KeyBanc Capital Markets reiterated Microsoft (MSFT) coverage with Overweight and target $600"
+  },
+  {
+    "headline": "Bernstein reiterated Microsoft (MSFT) coverage with Outperform and target $641",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:39:12",
+    "articleId": "BRFUPDN$1d61840e",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.78",
+      "confidence": 0.7772834897041321
+    },
+    "raw": "{A:800015:L:en:K:0.78:C:0.7772834897041321}!Bernstein reiterated Microsoft (MSFT) coverage with Outperform and target $641"
+  },
+  {
+    "headline": "Piper Sandler reiterated Microsoft (MSFT) coverage with Overweight and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:38:59",
+    "articleId": "BRFUPDN$1d61840d",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.87",
+      "confidence": 0.8668450713157654
+    },
+    "raw": "{A:800015:L:en:K:0.87:C:0.8668450713157654}!Piper Sandler reiterated Microsoft (MSFT) coverage with Overweight and target $600"
+  },
+  {
+    "headline": "JP Morgan reiterated Microsoft (MSFT) coverage with Overweight and target $550",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:38:50",
+    "articleId": "BRFUPDN$1d61840c",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.88",
+      "confidence": 0.8767431974411011
+    },
+    "raw": "{A:800015:L:en:K:0.88:C:0.8767431974411011}!JP Morgan reiterated Microsoft (MSFT) coverage with Overweight and target $550"
+  },
+  {
+    "headline": "Wedbush reiterated Microsoft (MSFT) coverage with Outperform and target $575",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:38:39",
+    "articleId": "BRFUPDN$1d61840b",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.87",
+      "confidence": 0.8746485114097595
+    },
+    "raw": "{A:800015:L:en:K:0.87:C:0.8746485114097595}!Wedbush reiterated Microsoft (MSFT) coverage with Outperform and target $575"
+  },
+  {
+    "headline": "Evercore ISI reiterated Microsoft (MSFT) coverage with Outperform and target $580",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:38:29",
+    "articleId": "BRFUPDN$1d61840a",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.82",
+      "confidence": 0.8235893845558167
+    },
+    "raw": "{A:800015:L:en:K:0.82:C:0.8235893845558167}!Evercore ISI reiterated Microsoft (MSFT) coverage with Outperform and target $580"
+  },
+  {
+    "headline": "Stifel reiterated Microsoft (MSFT) coverage with Buy and target $540",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:38:08",
+    "articleId": "BRFUPDN$1d618109",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.65",
+      "confidence": 0.6460281610488892
+    },
+    "raw": "{A:800015:L:en:K:0.65:C:0.6460281610488892}!Stifel reiterated Microsoft (MSFT) coverage with Buy and target $540"
+  },
+  {
+    "headline": "Deutsche Bank reiterated Microsoft (MSFT) coverage with Buy and target $575",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:37:57",
+    "articleId": "BRFUPDN$1d618104",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.76",
+      "confidence": 0.7619504332542419
+    },
+    "raw": "{A:800015:L:en:K:0.76:C:0.7619504332542419}!Deutsche Bank reiterated Microsoft (MSFT) coverage with Buy and target $575"
+  },
+  {
+    "headline": "BMO Capital Markets reiterated Microsoft (MSFT) coverage with Outperform and target $575",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 11:53:18",
+    "articleId": "BRFUPDN$1d61052c",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.90",
+      "confidence": 0.8972260355949402
+    },
+    "raw": "{A:800015:L:en:K:0.90:C:0.8972260355949402}!BMO Capital Markets reiterated Microsoft (MSFT) coverage with Outperform and target $575"
+  },
+  {
+    "headline": "Stifel reiterated Microsoft (MSFT) coverage with Buy and target $520",
+    "provider": "BRFUPDN",
+    "time": "2026-01-26 15:18:36",
+    "articleId": "BRFUPDN$1d57a872",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.65",
+      "confidence": 0.6460281610488892
+    },
+    "raw": "{A:800015:L:en:K:0.65:C:0.6460281610488892}!Stifel reiterated Microsoft (MSFT) coverage with Buy and target $520"
+  },
+  {
+    "headline": "UBS reiterated Microsoft (MSFT) coverage with Buy and target $600",
+    "provider": "BRFUPDN",
+    "time": "2026-01-23 15:17:14",
+    "articleId": "BRFUPDN$1d53a53e",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.65",
+      "confidence": 0.6525485515594482
+    },
+    "raw": "{A:800015:L:en:K:0.65:C:0.6525485515594482}!UBS reiterated Microsoft (MSFT) coverage with Buy and target $600"
+  },
+  {
+    "headline": "Citigroup reiterated Microsoft (MSFT) coverage with Buy and target $660",
+    "provider": "BRFUPDN",
+    "time": "2026-01-21 16:13:57",
+    "articleId": "BRFUPDN$1d4d696f",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.87",
+      "confidence": 0.8733767867088318
+    },
+    "raw": "{A:800015:L:en:K:0.87:C:0.8733767867088318}!Citigroup reiterated Microsoft (MSFT) coverage with Buy and target $660"
+  },
+  {
+    "headline": "Mizuho reiterated Microsoft (MSFT) coverage with Outperform and target $620",
+    "provider": "BRFUPDN",
+    "time": "2026-01-21 16:13:34",
+    "articleId": "BRFUPDN$1d4d696e",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.76",
+      "confidence": 0.7616164088249207
+    },
+    "raw": "{A:800015:L:en:K:0.76:C:0.7616164088249207}!Mizuho reiterated Microsoft (MSFT) coverage with Outperform and target $620"
+  },
+  {
+    "headline": "Barclays reiterated Microsoft (MSFT) coverage with Overweight and target $610",
+    "provider": "BRFUPDN",
+    "time": "2026-01-12 14:52:07",
+    "articleId": "BRFUPDN$1d37be99",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.54",
+      "confidence": 0.535152792930603
+    },
+    "raw": "{A:800015:L:en:K:0.54:C:0.535152792930603}!Barclays reiterated Microsoft (MSFT) coverage with Overweight and target $610"
+  },
+  {
+    "headline": "Goldman resumed Microsoft (MSFT) coverage with Buy and target $655",
+    "provider": "BRFUPDN",
+    "time": "2026-01-12 13:16:56",
+    "articleId": "BRFUPDN$1d378468",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4326384365558624
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4326384365558624}!Goldman resumed Microsoft (MSFT) coverage with Buy and target $655"
+  },
+  {
+    "headline": "Wells Fargo reiterated Microsoft (MSFT) coverage with Overweight and target $665",
+    "provider": "BRFUPDN",
+    "time": "2026-01-08 15:07:49",
+    "articleId": "BRFUPDN$1d30e56f",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.34",
+      "confidence": 0.3418863117694855
+    },
+    "raw": "{A:800015:L:en:K:0.34:C:0.3418863117694855}!Wells Fargo reiterated Microsoft (MSFT) coverage with Overweight and target $665"
+  },
+  {
+    "headline": "Rothschild &amp; Co Redburn downgraded Microsoft (MSFT) to Neutral with target $500",
+    "provider": "BRFUPDN",
+    "time": "2025-11-18 13:19:08",
+    "articleId": "BRFUPDN$1cbf5071",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Rothschild &amp; Co Redburn downgraded Microsoft (MSFT) to Neutral with target $500"
+  },
+  {
+    "headline": "Robert W. Baird initiated Microsoft (MSFT) coverage with Outperform",
+    "provider": "BRFUPDN",
+    "time": "2025-11-14 16:28:22",
+    "articleId": "BRFUPDN$1cb8268c",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.55",
+      "confidence": 0.5495357513427734
+    },
+    "raw": "{A:800015:L:en:K:0.55:C:0.5495357513427734}!Robert W. Baird initiated Microsoft (MSFT) coverage with Outperform"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.98:C:0.9787377119064331}Microsoft Powers Up: Azure Shines Bright as FY26 Kicks Off in the Cloud",
+    "provider": "BRFG",
+    "time": "2025-10-30 14:15:01",
+    "articleId": "BRFG$1c8e5035",
+    "ticker": "MSFT",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.98:C:0.9787377119064331}Microsoft Powers Up: Azure Shines Bright as FY26 Kicks Off in the Cloud"
+  },
+  {
+    "headline": "BMO Capital Markets reiterated Microsoft (MSFT) coverage with Outperform and target $625",
+    "provider": "BRFUPDN",
+    "time": "2025-10-30 11:10:44",
+    "articleId": "BRFUPDN$1c8d3144",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.90",
+      "confidence": 0.8972260355949402
+    },
+    "raw": "{A:800015:L:en:K:0.90:C:0.8972260355949402}!BMO Capital Markets reiterated Microsoft (MSFT) coverage with Outperform and target $625"
+  },
+  {
+    "headline": "Guggenheim upgraded Microsoft (MSFT) to Buy with target $586",
+    "provider": "BRFUPDN",
+    "time": "2025-10-27 12:30:44",
+    "articleId": "BRFUPDN$1c8221ca",
+    "ticker": "MSFT",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Guggenheim upgraded Microsoft (MSFT) to Buy with target $586"
+  },
+  {
+    "headline": "Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $304",
+    "provider": "BRFUPDN",
+    "time": "2026-02-23 15:44:48",
+    "articleId": "BRFUPDN$1d9f5ce3",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3355937600135803
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3355937600135803}!Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $304"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.9886660575866699}Amazon Delivers on AWS, but $200 bln Cap-Ex Plan Clouds the Outlook",
+    "provider": "BRFG",
+    "time": "2026-02-06 15:23:47",
+    "articleId": "BRFG$1d796270",
+    "ticker": "AMZN",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.9886660575866699}Amazon Delivers on AWS, but $200 bln Cap-Ex Plan Clouds the Outlook"
+  },
+  {
+    "headline": "Monness Crespi &amp; Hardt reiterated Amazon (AMZN) coverage with Buy and target $280",
+    "provider": "BRFUPDN",
+    "time": "2026-02-06 13:22:55",
+    "articleId": "BRFUPDN$1d789779",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.61",
+      "confidence": 0.607125997543335
+    },
+    "raw": "{A:800015:L:en:K:0.61:C:0.607125997543335}!Monness Crespi &amp; Hardt reiterated Amazon (AMZN) coverage with Buy and target $280"
+  },
+  {
+    "headline": "DA Davidson downgraded Amazon (AMZN) to Neutral with target $175",
+    "provider": "BRFUPDN",
+    "time": "2026-02-06 13:06:11",
+    "articleId": "BRFUPDN$1d788d46",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!DA Davidson downgraded Amazon (AMZN) to Neutral with target $175"
+  },
+  {
+    "headline": "Citizens JMP reiterated Amazon (AMZN) coverage with Mkt Outperform and target $315",
+    "provider": "BRFUPDN",
+    "time": "2026-02-02 13:11:44",
+    "articleId": "BRFUPDN$1d695752",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.84",
+      "confidence": 0.8436964154243469
+    },
+    "raw": "{A:800015:L:en:K:0.84:C:0.8436964154243469}!Citizens JMP reiterated Amazon (AMZN) coverage with Mkt Outperform and target $315"
+  },
+  {
+    "headline": "Oppenheimer reiterated Amazon (AMZN) coverage with Outperform and target $315",
+    "provider": "BRFUPDN",
+    "time": "2026-01-28 13:11:48",
+    "articleId": "BRFUPDN$1d5de4ea",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.83",
+      "confidence": 0.8347249031066895
+    },
+    "raw": "{A:800015:L:en:K:0.83:C:0.8347249031066895}!Oppenheimer reiterated Amazon (AMZN) coverage with Outperform and target $315"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Amazon (AMZN) coverage with Overweight and target $308",
+    "provider": "BRFUPDN",
+    "time": "2026-01-28 13:11:32",
+    "articleId": "BRFUPDN$1d5de4e7",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.49",
+      "confidence": 0.49026912450790405
+    },
+    "raw": "{A:800015:L:en:K:0.49:C:0.49026912450790405}!KeyBanc Capital Markets reiterated Amazon (AMZN) coverage with Overweight and target $308"
+  },
+  {
+    "headline": "Stifel reiterated Amazon (AMZN) coverage with Buy and target $300",
+    "provider": "BRFUPDN",
+    "time": "2026-01-27 14:20:15",
+    "articleId": "BRFUPDN$1d5ae178",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.50",
+      "confidence": 0.4975987374782562
+    },
+    "raw": "{A:800015:L:en:K:0.50:C:0.4975987374782562}!Stifel reiterated Amazon (AMZN) coverage with Buy and target $300"
+  },
+  {
+    "headline": "BofA Securities reiterated Amazon (AMZN) coverage with Buy and target $286",
+    "provider": "BRFUPDN",
+    "time": "2026-01-27 14:19:40",
+    "articleId": "BRFUPDN$1d5ae173",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6281531453132629
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6281531453132629}!BofA Securities reiterated Amazon (AMZN) coverage with Buy and target $286"
+  },
+  {
+    "headline": "Raymond James reiterated Amazon (AMZN) coverage with Outperform and target $260",
+    "provider": "BRFUPDN",
+    "time": "2026-01-15 13:51:28",
+    "articleId": "BRFUPDN$1d40b8c6",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.55",
+      "confidence": 0.5472119450569153
+    },
+    "raw": "{A:800015:L:en:K:0.55:C:0.5472119450569153}!Raymond James reiterated Amazon (AMZN) coverage with Outperform and target $260"
+  },
+  {
+    "headline": "TD Cowen reiterated Amazon (AMZN) coverage with Buy and target $315",
+    "provider": "BRFUPDN",
+    "time": "2026-01-13 14:27:41",
+    "articleId": "BRFUPDN$1d3afff3",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.62",
+      "confidence": 0.624081552028656
+    },
+    "raw": "{A:800015:L:en:K:0.62:C:0.624081552028656}!TD Cowen reiterated Amazon (AMZN) coverage with Buy and target $315"
+  },
+  {
+    "headline": "Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $301",
+    "provider": "BRFUPDN",
+    "time": "2026-01-12 14:49:24",
+    "articleId": "BRFUPDN$1d37bd84",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3355937600135803
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3355937600135803}!Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $301"
+  },
+  {
+    "headline": "Cantor Fitzgerald reiterated Amazon (AMZN) coverage with Overweight and target $260",
+    "provider": "BRFUPDN",
+    "time": "2026-01-08 15:10:40",
+    "articleId": "BRFUPDN$1d30e82e",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.79",
+      "confidence": 0.793071985244751
+    },
+    "raw": "{A:800015:L:en:K:0.79:C:0.793071985244751}!Cantor Fitzgerald reiterated Amazon (AMZN) coverage with Overweight and target $260"
+  },
+  {
+    "headline": "Jefferies reiterated Amazon (AMZN) coverage with Buy and target $300",
+    "provider": "BRFUPDN",
+    "time": "2026-01-05 14:51:29",
+    "articleId": "BRFUPDN$1d2724e2",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.61",
+      "confidence": 0.608517587184906
+    },
+    "raw": "{A:800015:L:en:K:0.61:C:0.608517587184906}!Jefferies reiterated Amazon (AMZN) coverage with Buy and target $300"
+  },
+  {
+    "headline": "Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $295",
+    "provider": "BRFUPDN",
+    "time": "2025-12-02 13:56:36",
+    "articleId": "BRFUPDN$1ce1907a",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.46168363094329834
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.46168363094329834}!Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $295"
+  },
+  {
+    "headline": "Oppenheimer reiterated Amazon (AMZN) coverage with Outperform and target $305",
+    "provider": "BRFUPDN",
+    "time": "2025-12-01 16:12:18",
+    "articleId": "BRFUPDN$1cde5fa2",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.83",
+      "confidence": 0.8347249031066895
+    },
+    "raw": "{A:800015:L:en:K:0.83:C:0.8347249031066895}!Oppenheimer reiterated Amazon (AMZN) coverage with Outperform and target $305"
+  },
+  {
+    "headline": "BNP Paribas Exane initiated Amazon (AMZN) coverage with Outperform",
+    "provider": "BRFUPDN",
+    "time": "2025-11-24 13:15:58",
+    "articleId": "BRFUPDN$1cce2c6d",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.80",
+      "confidence": 0.8008650541305542
+    },
+    "raw": "{A:800015:L:en:K:0.80:C:0.8008650541305542}!BNP Paribas Exane initiated Amazon (AMZN) coverage with Outperform"
+  },
+  {
+    "headline": "Rothschild &amp; Co Redburn downgraded Amazon (AMZN) to Neutral with target $250",
+    "provider": "BRFUPDN",
+    "time": "2025-11-18 13:16:54",
+    "articleId": "BRFUPDN$1cbf4ec4",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Rothschild &amp; Co Redburn downgraded Amazon (AMZN) to Neutral with target $250"
+  },
+  {
+    "headline": "Mizuho reiterated Amazon (AMZN) coverage with Outperform and target $315",
+    "provider": "BRFUPDN",
+    "time": "2025-11-04 15:48:07",
+    "articleId": "BRFUPDN$1c9a1e92",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.65",
+      "confidence": 0.6489788889884949
+    },
+    "raw": "{A:800015:L:en:K:0.65:C:0.6489788889884949}!Mizuho reiterated Amazon (AMZN) coverage with Outperform and target $315"
+  },
+  {
+    "headline": "Barclays reiterated Amazon (AMZN) coverage with Overweight and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:26:40",
+    "articleId": "BRFUPDN$1c91ed0e",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.37",
+      "confidence": 0.36635732650756836
+    },
+    "raw": "{A:800015:L:en:K:0.37:C:0.36635732650756836}!Barclays reiterated Amazon (AMZN) coverage with Overweight and target $300"
+  },
+  {
+    "headline": "Citizens JMP reiterated Amazon (AMZN) coverage with Mkt Outperform and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:26:30",
+    "articleId": "BRFUPDN$1c91ed0a",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.84",
+      "confidence": 0.8436964154243469
+    },
+    "raw": "{A:800015:L:en:K:0.84:C:0.8436964154243469}!Citizens JMP reiterated Amazon (AMZN) coverage with Mkt Outperform and target $300"
+  },
+  {
+    "headline": "Canaccord Genuity reiterated Amazon (AMZN) coverage with Buy and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:26:20",
+    "articleId": "BRFUPDN$1c91ed06",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.84",
+      "confidence": 0.8401069641113281
+    },
+    "raw": "{A:800015:L:en:K:0.84:C:0.8401069641113281}!Canaccord Genuity reiterated Amazon (AMZN) coverage with Buy and target $300"
+  },
+  {
+    "headline": "Citigroup reiterated Amazon (AMZN) coverage with Buy and target $320",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:26:09",
+    "articleId": "BRFUPDN$1c91ed04",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.80",
+      "confidence": 0.8035948872566223
+    },
+    "raw": "{A:800015:L:en:K:0.80:C:0.8035948872566223}!Citigroup reiterated Amazon (AMZN) coverage with Buy and target $320"
+  },
+  {
+    "headline": "Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $292",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:58",
+    "articleId": "BRFUPDN$1c91ed01",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3355937600135803
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3355937600135803}!Wells Fargo reiterated Amazon (AMZN) coverage with Overweight and target $292"
+  },
+  {
+    "headline": "BofA Securities reiterated Amazon (AMZN) coverage with Buy and target $303",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:45",
+    "articleId": "BRFUPDN$1c91ed00",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6281531453132629
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6281531453132629}!BofA Securities reiterated Amazon (AMZN) coverage with Buy and target $303"
+  },
+  {
+    "headline": "JP Morgan reiterated Amazon (AMZN) coverage with Overweight and target $305",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:35",
+    "articleId": "BRFUPDN$1c91ecfe",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.81",
+      "confidence": 0.8092553019523621
+    },
+    "raw": "{A:800015:L:en:K:0.81:C:0.8092553019523621}!JP Morgan reiterated Amazon (AMZN) coverage with Overweight and target $305"
+  },
+  {
+    "headline": "Piper Sandler reiterated Amazon (AMZN) coverage with Overweight and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:24",
+    "articleId": "BRFUPDN$1c91ecfc",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.80",
+      "confidence": 0.7961395978927612
+    },
+    "raw": "{A:800015:L:en:K:0.80:C:0.7961395978927612}!Piper Sandler reiterated Amazon (AMZN) coverage with Overweight and target $300"
+  },
+  {
+    "headline": "UBS reiterated Amazon (AMZN) coverage with Buy and target $310",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:15",
+    "articleId": "BRFUPDN$1c91ecfa",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.50",
+      "confidence": 0.504582941532135
+    },
+    "raw": "{A:800015:L:en:K:0.50:C:0.504582941532135}!UBS reiterated Amazon (AMZN) coverage with Buy and target $310"
+  },
+  {
+    "headline": "Stifel reiterated Amazon (AMZN) coverage with Buy and target $295",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:25:02",
+    "articleId": "BRFUPDN$1c91ecf7",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.50",
+      "confidence": 0.4975987374782562
+    },
+    "raw": "{A:800015:L:en:K:0.50:C:0.4975987374782562}!Stifel reiterated Amazon (AMZN) coverage with Buy and target $295"
+  },
+  {
+    "headline": "Bernstein reiterated Amazon (AMZN) coverage with Outperform and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-31 15:24:51",
+    "articleId": "BRFUPDN$1c91ecf5",
+    "ticker": "AMZN",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.67",
+      "confidence": 0.6689517498016357
+    },
+    "raw": "{A:800015:L:en:K:0.67:C:0.6689517498016357}!Bernstein reiterated Amazon (AMZN) coverage with Outperform and target $300"
+  },
+  {
+    "headline": "Wells Fargo upgraded Alphabet A (GOOGL) to Overweight with target $387",
+    "provider": "BRFUPDN",
+    "time": "2026-02-23 13:28:23",
+    "articleId": "BRFUPDN$1d9efbdb",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Wells Fargo upgraded Alphabet A (GOOGL) to Overweight with target $387"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $360",
+    "provider": "BRFUPDN",
+    "time": "2026-01-26 15:31:45",
+    "articleId": "BRFUPDN$1d57b945",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.31808286905288696
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.31808286905288696}!KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $360"
+  },
+  {
+    "headline": "Stifel reiterated Alphabet A (GOOGL) coverage with Buy and target $346",
+    "provider": "BRFUPDN",
+    "time": "2026-01-23 15:18:09",
+    "articleId": "BRFUPDN$1d53a543",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.30233994126319885
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.30233994126319885}!Stifel reiterated Alphabet A (GOOGL) coverage with Buy and target $346"
+  },
+  {
+    "headline": "Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $350",
+    "provider": "BRFUPDN",
+    "time": "2026-01-12 14:51:03",
+    "articleId": "BRFUPDN$1d37be56",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.990258514881134
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.990258514881134}!Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $350"
+  },
+  {
+    "headline": "Cantor Fitzgerald upgraded Alphabet A (GOOGL) to Overweight with target $370",
+    "provider": "BRFUPDN",
+    "time": "2026-01-08 13:09:07",
+    "articleId": "BRFUPDN$1d309dd4",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Cantor Fitzgerald upgraded Alphabet A (GOOGL) to Overweight with target $370"
+  },
+  {
+    "headline": "Jefferies reiterated Alphabet A (GOOGL) coverage with Buy and target $365",
+    "provider": "BRFUPDN",
+    "time": "2026-01-05 14:52:22",
+    "articleId": "BRFUPDN$1d272501",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.30",
+      "confidence": 0.3048535883426666
+    },
+    "raw": "{A:800015:L:en:K:0.30:C:0.3048535883426666}!Jefferies reiterated Alphabet A (GOOGL) coverage with Buy and target $365"
+  },
+  {
+    "headline": "Guggenheim reiterated Alphabet A (GOOGL) coverage with Buy and target $375",
+    "provider": "BRFUPDN",
+    "time": "2025-12-01 16:13:10",
+    "articleId": "BRFUPDN$1cde607a",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.57",
+      "confidence": 0.5654425621032715
+    },
+    "raw": "{A:800015:L:en:K:0.57:C:0.5654425621032715}!Guggenheim reiterated Alphabet A (GOOGL) coverage with Buy and target $375"
+  },
+  {
+    "headline": "BNP Paribas Exane initiated Alphabet A (GOOGL) coverage with Outperform and target $355",
+    "provider": "BRFUPDN",
+    "time": "2025-11-24 14:15:57",
+    "articleId": "BRFUPDN$1cce4d92",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.64",
+      "confidence": 0.6434814929962158
+    },
+    "raw": "{A:800015:L:en:K:0.64:C:0.6434814929962158}!BNP Paribas Exane initiated Alphabet A (GOOGL) coverage with Outperform and target $355"
+  },
+  {
+    "headline": "Loop Capital upgraded Alphabet A (GOOGL) to Buy with target $320",
+    "provider": "BRFUPDN",
+    "time": "2025-11-18 13:10:19",
+    "articleId": "BRFUPDN$1cbf4b8c",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Loop Capital upgraded Alphabet A (GOOGL) to Buy with target $320"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $300",
+    "provider": "BRFUPDN",
+    "time": "2025-10-27 15:31:34",
+    "articleId": "BRFUPDN$1c82d96e",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.31808286905288696
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.31808286905288696}!KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $300"
+  },
+  {
+    "headline": "Stifel reiterated Alphabet A (GOOGL) coverage with Buy and target $292",
+    "provider": "BRFUPDN",
+    "time": "2025-10-24 12:37:01",
+    "articleId": "BRFUPDN$1c7dc7bf",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.30233994126319885
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.30233994126319885}!Stifel reiterated Alphabet A (GOOGL) coverage with Buy and target $292"
+  },
+  {
+    "headline": "Bernstein reiterated Alphabet A (GOOGL) coverage with Mkt Perform and target $260",
+    "provider": "BRFUPDN",
+    "time": "2025-10-23 10:43:17",
+    "articleId": "BRFUPDN$1c7a6b6f",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9537298083305359
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9537298083305359}!Bernstein reiterated Alphabet A (GOOGL) coverage with Mkt Perform and target $260"
+  },
+  {
+    "headline": "BofA Securities reiterated Alphabet A (GOOGL) coverage with Buy and target $280",
+    "provider": "BRFUPDN",
+    "time": "2025-10-20 12:21:55",
+    "articleId": "BRFUPDN$1c71b8b3",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.33270683884620667
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.33270683884620667}!BofA Securities reiterated Alphabet A (GOOGL) coverage with Buy and target $280"
+  },
+  {
+    "headline": "HSBC Securities initiated Alphabet A (GOOGL) coverage with Buy and target $285",
+    "provider": "BRFUPDN",
+    "time": "2025-10-07 13:23:20",
+    "articleId": "BRFUPDN$1c54bb17",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.84",
+      "confidence": 0.8398089408874512
+    },
+    "raw": "{A:800015:L:en:K:0.84:C:0.8398089408874512}!HSBC Securities initiated Alphabet A (GOOGL) coverage with Buy and target $285"
+  },
+  {
+    "headline": "Mizuho initiated Alphabet A (GOOGL) coverage with Outperform and target $295",
+    "provider": "BRFUPDN",
+    "time": "2025-09-30 12:41:50",
+    "articleId": "BRFUPDN$1c44521b",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.68",
+      "confidence": 0.6791632175445557
+    },
+    "raw": "{A:800015:L:en:K:0.68:C:0.6791632175445557}!Mizuho initiated Alphabet A (GOOGL) coverage with Outperform and target $295"
+  },
+  {
+    "headline": "Truist reiterated Alphabet A (GOOGL) coverage with Buy and target $285",
+    "provider": "BRFUPDN",
+    "time": "2025-09-22 14:22:33",
+    "articleId": "BRFUPDN$1c30fe62",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.30",
+      "confidence": 0.30393409729003906
+    },
+    "raw": "{A:800015:L:en:K:0.30:C:0.30393409729003906}!Truist reiterated Alphabet A (GOOGL) coverage with Buy and target $285"
+  },
+  {
+    "headline": "Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $187",
+    "provider": "BRFUPDN",
+    "time": "2025-07-29 12:14:52",
+    "articleId": "BRFUPDN$1babc624",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.990258514881134
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.990258514881134}!Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $187"
+  },
+  {
+    "headline": "Needham reiterated Alphabet A (GOOGL) coverage with Buy and target $220",
+    "provider": "BRFUPDN",
+    "time": "2025-07-24 11:13:46",
+    "articleId": "BRFUPDN$1ba15340",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.286294549703598
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.286294549703598}!Needham reiterated Alphabet A (GOOGL) coverage with Buy and target $220"
+  },
+  {
+    "headline": "BMO Capital Markets reiterated Alphabet A (GOOGL) coverage with Outperform and target $208",
+    "provider": "BRFUPDN",
+    "time": "2025-07-15 13:29:28",
+    "articleId": "BRFUPDN$1b8b4b73",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.67",
+      "confidence": 0.6663862466812134
+    },
+    "raw": "{A:800015:L:en:K:0.67:C:0.6663862466812134}!BMO Capital Markets reiterated Alphabet A (GOOGL) coverage with Outperform and target $208"
+  },
+  {
+    "headline": "BNP Paribas Exane downgraded Alphabet A (GOOGL) to Neutral with target $172",
+    "provider": "BRFUPDN",
+    "time": "2025-06-27 11:45:47",
+    "articleId": "BRFUPDN$1b640b94",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!BNP Paribas Exane downgraded Alphabet A (GOOGL) to Neutral with target $172"
+  },
+  {
+    "headline": "Citizens JMP upgraded Alphabet A (GOOGL) to Mkt Outperform with target $220",
+    "provider": "BRFUPDN",
+    "time": "2025-06-27 11:42:02",
+    "articleId": "BRFUPDN$1b640905",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!Citizens JMP upgraded Alphabet A (GOOGL) to Mkt Outperform with target $220"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $195",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:03:24",
+    "articleId": "BRFUPDN$1ac8f29b",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.31808286905288696
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.31808286905288696}!KeyBanc Capital Markets reiterated Alphabet A (GOOGL) coverage with Overweight and target $195"
+  },
+  {
+    "headline": "Bernstein reiterated Alphabet A (GOOGL) coverage with Mkt Perform and target $185",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:03:12",
+    "articleId": "BRFUPDN$1ac8f299",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9537298083305359
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9537298083305359}!Bernstein reiterated Alphabet A (GOOGL) coverage with Mkt Perform and target $185"
+  },
+  {
+    "headline": "BofA Securities reiterated Alphabet A (GOOGL) coverage with Buy and target $200",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:03:01",
+    "articleId": "BRFUPDN$1ac8f296",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.33270683884620667
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.33270683884620667}!BofA Securities reiterated Alphabet A (GOOGL) coverage with Buy and target $200"
+  },
+  {
+    "headline": "Piper Sandler reiterated Alphabet A (GOOGL) coverage with Overweight and target $195",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:02:49",
+    "articleId": "BRFUPDN$1ac8f294",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.60",
+      "confidence": 0.5981692671775818
+    },
+    "raw": "{A:800015:L:en:K:0.60:C:0.5981692671775818}!Piper Sandler reiterated Alphabet A (GOOGL) coverage with Overweight and target $195"
+  },
+  {
+    "headline": "Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $175",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:02:40",
+    "articleId": "BRFUPDN$1ac8f292",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.990258514881134
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.990258514881134}!Wells Fargo reiterated Alphabet A (GOOGL) coverage with Equal Weight and target $175"
+  },
+  {
+    "headline": "UBS reiterated Alphabet A (GOOGL) coverage with Neutral and target $186",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:02:28",
+    "articleId": "BRFUPDN$1ac8f290",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9873570203781128
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9873570203781128}!UBS reiterated Alphabet A (GOOGL) coverage with Neutral and target $186"
+  },
+  {
+    "headline": "Rosenblatt reiterated Alphabet A (GOOGL) coverage with Buy and target $189",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:02:17",
+    "articleId": "BRFUPDN$1ac8f28e",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.30",
+      "confidence": 0.30213722586631775
+    },
+    "raw": "{A:800015:L:en:K:0.30:C:0.30213722586631775}!Rosenblatt reiterated Alphabet A (GOOGL) coverage with Buy and target $189"
+  },
+  {
+    "headline": "Susquehanna reiterated Alphabet A (GOOGL) coverage with Positive and target $220",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:02:05",
+    "articleId": "BRFUPDN$1ac8f28c",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.93",
+      "confidence": 0.9329590797424316
+    },
+    "raw": "{A:800015:L:en:K:0.93:C:0.9329590797424316}!Susquehanna reiterated Alphabet A (GOOGL) coverage with Positive and target $220"
+  },
+  {
+    "headline": "Citigroup reiterated Alphabet A (GOOGL) coverage with Buy and target $200",
+    "provider": "BRFUPDN",
+    "time": "2025-04-25 13:01:53",
+    "articleId": "BRFUPDN$1ac8f28a",
+    "ticker": "GOOGL",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.60",
+      "confidence": 0.5974931716918945
+    },
+    "raw": "{A:800015:L:en:K:0.60:C:0.5974931716918945}!Citigroup reiterated Alphabet A (GOOGL) coverage with Buy and target $200"
+  },
+  {
+    "headline": "Arete downgraded Meta Platforms (META) to Neutral",
+    "provider": "BRFUPDN",
+    "time": "2026-03-05 13:27:39",
+    "articleId": "BRFUPDN$1dbe1ebf",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Arete downgraded Meta Platforms (META) to Neutral"
+  },
+  {
+    "headline": "Erste Group upgraded Meta Platforms (META) to Buy",
+    "provider": "BRFUPDN",
+    "time": "2026-03-05 13:23:09",
+    "articleId": "BRFUPDN$1dbe18cf",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Erste Group upgraded Meta Platforms (META) to Buy"
+  },
+  {
+    "headline": "Wells Fargo reiterated Meta Platforms (META) coverage with Overweight and target $856",
+    "provider": "BRFUPDN",
+    "time": "2026-02-23 15:55:19",
+    "articleId": "BRFUPDN$1d9f66f6",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.26",
+      "confidence": 0.2591674327850342
+    },
+    "raw": "{A:800015:L:en:K:0.26:C:0.2591674327850342}!Wells Fargo reiterated Meta Platforms (META) coverage with Overweight and target $856"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.1519111543893814}Meta Platforms crushes Q4 estimates and accelerates toward \"Personal Superintelligence\"",
+    "provider": "BRFG",
+    "time": "2026-01-29 16:54:33",
+    "articleId": "BRFG$1d6211a3",
+    "ticker": "META",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.1519111543893814}Meta Platforms crushes Q4 estimates and accelerates toward \"Personal Superintelligence\""
+  },
+  {
+    "headline": "Barclays reiterated Meta Platforms (META) coverage with Overweight and target $800",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:46:45",
+    "articleId": "BRFUPDN$1d6184aa",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.45",
+      "confidence": 0.4488666355609894
+    },
+    "raw": "{A:800015:L:en:K:0.45:C:0.4488666355609894}!Barclays reiterated Meta Platforms (META) coverage with Overweight and target $800"
+  },
+  {
+    "headline": "UBS reiterated Meta Platforms (META) coverage with Buy and target $872",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:46:36",
+    "articleId": "BRFUPDN$1d618496",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.59",
+      "confidence": 0.5871878862380981
+    },
+    "raw": "{A:800015:L:en:K:0.59:C:0.5871878862380981}!UBS reiterated Meta Platforms (META) coverage with Buy and target $872"
+  },
+  {
+    "headline": "Wolfe Research reiterated Meta Platforms (META) coverage with Outperform and target $850",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:46:22",
+    "articleId": "BRFUPDN$1d618495",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.55",
+      "confidence": 0.5507775545120239
+    },
+    "raw": "{A:800015:L:en:K:0.55:C:0.5507775545120239}!Wolfe Research reiterated Meta Platforms (META) coverage with Outperform and target $850"
+  },
+  {
+    "headline": "Roth Capital reiterated Meta Platforms (META) coverage with Buy and target $850",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:45:31",
+    "articleId": "BRFUPDN$1d618475",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.60",
+      "confidence": 0.599402666091919
+    },
+    "raw": "{A:800015:L:en:K:0.60:C:0.599402666091919}!Roth Capital reiterated Meta Platforms (META) coverage with Buy and target $850"
+  },
+  {
+    "headline": "JP Morgan reiterated Meta Platforms (META) coverage with Overweight and target $825",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:45:21",
+    "articleId": "BRFUPDN$1d618474",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.84",
+      "confidence": 0.843619704246521
+    },
+    "raw": "{A:800015:L:en:K:0.84:C:0.843619704246521}!JP Morgan reiterated Meta Platforms (META) coverage with Overweight and target $825"
+  },
+  {
+    "headline": "Wells Fargo reiterated Meta Platforms (META) coverage with Overweight and target $849",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:45:06",
+    "articleId": "BRFUPDN$1d618473",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.26",
+      "confidence": 0.2591674327850342
+    },
+    "raw": "{A:800015:L:en:K:0.26:C:0.2591674327850342}!Wells Fargo reiterated Meta Platforms (META) coverage with Overweight and target $849"
+  },
+  {
+    "headline": "Piper Sandler reiterated Meta Platforms (META) coverage with Overweight and target $880",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:44:37",
+    "articleId": "BRFUPDN$1d618472",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.82",
+      "confidence": 0.8244661092758179
+    },
+    "raw": "{A:800015:L:en:K:0.82:C:0.8244661092758179}!Piper Sandler reiterated Meta Platforms (META) coverage with Overweight and target $880"
+  },
+  {
+    "headline": "BofA Securities reiterated Meta Platforms (META) coverage with Buy and target $885",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:44:27",
+    "articleId": "BRFUPDN$1d618471",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.69",
+      "confidence": 0.693958580493927
+    },
+    "raw": "{A:800015:L:en:K:0.69:C:0.693958580493927}!BofA Securities reiterated Meta Platforms (META) coverage with Buy and target $885"
+  },
+  {
+    "headline": "Jefferies reiterated Meta Platforms (META) coverage with Buy and target $1000",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:44:11",
+    "articleId": "BRFUPDN$1d618470",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.68",
+      "confidence": 0.679716169834137
+    },
+    "raw": "{A:800015:L:en:K:0.68:C:0.679716169834137}!Jefferies reiterated Meta Platforms (META) coverage with Buy and target $1000"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Meta Platforms (META) coverage with Overweight and target $855",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:42:42",
+    "articleId": "BRFUPDN$1d618421",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.57",
+      "confidence": 0.5704807043075562
+    },
+    "raw": "{A:800015:L:en:K:0.57:C:0.5704807043075562}!KeyBanc Capital Markets reiterated Meta Platforms (META) coverage with Overweight and target $855"
+  },
+  {
+    "headline": "Morgan Stanley reiterated Meta Platforms (META) coverage with Overweight and target $825",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:42:30",
+    "articleId": "BRFUPDN$1d618420",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.88",
+      "confidence": 0.8756376504898071
+    },
+    "raw": "{A:800015:L:en:K:0.88:C:0.8756376504898071}!Morgan Stanley reiterated Meta Platforms (META) coverage with Overweight and target $825"
+  },
+  {
+    "headline": "Mizuho reiterated Meta Platforms (META) coverage with Outperform and target $850",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:42:18",
+    "articleId": "BRFUPDN$1d61841f",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.70",
+      "confidence": 0.6952487230300903
+    },
+    "raw": "{A:800015:L:en:K:0.70:C:0.6952487230300903}!Mizuho reiterated Meta Platforms (META) coverage with Outperform and target $850"
+  },
+  {
+    "headline": "Cantor Fitzgerald reiterated Meta Platforms (META) coverage with Overweight and target $860",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:42:07",
+    "articleId": "BRFUPDN$1d61841e",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.83",
+      "confidence": 0.8260883092880249
+    },
+    "raw": "{A:800015:L:en:K:0.83:C:0.8260883092880249}!Cantor Fitzgerald reiterated Meta Platforms (META) coverage with Overweight and target $860"
+  },
+  {
+    "headline": "Canaccord Genuity reiterated Meta Platforms (META) coverage with Buy and target $930",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:56",
+    "articleId": "BRFUPDN$1d61841d",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.87",
+      "confidence": 0.8652106523513794
+    },
+    "raw": "{A:800015:L:en:K:0.87:C:0.8652106523513794}!Canaccord Genuity reiterated Meta Platforms (META) coverage with Buy and target $930"
+  },
+  {
+    "headline": "Guggenheim reiterated Meta Platforms (META) coverage with Buy and target $850",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:46",
+    "articleId": "BRFUPDN$1d61841c",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.83",
+      "confidence": 0.8282725811004639
+    },
+    "raw": "{A:800015:L:en:K:0.83:C:0.8282725811004639}!Guggenheim reiterated Meta Platforms (META) coverage with Buy and target $850"
+  },
+  {
+    "headline": "BMO Capital Markets reiterated Meta Platforms (META) coverage with Market Perform and target $730",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:36",
+    "articleId": "BRFUPDN$1d61841b",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7692936062812805
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7692936062812805}!BMO Capital Markets reiterated Meta Platforms (META) coverage with Market Perform and target $730"
+  },
+  {
+    "headline": "Bernstein reiterated Meta Platforms (META) coverage with Outperform and target $900",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:26",
+    "articleId": "BRFUPDN$1d61841a",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.72",
+      "confidence": 0.7202338576316833
+    },
+    "raw": "{A:800015:L:en:K:0.72:C:0.7202338576316833}!Bernstein reiterated Meta Platforms (META) coverage with Outperform and target $900"
+  },
+  {
+    "headline": "Wedbush reiterated Meta Platforms (META) coverage with Outperform and target $900",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:14",
+    "articleId": "BRFUPDN$1d618419",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.83",
+      "confidence": 0.8281263709068298
+    },
+    "raw": "{A:800015:L:en:K:0.83:C:0.8281263709068298}!Wedbush reiterated Meta Platforms (META) coverage with Outperform and target $900"
+  },
+  {
+    "headline": "Evercore ISI reiterated Meta Platforms (META) coverage with Outperform and target $900",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:41:06",
+    "articleId": "BRFUPDN$1d618418",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.77",
+      "confidence": 0.7726379036903381
+    },
+    "raw": "{A:800015:L:en:K:0.77:C:0.7726379036903381}!Evercore ISI reiterated Meta Platforms (META) coverage with Outperform and target $900"
+  },
+  {
+    "headline": "Robert W. Baird reiterated Meta Platforms (META) coverage with Outperform and target $830",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:40:56",
+    "articleId": "BRFUPDN$1d618417",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3707192540168762
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3707192540168762}!Robert W. Baird reiterated Meta Platforms (META) coverage with Outperform and target $830"
+  },
+  {
+    "headline": "Stifel reiterated Meta Platforms (META) coverage with Buy and target $820",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:40:46",
+    "articleId": "BRFUPDN$1d618416",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.57",
+      "confidence": 0.5738260746002197
+    },
+    "raw": "{A:800015:L:en:K:0.57:C:0.5738260746002197}!Stifel reiterated Meta Platforms (META) coverage with Buy and target $820"
+  },
+  {
+    "headline": "Deutsche Bank reiterated Meta Platforms (META) coverage with Buy and target $920",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 14:40:35",
+    "articleId": "BRFUPDN$1d618415",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.71",
+      "confidence": 0.7079495787620544
+    },
+    "raw": "{A:800015:L:en:K:0.71:C:0.7079495787620544}!Deutsche Bank reiterated Meta Platforms (META) coverage with Buy and target $920"
+  },
+  {
+    "headline": "Monness Crespi &amp; Hardt reiterated Meta Platforms (META) coverage with Buy and target $890",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 12:48:53",
+    "articleId": "BRFUPDN$1d612761",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.68",
+      "confidence": 0.6773414015769958
+    },
+    "raw": "{A:800015:L:en:K:0.68:C:0.6773414015769958}!Monness Crespi &amp; Hardt reiterated Meta Platforms (META) coverage with Buy and target $890"
+  },
+  {
+    "headline": "Pivotal Research Group reiterated Meta Platforms (META) coverage with Buy and target $910",
+    "provider": "BRFUPDN",
+    "time": "2026-01-29 11:55:17",
+    "articleId": "BRFUPDN$1d610cb2",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.75",
+      "confidence": 0.751198947429657
+    },
+    "raw": "{A:800015:L:en:K:0.75:C:0.751198947429657}!Pivotal Research Group reiterated Meta Platforms (META) coverage with Buy and target $910"
+  },
+  {
+    "headline": "KeyBanc Capital Markets reiterated Meta Platforms (META) coverage with Overweight and target $835",
+    "provider": "BRFUPDN",
+    "time": "2026-01-26 15:20:15",
+    "articleId": "BRFUPDN$1d57aaa5",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.57",
+      "confidence": 0.5704807043075562
+    },
+    "raw": "{A:800015:L:en:K:0.57:C:0.5704807043075562}!KeyBanc Capital Markets reiterated Meta Platforms (META) coverage with Overweight and target $835"
+  },
+  {
+    "headline": "Raymond James reiterated Meta Platforms (META) coverage with Strong Buy and target $800",
+    "provider": "BRFUPDN",
+    "time": "2026-01-26 14:37:49",
+    "articleId": "BRFUPDN$1d578ee8",
+    "ticker": "META",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.95",
+      "confidence": 0.9522972106933594
+    },
+    "raw": "{A:800015:L:en:K:0.95:C:0.9522972106933594}!Raymond James reiterated Meta Platforms (META) coverage with Strong Buy and target $800"
+  },
+  {
+    "headline": "BofA Securities resumed Tesla (TSLA) coverage with Buy and target $460",
+    "provider": "BRFUPDN",
+    "time": "2026-03-04 13:39:52",
+    "articleId": "BRFUPDN$1dba28e5",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.8535100817680359
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.8535100817680359}!BofA Securities resumed Tesla (TSLA) coverage with Buy and target $460"
+  },
+  {
+    "headline": "Tigress Financial resumed Tesla (TSLA) coverage with Buy and target $550",
+    "provider": "BRFUPDN",
+    "time": "2026-02-12 15:13:06",
+    "articleId": "BRFUPDN$1d889099",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.97}!Tigress Financial resumed Tesla (TSLA) coverage with Buy and target $550"
+  },
+  {
+    "headline": "JP Morgan reiterated Tesla (TSLA) coverage with Underweight and target $145",
+    "provider": "BRFUPDN",
+    "time": "2026-01-30 12:59:32",
+    "articleId": "BRFUPDN$1d649f04",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7448126077651978
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7448126077651978}!JP Morgan reiterated Tesla (TSLA) coverage with Underweight and target $145"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.97:C:0.97}Tesla edges past EPS estimates on margin surge and signals radical shift to AI powerhouse",
+    "provider": "BRFG",
+    "time": "2026-01-29 15:33:10",
+    "articleId": "BRFG$1d621187",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}Tesla edges past EPS estimates on margin surge and signals radical shift to AI powerhouse"
+  },
+  {
+    "headline": "Wells Fargo reiterated Tesla (TSLA) coverage with Underweight and target $130",
+    "provider": "BRFUPDN",
+    "time": "2026-01-12 14:31:00",
+    "articleId": "BRFUPDN$1d37b544",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9655362963676453
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9655362963676453}!Wells Fargo reiterated Tesla (TSLA) coverage with Underweight and target $130"
+  },
+  {
+    "headline": "Truist reiterated Tesla (TSLA) coverage with Hold and target $439",
+    "provider": "BRFUPDN",
+    "time": "2026-01-02 15:54:21",
+    "articleId": "BRFUPDN$1d237fec",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9662041068077087
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9662041068077087}!Truist reiterated Tesla (TSLA) coverage with Hold and target $439"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.88:C:0.8789701461791992}Tesla shrugs off Q4 delivery miss as investors pivot to AI and robotics future",
+    "provider": "BRFG",
+    "time": "2026-01-02 15:04:55",
+    "articleId": "BRFG$1d23b6be",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.88:C:0.8789701461791992}Tesla shrugs off Q4 delivery miss as investors pivot to AI and robotics future"
+  },
+  {
+    "headline": "Morgan Stanley downgraded Tesla (TSLA) to Equal-Weight with target $425",
+    "provider": "BRFUPDN",
+    "time": "2025-12-08 13:32:07",
+    "articleId": "BRFUPDN$1cee8cf1",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Morgan Stanley downgraded Tesla (TSLA) to Equal-Weight with target $425"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.58:C:0.5804048776626587}Tesla's registrations plunge across Europe as EV maker remains stuck in between growth cycles",
+    "provider": "BRFG",
+    "time": "2025-12-01 15:03:51",
+    "articleId": "BRFG$1cde9cfb",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.58:C:0.5804048776626587}Tesla's registrations plunge across Europe as EV maker remains stuck in between growth cycles"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.9385820627212524}Tesla shareholders back Musk pay plan, clearing path for bold AI and robotics pivot",
+    "provider": "BRFG",
+    "time": "2025-11-07 16:10:58",
+    "articleId": "BRFG$1ca558e0",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.9385820627212524}Tesla shareholders back Musk pay plan, clearing path for bold AI and robotics pivot"
+  },
+  {
+    "headline": "BofA Securities reiterated Tesla (TSLA) coverage with Neutral and target $471",
+    "provider": "BRFUPDN",
+    "time": "2025-10-29 12:26:31",
+    "articleId": "BRFUPDN$1c899f6d",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9804558157920837
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9804558157920837}!BofA Securities reiterated Tesla (TSLA) coverage with Neutral and target $471"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-1.00:C:0.9952787160873413}Tesla misses on EPS again as lower ASPs, tariff pressures, and higher AI spending hit profits",
+    "provider": "BRFG",
+    "time": "2025-10-23 14:06:53",
+    "articleId": "BRFG$1c7b8090",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-1.00:C:0.9952787160873413}Tesla misses on EPS again as lower ASPs, tariff pressures, and higher AI spending hit profits"
+  },
+  {
+    "headline": "Mizuho reiterated Tesla (TSLA) coverage with Outperform and target $485",
+    "provider": "BRFUPDN",
+    "time": "2025-10-23 12:02:15",
+    "articleId": "BRFUPDN$1c7a9b25",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.37",
+      "confidence": 0.37372684478759766
+    },
+    "raw": "{A:800015:L:en:K:0.37:C:0.37372684478759766}!Mizuho reiterated Tesla (TSLA) coverage with Outperform and target $485"
+  },
+  {
+    "headline": "Canaccord Genuity reiterated Tesla (TSLA) coverage with Buy and target $482",
+    "provider": "BRFUPDN",
+    "time": "2025-10-23 12:00:36",
+    "articleId": "BRFUPDN$1c7a9a46",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.67",
+      "confidence": 0.6707302331924438
+    },
+    "raw": "{A:800015:L:en:K:0.67:C:0.6707302331924438}!Canaccord Genuity reiterated Tesla (TSLA) coverage with Buy and target $482"
+  },
+  {
+    "headline": "Deutsche Bank reiterated Tesla (TSLA) coverage with Buy and target $440",
+    "provider": "BRFUPDN",
+    "time": "2025-10-23 12:00:07",
+    "articleId": "BRFUPDN$1c7a9a44",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.36",
+      "confidence": 0.35942456126213074
+    },
+    "raw": "{A:800015:L:en:K:0.36:C:0.35942456126213074}!Deutsche Bank reiterated Tesla (TSLA) coverage with Buy and target $440"
+  },
+  {
+    "headline": "Truist reiterated Tesla (TSLA) coverage with Hold and target $406",
+    "provider": "BRFUPDN",
+    "time": "2025-10-23 11:16:59",
+    "articleId": "BRFUPDN$1c7a8338",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9662041068077087
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9662041068077087}!Truist reiterated Tesla (TSLA) coverage with Hold and target $406"
+  },
+  {
+    "headline": "Barclays reiterated Tesla (TSLA) coverage with Equal Weight and target $350",
+    "provider": "BRFUPDN",
+    "time": "2025-10-16 14:48:58",
+    "articleId": "BRFUPDN$1c6aed9b",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9837002754211426
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9837002754211426}!Barclays reiterated Tesla (TSLA) coverage with Equal Weight and target $350"
+  },
+  {
+    "headline": "BNP Paribas Exane initiated Tesla (TSLA) coverage with Underperform and target $307",
+    "provider": "BRFUPDN",
+    "time": "2025-10-16 12:51:35",
+    "articleId": "BRFUPDN$1c6a85dc",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.35969945788383484
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.35969945788383484}!BNP Paribas Exane initiated Tesla (TSLA) coverage with Underperform and target $307"
+  },
+  {
+    "headline": "Melius initiated Tesla (TSLA) coverage with Buy and target $520",
+    "provider": "BRFUPDN",
+    "time": "2025-10-13 12:59:10",
+    "articleId": "BRFUPDN$1c60d0ce",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.63",
+      "confidence": 0.6265273690223694
+    },
+    "raw": "{A:800015:L:en:K:0.63:C:0.6265273690223694}!Melius initiated Tesla (TSLA) coverage with Buy and target $520"
+  },
+  {
+    "headline": "RBC Capital Mkts reiterated Tesla (TSLA) coverage with Outperform and target $500",
+    "provider": "BRFUPDN",
+    "time": "2025-10-10 13:28:17",
+    "articleId": "BRFUPDN$1c5cbcb6",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.31",
+      "confidence": 0.30782800912857056
+    },
+    "raw": "{A:800015:L:en:K:0.31:C:0.30782800912857056}!RBC Capital Mkts reiterated Tesla (TSLA) coverage with Outperform and target $500"
+  },
+  {
+    "headline": "TD Cowen reiterated Tesla (TSLA) coverage with Buy and target $509",
+    "provider": "BRFUPDN",
+    "time": "2025-10-09 14:36:44",
+    "articleId": "BRFUPDN$1c5a47a7",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.33",
+      "confidence": 0.33052074909210205
+    },
+    "raw": "{A:800015:L:en:K:0.33:C:0.33052074909210205}!TD Cowen reiterated Tesla (TSLA) coverage with Buy and target $509"
+  },
+  {
+    "headline": "Stifel reiterated Tesla (TSLA) coverage with Buy and target $483",
+    "provider": "BRFUPDN",
+    "time": "2025-10-08 13:23:56",
+    "articleId": "BRFUPDN$1c57468e",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.3023865818977356
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.3023865818977356}!Stifel reiterated Tesla (TSLA) coverage with Buy and target $483"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.43:C:0.43217435479164124}Tesla cruises past Q3 delivery estimates, but tax credit pull-forward clouds Q4 outlook",
+    "provider": "BRFG",
+    "time": "2025-10-02 14:19:54",
+    "articleId": "BRFG$1c4c428a",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.43:C:0.43217435479164124}Tesla cruises past Q3 delivery estimates, but tax credit pull-forward clouds Q4 outlook"
+  },
+  {
+    "headline": "Canaccord Genuity reiterated Tesla (TSLA) coverage with Buy and target $490",
+    "provider": "BRFUPDN",
+    "time": "2025-09-30 14:59:17",
+    "articleId": "BRFUPDN$1c44db55",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.67",
+      "confidence": 0.6707302331924438
+    },
+    "raw": "{A:800015:L:en:K:0.67:C:0.6707302331924438}!Canaccord Genuity reiterated Tesla (TSLA) coverage with Buy and target $490"
+  },
+  {
+    "headline": "Deutsche Bank reiterated Tesla (TSLA) coverage with Buy and target $435",
+    "provider": "BRFUPDN",
+    "time": "2025-09-26 11:49:39",
+    "articleId": "BRFUPDN$1c3c37cd",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.36",
+      "confidence": 0.35942456126213074
+    },
+    "raw": "{A:800015:L:en:K:0.36:C:0.35942456126213074}!Deutsche Bank reiterated Tesla (TSLA) coverage with Buy and target $435"
+  },
+  {
+    "headline": "Mizuho reiterated Tesla (TSLA) coverage with Outperform and target $450",
+    "provider": "BRFUPDN",
+    "time": "2025-09-23 11:51:14",
+    "articleId": "BRFUPDN$1c33a484",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.37",
+      "confidence": 0.37372684478759766
+    },
+    "raw": "{A:800015:L:en:K:0.37:C:0.37372684478759766}!Mizuho reiterated Tesla (TSLA) coverage with Outperform and target $450"
+  },
+  {
+    "headline": "Piper Sandler reiterated Tesla (TSLA) coverage with Overweight and target $500",
+    "provider": "BRFUPDN",
+    "time": "2025-09-22 12:57:41",
+    "articleId": "BRFUPDN$1c30c127",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.60",
+      "confidence": 0.5972588658332825
+    },
+    "raw": "{A:800015:L:en:K:0.60:C:0.5972588658332825}!Piper Sandler reiterated Tesla (TSLA) coverage with Overweight and target $500"
+  },
+  {
+    "headline": "Robert W. Baird upgraded Tesla (TSLA) to Outperform with target $548",
+    "provider": "BRFUPDN",
+    "time": "2025-09-19 12:20:40",
+    "articleId": "BRFUPDN$1c2c98ae",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Robert W. Baird upgraded Tesla (TSLA) to Outperform with target $548"
+  },
+  {
+    "headline": "Goldman reiterated Tesla (TSLA) coverage with Neutral and target $395",
+    "provider": "BRFUPDN",
+    "time": "2025-09-18 17:11:04",
+    "articleId": "BRFUPDN$1c2aad01",
+    "ticker": "TSLA",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9702797532081604
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9702797532081604}!Goldman reiterated Tesla (TSLA) coverage with Neutral and target $395"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.5904529094696045}Tesla's Musk makes bold $1 bln stock bet amid EV headwinds and AI ambitions",
+    "provider": "BRFG",
+    "time": "2025-09-15 14:03:38",
+    "articleId": "BRFG$1c223a63",
+    "ticker": "TSLA",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.5904529094696045}Tesla's Musk makes bold $1 bln stock bet amid EV headwinds and AI ambitions"
+  },
+  {
+    "headline": "Robert W. Baird upgraded JPMorgan Chase (JPM) to Neutral with target $280",
+    "provider": "BRFUPDN",
+    "time": "2026-02-03 11:50:01",
+    "articleId": "BRFUPDN$1d6d130e",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Robert W. Baird upgraded JPMorgan Chase (JPM) to Neutral with target $280"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.25917407870292664}JPMorgan Chase Checks In With Solid Core Growth, but Investment Banking Slips",
+    "provider": "BRFG",
+    "time": "2026-01-13 16:13:25",
+    "articleId": "BRFG$1d3b9684",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.25917407870292664}JPMorgan Chase Checks In With Solid Core Growth, but Investment Banking Slips"
+  },
+  {
+    "headline": "Wolfe Research downgraded JPMorgan Chase (JPM) to Peer Perform",
+    "provider": "BRFUPDN",
+    "time": "2026-01-07 13:56:49",
+    "articleId": "BRFUPDN$1d2d9fd6",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Wolfe Research downgraded JPMorgan Chase (JPM) to Peer Perform"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.97:C:0.97}JPMorgan Chase Revenue Surges, EPS Beats, But Market Reacts to Credit Risk",
+    "provider": "BRFG",
+    "time": "2025-10-14 14:25:19",
+    "articleId": "BRFG$1c652888",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}JPMorgan Chase Revenue Surges, EPS Beats, But Market Reacts to Credit Risk"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.7084382176399231}JPMorgan Chase trading flat despite large EPS beat; consumer remains resilient",
+    "provider": "BRFG",
+    "time": "2025-07-15 14:41:35",
+    "articleId": "BRFG$1b8be938",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.7084382176399231}JPMorgan Chase trading flat despite large EPS beat; consumer remains resilient"
+  },
+  {
+    "headline": "Keefe Bruyette upgraded JPMorgan Chase (JPM) to Outperform with target $327",
+    "provider": "BRFUPDN",
+    "time": "2025-07-09 12:14:59",
+    "articleId": "BRFUPDN$1b7e15c5",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Keefe Bruyette upgraded JPMorgan Chase (JPM) to Outperform with target $327"
+  },
+  {
+    "headline": "HSBC Securities downgraded JPMorgan Chase (JPM) to Reduce with target $259",
+    "provider": "BRFUPDN",
+    "time": "2025-07-08 12:30:23",
+    "articleId": "BRFUPDN$1b7abe39",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!HSBC Securities downgraded JPMorgan Chase (JPM) to Reduce with target $259"
+  },
+  {
+    "headline": "Robert W. Baird downgraded JPMorgan Chase (JPM) to Underperform with target $235",
+    "provider": "BRFUPDN",
+    "time": "2025-06-27 11:46:21",
+    "articleId": "BRFUPDN$1b640b97",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!Robert W. Baird downgraded JPMorgan Chase (JPM) to Underperform with target $235"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.88:C:0.878912091255188}JPMorgan Chase boosts FY25 NII forecast, signaling confidence amid economic crosscurrents",
+    "provider": "BRFG",
+    "time": "2025-05-19 14:22:14",
+    "articleId": "BRFG$1b07b8ea",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.88:C:0.878912091255188}JPMorgan Chase boosts FY25 NII forecast, signaling confidence amid economic crosscurrents"
+  },
+  {
+    "headline": "TD Cowen initiated JPMorgan Chase (JPM) coverage with Buy and target $305",
+    "provider": "BRFUPDN",
+    "time": "2025-05-15 12:11:59",
+    "articleId": "BRFUPDN$1aff4100",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.47",
+      "confidence": 0.4685242176055908
+    },
+    "raw": "{A:800015:L:en:K:0.47:C:0.4685242176055908}!TD Cowen initiated JPMorgan Chase (JPM) coverage with Buy and target $305"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.86:C:0.861783504486084}JPMorgan higher on solid Q1 results, but says economy is facing considerable turbulence",
+    "provider": "BRFG",
+    "time": "2025-04-11 14:25:39",
+    "articleId": "BRFG$1aa625f4",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.86:C:0.861783504486084}JPMorgan higher on solid Q1 results, but says economy is facing considerable turbulence"
+  },
+  {
+    "headline": "Robert W. Baird upgraded JPMorgan Chase (JPM) to Neutral with target $220",
+    "provider": "BRFUPDN",
+    "time": "2025-03-07 12:44:36",
+    "articleId": "BRFUPDN$1a49b637",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!Robert W. Baird upgraded JPMorgan Chase (JPM) to Neutral with target $220"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.995538055896759}JPMorgan Chase reaches record highs today on another healthy earnings report in Q4",
+    "provider": "BRFG",
+    "time": "2025-01-15 15:01:10",
+    "articleId": "BRFG$19c80f23",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.995538055896759}JPMorgan Chase reaches record highs today on another healthy earnings report in Q4"
+  },
+  {
+    "headline": "Wolfe Research upgraded JPMorgan Chase (JPM) to Outperform with target $269",
+    "provider": "BRFUPDN",
+    "time": "2025-01-03 12:35:57",
+    "articleId": "BRFUPDN$19ac2311",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Wolfe Research upgraded JPMorgan Chase (JPM) to Outperform with target $269"
+  },
+  {
+    "headline": "Oppenheimer downgraded JPMorgan Chase (JPM) to Perform",
+    "provider": "BRFUPDN",
+    "time": "2024-11-20 12:43:07",
+    "articleId": "BRFUPDN$194c74a8",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Oppenheimer downgraded JPMorgan Chase (JPM) to Perform"
+  },
+  {
+    "headline": "Robert W. Baird downgraded JPMorgan Chase (JPM) to Underperform with target $200",
+    "provider": "BRFUPDN",
+    "time": "2024-11-07 11:26:15",
+    "articleId": "BRFUPDN$1929fe35",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Robert W. Baird downgraded JPMorgan Chase (JPM) to Underperform with target $200"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.94:C:0.9359737038612366}JPMorgan Chase nicely higher following another hefty EPS beat",
+    "provider": "BRFG",
+    "time": "2024-10-11 14:19:08",
+    "articleId": "BRFG$18e5cb5d",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.94:C:0.9359737038612366}JPMorgan Chase nicely higher following another hefty EPS beat"
+  },
+  {
+    "headline": "Morgan Stanley downgraded JPMorgan Chase (JPM) to Equal-Weight with target $224",
+    "provider": "BRFUPDN",
+    "time": "2024-09-30 11:48:25",
+    "articleId": "BRFUPDN$18c7c68f",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Morgan Stanley downgraded JPMorgan Chase (JPM) to Equal-Weight with target $224"
+  },
+  {
+    "headline": "Deutsche Bank downgraded JPMorgan Chase (JPM) to Hold with target $235",
+    "provider": "BRFUPDN",
+    "time": "2024-09-03 12:05:51",
+    "articleId": "BRFUPDN$18864930",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Deutsche Bank downgraded JPMorgan Chase (JPM) to Hold with target $235"
+  },
+  {
+    "headline": "Daiwa Securities downgraded JPMorgan Chase (JPM) to Outperform with target $240",
+    "provider": "BRFUPDN",
+    "time": "2024-08-20 10:52:40",
+    "articleId": "BRFUPDN$18655ccb",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!Daiwa Securities downgraded JPMorgan Chase (JPM) to Outperform with target $240"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.67:C:0.6710962057113647}JPMorgan Chase heads lower following earnings; increase in PCL a bit worrisome",
+    "provider": "BRFG",
+    "time": "2024-07-12 15:11:37",
+    "articleId": "BRFG$1803fc4e",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.67:C:0.6710962057113647}JPMorgan Chase heads lower following earnings; increase in PCL a bit worrisome"
+  },
+  {
+    "headline": "Wolfe Research downgraded JPMorgan Chase (JPM) to Peer Perform",
+    "provider": "BRFUPDN",
+    "time": "2024-07-08 12:07:51",
+    "articleId": "BRFUPDN$17f727e5",
+    "ticker": "JPM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!Wolfe Research downgraded JPMorgan Chase (JPM) to Peer Perform"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.9996147751808167}JPMorgan Chase banks on fewer rate cuts to push NII higher as shares hover around record highs",
+    "provider": "BRFG",
+    "time": "2024-05-20 14:59:55",
+    "articleId": "BRFG$1789e5a4",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.9996147751808167}JPMorgan Chase banks on fewer rate cuts to push NII higher as shares hover around record highs"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.93:C:0.932767391204834}JPMorgan Chase pulls back following Q1 results; commentary/guidance weighing on stock",
+    "provider": "BRFG",
+    "time": "2024-04-12 14:24:36",
+    "articleId": "BRFG$1729abaf",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.93:C:0.932767391204834}JPMorgan Chase pulls back following Q1 results; commentary/guidance weighing on stock"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.9989449381828308}JPMorgan Chase hits all-time highs on Q4 results; cautiously optimistic about the economy",
+    "provider": "BRFG",
+    "time": "2024-01-12 15:23:20",
+    "articleId": "BRFG$16629781",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.9989449381828308}JPMorgan Chase hits all-time highs on Q4 results; cautiously optimistic about the economy"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.9983433485031128}JPMorgan Chase banks higher today on strong Q3 report; US consumer remains healthy",
+    "provider": "BRFG",
+    "time": "2023-10-13 14:14:21",
+    "articleId": "BRFG$15a3762b",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.9983433485031128}JPMorgan Chase banks higher today on strong Q3 report; US consumer remains healthy"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.50:C:0.5001649856567383}JPMorgan Chase eases investor fears with another large EPS beat, was generally positive on 2H",
+    "provider": "BRFG",
+    "time": "2023-07-14 14:07:01",
+    "articleId": "BRFG$14e204d8",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.50:C:0.5001649856567383}JPMorgan Chase eases investor fears with another large EPS beat, was generally positive on 2H"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.9999048113822937}JPMorgan Chase banks higher on huge Q1 upside; says US economy on generally healthy footing",
+    "provider": "BRFG",
+    "time": "2023-04-14 14:28:10",
+    "articleId": "BRFG$1433f0d1",
+    "ticker": "JPM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.9999048113822937}JPMorgan Chase banks higher on huge Q1 upside; says US economy on generally healthy footing"
+  },
+  {
+    "headline": "BNP Paribas Exane downgraded Exxon Mobil (XOM) to Underperform with target $125",
+    "provider": "BRFUPDN",
+    "time": "2026-02-03 11:51:47",
+    "articleId": "BRFUPDN$1d6d131a",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!BNP Paribas Exane downgraded Exxon Mobil (XOM) to Underperform with target $125"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $145",
+    "provider": "BRFUPDN",
+    "time": "2026-02-03 11:35:46",
+    "articleId": "BRFUPDN$1d6d0b1d",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $145"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $135",
+    "provider": "BRFUPDN",
+    "time": "2025-12-12 13:14:28",
+    "articleId": "BRFUPDN$1cfabb2c",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $135"
+  },
+  {
+    "headline": "BNP Paribas Exane upgraded Exxon Mobil (XOM) to Neutral with target $114",
+    "provider": "BRFUPDN",
+    "time": "2025-12-08 13:13:39",
+    "articleId": "BRFUPDN$1cee84e8",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!BNP Paribas Exane upgraded Exxon Mobil (XOM) to Neutral with target $114"
+  },
+  {
+    "headline": "Wells Fargo initiated Exxon Mobil (XOM) coverage with Overweight and target $156",
+    "provider": "BRFUPDN",
+    "time": "2025-10-17 12:34:16",
+    "articleId": "BRFUPDN$1c6d71a6",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.587773859500885
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.587773859500885}!Wells Fargo initiated Exxon Mobil (XOM) coverage with Overweight and target $156"
+  },
+  {
+    "headline": "Melius initiated Exxon Mobil (XOM) coverage with Hold and target $111",
+    "provider": "BRFUPDN",
+    "time": "2025-08-20 12:52:37",
+    "articleId": "BRFUPDN$1be72047",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.9640896916389465
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.9640896916389465}!Melius initiated Exxon Mobil (XOM) coverage with Hold and target $111"
+  },
+  {
+    "headline": "{A:800015:L:en}Exxon Mobil braces for 2Q25 earnings hit as weak crude oil prices weigh on upstream results",
+    "provider": "BRFG",
+    "time": "2025-07-08 14:58:31",
+    "articleId": "BRFG$1b7b8308",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en}Exxon Mobil braces for 2Q25 earnings hit as weak crude oil prices weigh on upstream results"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $128",
+    "provider": "BRFUPDN",
+    "time": "2025-06-23 12:15:26",
+    "articleId": "BRFUPDN$1b5757b8",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en"
+    },
+    "raw": "{A:800015:L:en}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $128"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $128",
+    "provider": "BRFUPDN",
+    "time": "2024-12-16 11:56:32",
+    "articleId": "BRFUPDN$19858eda",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $128"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $132",
+    "provider": "BRFUPDN",
+    "time": "2024-11-19 12:57:52",
+    "articleId": "BRFUPDN$1949a493",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $132"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $127",
+    "provider": "BRFUPDN",
+    "time": "2024-11-04 13:10:13",
+    "articleId": "BRFUPDN$191f7432",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $127"
+  },
+  {
+    "headline": "BofA Securities resumed Exxon Mobil (XOM) coverage with Neutral and target $124",
+    "provider": "BRFUPDN",
+    "time": "2024-10-17 12:13:28",
+    "articleId": "BRFUPDN$18f1ffa9",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.999203085899353
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.999203085899353}!BofA Securities resumed Exxon Mobil (XOM) coverage with Neutral and target $124"
+  },
+  {
+    "headline": "Scotiabank upgraded Exxon Mobil (XOM) to Sector Outperform with target $145",
+    "provider": "BRFUPDN",
+    "time": "2024-10-10 12:09:59",
+    "articleId": "BRFUPDN$18e1deab",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Scotiabank upgraded Exxon Mobil (XOM) to Sector Outperform with target $145"
+  },
+  {
+    "headline": "Exane BNP Paribas downgraded Exxon Mobil (XOM) to Underperform with target $105",
+    "provider": "BRFUPDN",
+    "time": "2024-10-09 12:08:10",
+    "articleId": "BRFUPDN$18de8630",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Exane BNP Paribas downgraded Exxon Mobil (XOM) to Underperform with target $105"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.57:C:0.5680606961250305}Exxon Mobil's Q3 earnings took a hit from sliding oil prices and weaker refining margins",
+    "provider": "BRFG",
+    "time": "2024-10-04 14:19:24",
+    "articleId": "BRFG$18d4e30d",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.57:C:0.5680606961250305}Exxon Mobil's Q3 earnings took a hit from sliding oil prices and weaker refining margins"
+  },
+  {
+    "headline": "Redburn Atlantic downgraded Exxon Mobil (XOM) to Neutral with target $120",
+    "provider": "BRFUPDN",
+    "time": "2024-09-24 12:29:07",
+    "articleId": "BRFUPDN$18b90d19",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Redburn Atlantic downgraded Exxon Mobil (XOM) to Neutral with target $120"
+  },
+  {
+    "headline": "Wolfe Research resumed Exxon Mobil (XOM) coverage with Outperform and target $146",
+    "provider": "BRFUPDN",
+    "time": "2024-07-18 12:28:53",
+    "articleId": "BRFUPDN$180cc16c",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.97}!Wolfe Research resumed Exxon Mobil (XOM) coverage with Outperform and target $146"
+  },
+  {
+    "headline": "Truist downgraded Exxon Mobil (XOM) to Hold with target $124",
+    "provider": "BRFUPDN",
+    "time": "2024-06-07 12:11:10",
+    "articleId": "BRFUPDN$17b6e1a5",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Truist downgraded Exxon Mobil (XOM) to Hold with target $124"
+  },
+  {
+    "headline": "Morgan Stanley resumed Exxon Mobil (XOM) coverage with Overweight and target $145",
+    "provider": "BRFUPDN",
+    "time": "2024-05-15 11:48:36",
+    "articleId": "BRFUPDN$177f1ddb",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.97}!Morgan Stanley resumed Exxon Mobil (XOM) coverage with Overweight and target $145"
+  },
+  {
+    "headline": "TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $135",
+    "provider": "BRFUPDN",
+    "time": "2024-04-30 10:53:08",
+    "articleId": "BRFUPDN$1758a265",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.4389456808567047
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.4389456808567047}!TD Cowen reiterated Exxon Mobil (XOM) coverage with Buy and target $135"
+  },
+  {
+    "headline": "Barclays initiated Exxon Mobil (XOM) coverage with Overweight and target $147",
+    "provider": "BRFUPDN",
+    "time": "2024-04-10 12:51:49",
+    "articleId": "BRFUPDN$17234200",
+    "ticker": "XOM",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.37745460867881775
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.37745460867881775}!Barclays initiated Exxon Mobil (XOM) coverage with Overweight and target $147"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.1738545298576355}Exxon Mobil's Q1 earnings take a hit from lower oil and gas prices, but shares holding steady",
+    "provider": "BRFG",
+    "time": "2024-04-04 16:19:20",
+    "articleId": "BRFG$17180b6b",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.1738545298576355}Exxon Mobil's Q1 earnings take a hit from lower oil and gas prices, but shares holding steady"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.51:C:0.5063915848731995}Exxon Mobil slips on earnings miss, but company is gushing with cash as oil prices remain high",
+    "provider": "BRFG",
+    "time": "2023-10-27 16:34:47",
+    "articleId": "BRFG$15c2b4fb",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.51:C:0.5063915848731995}Exxon Mobil slips on earnings miss, but company is gushing with cash as oil prices remain high"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.9894594550132751}Exxon Mobil goes all in on Permian Basin with huge acquisition of Pioneer Natural Resources",
+    "provider": "BRFG",
+    "time": "2023-10-11 14:45:19",
+    "articleId": "BRFG$159dbf5e",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.9894594550132751}Exxon Mobil goes all in on Permian Basin with huge acquisition of Pioneer Natural Resources"
+  },
+  {
+    "headline": "{A:800015:L:en:K:n/a:C:0.999951183795929}Exxon Mobil nears blockbuster deal to acquire Pioneer Natural Resources, but timing is risky",
+    "provider": "BRFG",
+    "time": "2023-10-06 13:55:41",
+    "articleId": "BRFG$1595443a",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:n/a:C:0.999951183795929}Exxon Mobil nears blockbuster deal to acquire Pioneer Natural Resources, but timing is risky"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.85:C:0.8468838930130005}Exxon Mobil pumped out stronger profits in Q3, but falling oil prices negate the good news",
+    "provider": "BRFG",
+    "time": "2023-10-05 17:07:36",
+    "articleId": "BRFG$1592f540",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.85:C:0.8468838930130005}Exxon Mobil pumped out stronger profits in Q3, but falling oil prices negate the good news"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.77:C:0.7659689784049988}Exxon Mobil gets drilled after providing update that points to lower Q2 earnings",
+    "provider": "BRFG",
+    "time": "2023-07-06 15:21:34",
+    "articleId": "BRFG$14cfbaef",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.77:C:0.7659689784049988}Exxon Mobil gets drilled after providing update that points to lower Q2 earnings"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.49:C:0.4853314161300659}Exxon Mobil still gushing with earnings and cash flow as it ramps up production",
+    "provider": "BRFG",
+    "time": "2023-04-28 17:10:12",
+    "articleId": "BRFG$145480af",
+    "ticker": "XOM",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.49:C:0.4853314161300659}Exxon Mobil still gushing with earnings and cash flow as it ramps up production"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.96:C:0.9609013199806213}Goldman Sachs crushes Q4 EPS estimates and hikes dividend as investment banking, trading surge",
+    "provider": "BRFG",
+    "time": "2026-01-15 15:09:36",
+    "articleId": "BRFG$1d416a15",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.96:C:0.9609013199806213}Goldman Sachs crushes Q4 EPS estimates and hikes dividend as investment banking, trading surge"
+  },
+  {
+    "headline": "JP Morgan downgraded Goldman Sachs (GS) to Neutral with target $750",
+    "provider": "BRFUPDN",
+    "time": "2025-10-21 11:15:03",
+    "articleId": "BRFUPDN$1c749ca8",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!JP Morgan downgraded Goldman Sachs (GS) to Neutral with target $750"
+  },
+  {
+    "headline": "BMO Capital Markets initiated Goldman Sachs (GS) coverage with Market Perform and target $785",
+    "provider": "BRFUPDN",
+    "time": "2025-10-03 12:39:55",
+    "articleId": "BRFUPDN$1c4deb9d",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "n/a",
+      "confidence": 0.7925769686698914
+    },
+    "raw": "{A:800015:L:en:K:n/a:C:0.7925769686698914}!BMO Capital Markets initiated Goldman Sachs (GS) coverage with Market Perform and target $785"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.89:C:0.8946593999862671}Goldman Sachs continues impressive EPS winning streak as Advisory shines with 71% surge in revs",
+    "provider": "BRFG",
+    "time": "2025-07-16 14:07:35",
+    "articleId": "BRFG$1b8eeefa",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.89:C:0.8946593999862671}Goldman Sachs continues impressive EPS winning streak as Advisory shines with 71% surge in revs"
+  },
+  {
+    "headline": "Citizens JMP downgraded Goldman Sachs (GS) to Mkt Perform",
+    "provider": "BRFUPDN",
+    "time": "2025-07-14 12:39:43",
+    "articleId": "BRFUPDN$1b87c1c7",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Citizens JMP downgraded Goldman Sachs (GS) to Mkt Perform"
+  },
+  {
+    "headline": "HSBC Securities downgraded Goldman Sachs (GS) to Reduce with target $627",
+    "provider": "BRFUPDN",
+    "time": "2025-07-08 12:29:49",
+    "articleId": "BRFUPDN$1b7abe36",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!HSBC Securities downgraded Goldman Sachs (GS) to Reduce with target $627"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.90:C:0.8976706266403198}Goldman Sachs reports strong Q1 upside, but was notably cautious on the macro picture",
+    "provider": "BRFG",
+    "time": "2025-04-14 14:12:25",
+    "articleId": "BRFG$1aaadb07",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.90:C:0.8976706266403198}Goldman Sachs reports strong Q1 upside, but was notably cautious on the macro picture"
+  },
+  {
+    "headline": "Morgan Stanley downgraded Goldman Sachs (GS) to Equal-Weight with target $558",
+    "provider": "BRFUPDN",
+    "time": "2025-04-07 15:55:43",
+    "articleId": "BRFUPDN$1a974592",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Morgan Stanley downgraded Goldman Sachs (GS) to Equal-Weight with target $558"
+  },
+  {
+    "headline": "Daiwa Securities downgraded Goldman Sachs (GS) to Neutral with target $560",
+    "provider": "BRFUPDN",
+    "time": "2025-04-04 12:36:42",
+    "articleId": "BRFUPDN$1a9186e4",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Daiwa Securities downgraded Goldman Sachs (GS) to Neutral with target $560"
+  },
+  {
+    "headline": "Oppenheimer downgraded Goldman Sachs (GS) to Perform",
+    "provider": "BRFUPDN",
+    "time": "2025-03-19 12:14:07",
+    "articleId": "BRFUPDN$1a657846",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Oppenheimer downgraded Goldman Sachs (GS) to Perform"
+  },
+  {
+    "headline": "Keefe Bruyette downgraded Goldman Sachs (GS) to Mkt Perform with target $660",
+    "provider": "BRFUPDN",
+    "time": "2025-02-27 11:21:14",
+    "articleId": "BRFUPDN$1a337485",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Keefe Bruyette downgraded Goldman Sachs (GS) to Mkt Perform with target $660"
+  },
+  {
+    "headline": "UBS downgraded Goldman Sachs (GS) to Neutral with target $610",
+    "provider": "BRFUPDN",
+    "time": "2025-01-06 13:09:15",
+    "articleId": "BRFUPDN$19b04e90",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!UBS downgraded Goldman Sachs (GS) to Neutral with target $610"
+  },
+  {
+    "headline": "HSBC Securities downgraded Goldman Sachs (GS) to Hold with target $608",
+    "provider": "BRFUPDN",
+    "time": "2024-11-26 12:31:18",
+    "articleId": "BRFUPDN$1958dd32",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!HSBC Securities downgraded Goldman Sachs (GS) to Hold with target $608"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.46:C:0.4617981016635895}Goldman Sachs looking golden again as investment banking business shines amid lower rates",
+    "provider": "BRFG",
+    "time": "2024-10-15 14:54:51",
+    "articleId": "BRFG$18ecee2c",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.46:C:0.4617981016635895}Goldman Sachs looking golden again as investment banking business shines amid lower rates"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-1.00:C:0.9999387860298157}Goldman Sachs slides lower as downturn in trading business to weigh on Q3 results",
+    "provider": "BRFG",
+    "time": "2024-09-10 14:27:00",
+    "articleId": "BRFG$18995662",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-1.00:C:0.9999387860298157}Goldman Sachs slides lower as downturn in trading business to weigh on Q3 results"
+  },
+  {
+    "headline": "{A:800015:L:en:K:0.63:C:0.6320969462394714}Goldman Sachs inches modestly higher as decent Q2 results mostly priced in",
+    "provider": "BRFG",
+    "time": "2024-07-15 14:24:14",
+    "articleId": "BRFG$18068ccd",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:0.63:C:0.6320969462394714}Goldman Sachs inches modestly higher as decent Q2 results mostly priced in"
+  },
+  {
+    "headline": "Seaport Research Partners downgraded Goldman Sachs (GS) to Neutral",
+    "provider": "BRFUPDN",
+    "time": "2024-07-02 11:35:24",
+    "articleId": "BRFUPDN$17eb9d8b",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "-0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}!Seaport Research Partners downgraded Goldman Sachs (GS) to Neutral"
+  },
+  {
+    "headline": "Argus upgraded Goldman Sachs (GS) to Buy with target $465",
+    "provider": "BRFUPDN",
+    "time": "2024-04-16 12:08:17",
+    "articleId": "BRFUPDN$17300da1",
+    "ticker": "GS",
+    "metadata": {
+      "conId": "800015",
+      "language": "en",
+      "keywords": "0.97",
+      "confidence": 0.97
+    },
+    "raw": "{A:800015:L:en:K:0.97:C:0.97}!Argus upgraded Goldman Sachs (GS) to Buy with target $465"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.996583104133606}Goldman Sachs bounces back on buoyant Q1 results; upbeat tone surrounding U.S. economy shifted",
+    "provider": "BRFG",
+    "time": "2024-04-15 14:08:03",
+    "articleId": "BRFG$172d886b",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.996583104133606}Goldman Sachs bounces back on buoyant Q1 results; upbeat tone surrounding U.S. economy shifted"
+  },
+  {
+    "headline": "{A:800015:L:en:K:1.00:C:0.9996971487998962}Goldman Sachs higher on robust EPS beat, potential for rate cuts in 1H24 spurs activity",
+    "provider": "BRFG",
+    "time": "2024-01-16 15:23:47",
+    "articleId": "BRFG$1667697a",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:1.00:C:0.9996971487998962}Goldman Sachs higher on robust EPS beat, potential for rate cuts in 1H24 spurs activity"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.81:C:0.8057857751846313}Goldman trades a bit lower on earnings; capital markets recovery to continue if conditions allow",
+    "provider": "BRFG",
+    "time": "2023-10-17 14:15:36",
+    "articleId": "BRFG$15a9e555",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.81:C:0.8057857751846313}Goldman trades a bit lower on earnings; capital markets recovery to continue if conditions allow"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.97:C:0.97}Goldman Sachs continues to cut the cord on its consumer business as it looks to sell GreenSky",
+    "provider": "BRFG",
+    "time": "2023-09-20 14:28:39",
+    "articleId": "BRFG$1574472f",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}Goldman Sachs continues to cut the cord on its consumer business as it looks to sell GreenSky"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.41:C:0.4148578643798828}Goldman Sachs looks to trim another underperforming business, which could provide EPS boost",
+    "provider": "BRFG",
+    "time": "2023-08-21 15:09:59",
+    "articleId": "BRFG$153475ea",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.41:C:0.4148578643798828}Goldman Sachs looks to trim another underperforming business, which could provide EPS boost"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.68:C:0.680482029914856}Goldman Sachs' Q2 earnings miss reflects unfavorable institutional financial market",
+    "provider": "BRFG",
+    "time": "2023-07-19 14:05:26",
+    "articleId": "BRFG$14eada06",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.68:C:0.680482029914856}Goldman Sachs' Q2 earnings miss reflects unfavorable institutional financial market"
+  },
+  {
+    "headline": "{A:800015:L:en:K:-0.97:C:0.97}Goldman Sachs fails to match earnings results from banking peers as trading revenue falls short",
+    "provider": "BRFG",
+    "time": "2023-04-18 14:17:33",
+    "articleId": "BRFG$143a7ea9",
+    "ticker": "GS",
+    "metadata": {},
+    "raw": "{A:800015:L:en:K:-0.97:C:0.97}Goldman Sachs fails to match earnings results from banking peers as trading revenue falls short"
+  }
+]

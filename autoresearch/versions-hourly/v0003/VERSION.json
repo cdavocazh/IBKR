@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "timestamp": "2026-03-27T10:17:39.053579",
+  "description": "BEAR_RISK_MULT 1.5->0.6",
+  "score": -2.33,
+  "total_return_pct": -4.27,
+  "max_drawdown_pct": 45.31,
+  "win_rate": 38.25,
+  "total_trades": 183
+}

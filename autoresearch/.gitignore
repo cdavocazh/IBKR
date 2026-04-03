@@ -1,0 +1,8 @@
+# Autoresearch generated files
+autoresearch-state.json
+autoresearch-results.tsv
+NEXT_STEPS.md
+iterations/
+versions/
+*.backup
+__pycache__/

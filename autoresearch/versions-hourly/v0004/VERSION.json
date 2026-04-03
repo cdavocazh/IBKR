@@ -1,0 +1,10 @@
+{
+  "version": 4,
+  "timestamp": "2026-03-27T10:18:39.262539",
+  "description": "SEQ_VOLUME_MIN_RATIO 0.3->0.7",
+  "score": -1.92,
+  "total_return_pct": -3.91,
+  "max_drawdown_pct": 50.91,
+  "win_rate": 37.64,
+  "total_trades": 178
+}
