@@ -54,6 +54,11 @@ def discover_all_tickers() -> list[str]:
 
     Returns a sorted list of unique ticker symbols. Includes the top-20 legacy
     tickers and all ~500 S&P 500 tickers from the expanded data sources.
+
+    Note: this only returns tickers with pre-extracted CSVs on disk. For tickers
+    outside this set (mid-caps, small-caps, recent IPOs), the yfinance live
+    fallback in equity_analysis._fetch_yfinance_live() handles them on-demand.
+    Use discover_extended_tickers() to get the full investable universe.
     """
     tickers = set(TOP_20_TICKERS)
     for directory in [EQUITY_SEC_EDGAR_DIR, EQUITY_YAHOO_DIR]:
@@ -63,6 +68,35 @@ def discover_all_tickers() -> list[str]:
                     ticker = fname.replace("_quarterly.csv", "")
                     tickers.add(ticker)
     return sorted(tickers)
+
+
+def discover_extended_tickers() -> list[str]:
+    """Return a combined S&P 500 + MidCap 400 + Russell 1000 ticker universe.
+
+    Covers ~900–1000 US equities. Tickers with CSVs on disk are served from
+    cache; others are served via the yfinance live fallback on-demand.
+
+    This function reads from the macro_2 sp500_tickers module, which scrapes
+    Wikipedia and caches results for 7 days.
+    """
+    import sys
+    sys.path.insert(0, MACRO2_ROOT)
+    try:
+        from data_extractors.sp500_tickers import (
+            get_sp500_tickers,
+            get_midcap400_tickers,
+            get_russell1000_tickers,
+        )
+        sp500  = set(get_sp500_tickers())
+        midcap = set(get_midcap400_tickers())
+        # Russell 1000 ≈ SP500 ∪ MidCap400; include for any gap coverage
+        r1000  = set(get_russell1000_tickers())
+        combined = sorted(sp500 | midcap | r1000)
+        return combined
+    except Exception as e:
+        # Graceful fallback to just what's on disk
+        print(f"  Warning: Extended ticker discovery failed ({e}). Using local CSVs only.")
+        return discover_all_tickers()
 
 
 # ── Macro indicator CSV files ────────────────────────────────────────

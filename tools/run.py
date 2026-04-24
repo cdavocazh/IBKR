@@ -7,7 +7,8 @@ Claude Code calls these functions; this script lets you test them standalone.
 Usage:
     python tools/run.py scan                          # Quick macro scan
     python tools/run.py scan_full                     # Full macro scan
-    python tools/run.py analyze NVDA                  # Equity analysis
+    python tools/run.py analyze NVDA                  # Equity analysis (auto-routes ETFs to etf_analysis)
+    python tools/run.py etf EWY                       # ETF analysis (AUM, holdings, concentration, risk)
     python tools/run.py compare AAPL,MSFT,NVDA        # Cross-ticker comparison
     python tools/run.py peers NVDA                    # GICS peer comparison
     python tools/run.py commodity crude_oil            # Commodity analysis
@@ -188,13 +189,19 @@ def main():
         from tools.consumer_housing_analysis import analyze_labor_deep_dive
         _pp(analyze_labor_deep_dive())
 
-    # ── Equity ────────────────────────────────────────────────────────
+    # ── Equity / ETF (auto-routed) ────────────────────────────────────
     elif cmd == "analyze":
-        from tools.equity_analysis import analyze_equity_valuation
         if not args:
             print("Usage: run.py analyze <TICKER>")
             sys.exit(1)
-        _pp(analyze_equity_valuation(args[0].upper()))
+        ticker = args[0].upper()
+        # Router: ETF → etf_analysis, equity → equity_analysis (with yfinance fallback)
+        from tools.etf_analysis import is_etf, analyze_etf
+        if is_etf(ticker):
+            _pp(analyze_etf(ticker))
+        else:
+            from tools.equity_analysis import analyze_equity_valuation
+            _pp(analyze_equity_valuation(ticker))
 
     elif cmd == "compare":
         from tools.equity_analysis import compare_equity_metrics
@@ -270,13 +277,27 @@ def main():
         from tools.yardeni_frameworks import classify_market_decline
         _pp(classify_market_decline())
 
-    # ── Graham ────────────────────────────────────────────────────────
+    # ── Graham (auto-routed: ETF → ETF analysis, equity → Graham) ────
     elif cmd == "graham":
-        from tools.graham_analysis import graham_value_analysis
         if not args:
             print("Usage: run.py graham <TICKER>")
             sys.exit(1)
-        _pp(graham_value_analysis(args[0].upper()))
+        ticker = args[0].upper()
+        # ETFs don't have Graham numbers — serve full ETF analysis instead
+        from tools.etf_analysis import is_etf, analyze_etf
+        if is_etf(ticker):
+            print(f"Note: '{ticker}' is an ETF — redirecting to ETF analysis (Graham N/A for funds).")
+            _pp(analyze_etf(ticker))
+        else:
+            from tools.graham_analysis import graham_value_analysis
+            _pp(graham_value_analysis(ticker))
+
+    elif cmd == "etf":
+        from tools.etf_analysis import analyze_etf
+        if not args:
+            print("Usage: run.py etf <TICKER>  (e.g. run.py etf EWY)")
+            sys.exit(1)
+        _pp(analyze_etf(args[0].upper()))
 
     elif cmd == "grahamscreen":
         from tools.graham_analysis import graham_screen

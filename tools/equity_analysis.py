@@ -109,13 +109,198 @@ def _load_equity_csv(ticker: str) -> pd.DataFrame | None:
             continue
 
     if not candidates:
-        return None
+        # ── yfinance live fallback ─────────────────────────────────────
+        # No CSV on disk for this ticker (mid-cap, small-cap, recent IPO,
+        # foreign ADR, etc.). Fetch quarterly fundamentals live from yfinance
+        # and reshape into the same schema used by the CSV pipeline.
+        return _fetch_yfinance_live(ticker)
 
     # Sort: freshest quarter first, then highest quality score
     candidates.sort(key=lambda c: (c[2], c[3]), reverse=True)
     best_label, best_df, best_ts, best_q = candidates[0]
 
     return best_df
+
+
+def _fetch_yfinance_live(ticker: str) -> pd.DataFrame | None:
+    """Fetch quarterly financials from yfinance and return as a DataFrame.
+
+    Used as a fallback when no CSV is available for the ticker (mid-cap,
+    small-cap, recent IPO, foreign ADR, ETF-proxied equity, etc.).
+
+    Maps yfinance column names → the 53-column CSV schema so that all
+    downstream analysis functions (analyze_equity_valuation, graham_analysis,
+    etc.) can consume the result without modification.
+
+    Returns None on total failure (delisted ticker, rate-limit, etc.).
+    """
+    try:
+        import yfinance as yf
+        import logging
+        import concurrent.futures
+        from datetime import datetime as _dt
+
+        yf_log = logging.getLogger("yfinance")
+        prev_level = yf_log.level
+        yf_log.setLevel(logging.CRITICAL)  # suppress noisy 404 / delisted warnings
+
+        def _fetch_all():
+            t = yf.Ticker(ticker)
+            info = t.info or {}
+            fin = t.quarterly_financials    # columns=quarters, rows=items
+            bs = t.quarterly_balance_sheet
+            cf = t.quarterly_cashflow
+            return info, fin, bs, cf
+
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                fut = ex.submit(_fetch_all)
+                info, fin, bs, cf = fut.result(timeout=20)
+        finally:
+            yf_log.setLevel(prev_level)
+
+        if fin is None or fin.empty:
+            return None
+
+        # ── normalise: transpose so rows = quarters ──────────────────
+        def _safe_t(df):
+            """Transpose if items are in rows, return empty df on failure."""
+            try:
+                if df is None or df.empty:
+                    return pd.DataFrame()
+                return df.T
+            except Exception:
+                return pd.DataFrame()
+
+        fin_t = _safe_t(fin)
+        bs_t  = _safe_t(bs)
+        cf_t  = _safe_t(cf)
+
+        # ── helper: pull value from transposed df ─────────────────────
+        def _col(df_t, *yf_names):
+            """Return the first matching column Series, or a None-filled Series."""
+            for name in yf_names:
+                if name in df_t.columns:
+                    return df_t[name]
+            return pd.Series([None] * len(df_t), index=df_t.index)
+
+        # ── build one row per reported quarter ────────────────────────
+        quarters_index = fin_t.index  # DatetimeIndex of period-end dates
+
+        def _qstr(dt) -> str:
+            """Convert period-end date → '2026-Q1' label."""
+            try:
+                m = dt.month
+                q = {3: 1, 6: 2, 9: 3, 12: 4}.get(m, (m - 1) // 3 + 1)
+                return f"{dt.year}-Q{q}"
+            except Exception:
+                return str(dt)[:7]
+
+        company_name = (
+            info.get("shortName") or info.get("longName") or ticker
+        )
+        now_str = _dt.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+        rows = []
+        for dt in quarters_index:
+            def _v(df_t, *names):
+                """Scalar value for this quarter from transposed df."""
+                for name in names:
+                    if name in df_t.columns:
+                        val = df_t.loc[dt, name] if dt in df_t.index else None
+                        if val is not None and not (isinstance(val, float) and np.isnan(val)):
+                            return float(val)
+                return None
+
+            rev  = _v(fin_t, "Total Revenue")
+            cogs = _v(fin_t, "Cost Of Revenue")
+            gp   = _v(fin_t, "Gross Profit") or (
+                (rev - cogs) if (rev is not None and cogs is not None) else None
+            )
+            oi   = _v(fin_t, "Operating Income",
+                                 "Operating Income Loss",
+                                 "Total Operating Income As Reported")
+            ni   = _v(fin_t, "Net Income", "Net Income Common Stockholders",
+                                "Net Income Continuous Operations")
+            ebit = _v(fin_t, "EBITDA", "Normalized EBITDA")
+            eps  = _v(fin_t, "Diluted EPS", "Basic EPS")
+            shs  = _v(fin_t, "Diluted Average Shares", "Basic Average Shares",
+                                "Ordinary Shares Number")
+            rnd  = _v(fin_t, "Research And Development", "Research Development")
+            sga  = _v(fin_t, "Selling General And Administration",
+                                "Selling General Administrative")
+            sbc  = _v(fin_t, "Stock Based Compensation")
+
+            ta   = _v(bs_t, "Total Assets")
+            tl   = _v(bs_t, "Total Liabilities Net Minority Interest",
+                               "Total Liabilities")
+            eq   = _v(bs_t, "Stockholders Equity",
+                               "Common Stockholders Equity",
+                               "Total Equity Gross Minority Interest")
+            ca   = _v(bs_t, "Current Assets")
+            cl   = _v(bs_t, "Current Liabilities")
+            gw   = _v(bs_t, "Goodwill") or 0.0
+            td   = _v(bs_t, "Total Debt")
+            ltd  = _v(bs_t, "Long Term Debt", "Long Term Debt And Capital Lease Obligation")
+            cash = _v(bs_t, "Cash And Cash Equivalents",
+                               "Cash Cash Equivalents And Short Term Investments")
+            inv  = _v(bs_t, "Inventory")
+
+            ocf  = _v(cf_t, "Operating Cash Flow")
+            fcf  = _v(cf_t, "Free Cash Flow")
+            capx = _v(cf_t, "Capital Expenditure")
+            div  = _v(cf_t, "Cash Dividends Paid", "Common Stock Dividend Paid")
+
+            # Derived ratios
+            dr   = round(tl / ta, 4) if (tl and ta and ta != 0) else None
+            cr   = round(ca / cl, 4) if (ca and cl and cl != 0) else None
+            dte  = round(td / eq, 4) if (td and eq and eq != 0) else None
+
+            rows.append({
+                "quarter":                  _qstr(dt),
+                "timestamp":                now_str,
+                "company_name":             company_name,
+                "source":                   "yfinance_live",
+                "total_revenue":            rev,
+                "cost_of_revenue":          cogs,
+                "gross_profit":             gp,
+                "operating_income":         oi,
+                "net_income":               ni,
+                "ebitda":                   ebit,
+                "total_assets":             ta,
+                "total_liabilities":        tl,
+                "stockholders_equity":      eq,
+                "current_assets":           ca,
+                "current_liabilities":      cl,
+                "goodwill":                 gw,
+                "total_debt":               td,
+                "long_term_debt":           ltd,
+                "cash_and_equivalents":     cash,
+                "inventory":                inv,
+                "operating_cash_flow":      ocf,
+                "free_cash_flow":           fcf,
+                "capital_expenditure":      capx,
+                "dividends_paid":           div,
+                "diluted_eps":              eps,
+                "diluted_shares":           shs,
+                "research_development":     rnd,
+                "selling_general_admin":    sga,
+                "stock_based_compensation": sbc,
+                "debt_ratio":               dr,
+                "current_ratio":            cr,
+                "debt_to_equity":           dte,
+            })
+
+        if not rows:
+            return None
+
+        df = pd.DataFrame(rows)
+        df["_quarter_date"] = df["quarter"].apply(_quarter_to_date)
+        df = df.sort_values("_quarter_date", ascending=False).reset_index(drop=True)
+        return df
+
+    except Exception:
+        return None
 
 
 def _safe_div(a, b) -> float | None:

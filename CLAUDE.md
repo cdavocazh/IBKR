@@ -1,5 +1,7 @@
 # IBKR ES Futures — Trading System + Financial Analysis Agent
 
+> **Heads-up — the Telegram bot file in `IB_Docker_VPS/telegram_claude_bot.py` is a REFERENCE COPY, not authoritative.** That script belongs to a different repo's deployment: Telegram handle `@FAzzh_CC_bot` → systemd `telegram-claude-bot.service` → authoritative script `/root/Finl_Agent_CC/telegram_claude_bot.py` on the Hostinger VPS. Do not patch the local copy here expecting behavior to change — edit on the VPS, or edit in `~/Github/Finl_Agent_CC/` and push. Cross-repo bot catalog: `~/Github/CLI_OS/AWS_CLI/Hostinger_Setup_Overview.md` → "Bot Identity Mapping". Full usage: `~/Github/Finl_Agent_CC/README.md` → "VPS Interactive Surface".
+
 ## React Dashboard
 
 ```bash
@@ -7,16 +9,24 @@ bash dashboard/start.sh                # Auto-finds ports, starts backend + fron
 ```
 
 Opens at `http://localhost:5173` (or next available port). Shows:
-- **Multi-Account Portfolio**: Account selector sidebar, per-account pages with positions table (symbol, cost basis, current price, prev close, market value, unrealized P&L, P&L%)
+- **Multi-Account Portfolio**: Account selector sidebar, per-account pages with positions table (symbol, cost basis, current price, prev close, market value, daily P&L, unrealized P&L, P&L%). Options positions auto-show Put/Call, Strike, Expiry columns. Instrument type filter buttons (ALL/STK/OPT/FUT/FOP). Daily P&L banner shows total.
 - **Open Orders**: Pending orders table (symbol, action, type, qty, limit price, status) — read-only via `ib.openOrders()`
 - **ES Sentiment Panel**: Unified trading direction (BEARISH/BULLISH/SIDEWAYS), confidence, sentiment scores (unified/newsletter/NLP), key levels (Smashlevel pivot, support/resistance, VPOCs, MA200), positioning (JPM z-score, NAAIM, VIX tier), expandable themes & insights, signal history timeline
-- **Price Charts**: Click any position symbol to open interactive OHLCV chart (1m/5m/15m/1h/1d/1w), live price updates when live mode enabled
-- **News Feed**: Real-time IBKR news headlines from 7 providers (BRFG, BRFUPDN, DJ-N, DJ-RT, DJ-RTA, DJ-RTE, DJ-RTG)
+- **Price Charts**: Click any position symbol to open interactive OHLCV chart (1m/5m/15m/1h/1d/1w). Auto-refresh in live mode (5s for 1m, 10s for 5m, etc.) with LIVE/PAUSED toggle
+- **News Feed**: Real-time IBKR news headlines from 7 providers (BRFG, BRFUPDN, DJ-N, DJ-RT, DJ-RTA, DJ-RTE, DJ-RTG). Click headline to read full article via `reqNewsArticle`
 - **Watchlists**: Custom instrument watchlists with real-time prices, rename/delete support
+- **Search**: Expandable instrument details with delivery months + open interest for futures
 - **WebSocket**: Live updates every 10s (portfolio) + per-second in live mode + real-time (news)
 
 Backend: FastAPI (`dashboard/server.py`) connects to IBKR TWS/Gateway via `ib_async` with auto-port detection (7496→7497→4001→4002).
 Frontend: Vite + React + TypeScript + Tailwind CSS (`dashboard/frontend/`).
+
+**Full specifications:** See [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) for API endpoints, component architecture, deployment details, and IB thread queue pattern.
+
+### VPS Dashboard Deployment
+- **URL:** `http://187.77.136.160/IBKR_KZ/`
+- **Service:** `ibkr-dashboard.service` (port 8888, clientId 30)
+- **Full VPS setup:** See [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) for Docker config, nginx, health monitoring, Telegram commands, session management
 
 ---
 
@@ -125,23 +135,25 @@ Sequential decision pipeline with regime-adaptive parameters:
 6. **Macro overlay**: VIX 7-tier framework, CTA proxy, HY OAS credit conditions, yield curve, DXY, Dr. Copper
 7. **Sentiment integration**: WSJ Markets A.M./P.M. email sentiment + IBKR DJ-N headline sentiment → daily composite score
 
-### Current Best Result
+### Current Best Results
 ```
-Return: +10.61% | Max DD: 22.46% | Win Rate: 36.0% | Trades: 25 | PF: ~2.0
-Period: Jan 2025 - Mar 2026 (14 months, 5-min bars with daily overlay)
+Composite (original data):  +14.73% return | 28.88% DD | 34% WR | 44 trades
+Composite (extended data):  -0.08% return  | 6.95% DD  | 33% WR | 6 trades
+MR Scalper (standalone):    +4.25% return  | 4.4% DD   | 43% WR | 51 trades
+Dual System (20/80 split):  +3.37% return  | ~4.9% DD  | —      | 57 trades
 ```
 
 ### Scoring
 ```
-score = total_return_pct   if max_dd <= 60% AND win_rate >= 30%
-score = 0                  otherwise
+score = return% × (1 - DD%/100)   if DD ≤ 60% AND WR ≥ 30% AND trades ≥ 5
+score = 0                          otherwise
 ```
 
 Rising threshold: `min_improvement = 0.05 * log(1 + iteration_count)` (near-zero for incremental hill-climbing)
 
 ### Constraints
 - Initial capital: $100,000
-- Risk per trade: $10,000 (contracts = $10K / (stop_distance * $50))
+- Risk per trade: $5,000 (contracts = $5K / (stop_distance * $50))
 - Win rate >= 30%, max drawdown <= 60%
 - Min holding period: 1 hour (12 × 5-min bars)
 - Stop loss required on every trade (adjustable based on indicators)
@@ -165,7 +177,19 @@ autoresearch/
   SKILL.md                   <- Full iteration protocol
   SCORING.md                 <- Scoring formula + diagnostic flowchart
   STRATEGY_CONTEXT.md        <- Strategy architecture + tunable parameter ranges
+  NEXT_STEPS.md              <- Current roadmap, next steps, exhausted approaches
+scripts/
+  backtest_mr_scalper.py     <- Standalone MR scalper backtest
+  backtest_dual_system.py    <- Dual-system combiner (composite + MR)
+  compute_ml_entry_signal.py <- Walk-forward ML entry classifier
+AR_exp_log.md (project root) <- Complete experiment history log
 ```
+
+### Documentation Requirements
+After every major experiment, structural change, or strategy decision:
+1. **Update `AR_exp_log.md`** — record the experiment, approach, results, and learnings
+2. **Update `autoresearch/NEXT_STEPS.md`** — reflect current state, update roadmap, mark exhausted approaches
+3. **Update `autoresearch/STRATEGY_CONTEXT.md`** — keep strategy architecture, active features, and prior strategies current
 
 ### Autoresearch Rules
 1. **ONE change per iteration** - atomic for clear attribution
@@ -176,9 +200,11 @@ autoresearch/
 6. **Multi-param jumps** between batches — apply top 3 near-misses simultaneously
 
 ### Data
-- **ES 5-min**: `data/es/ES_combined_5min.parquet` (48K bars, Jan 2025 - Mar 2026, TRADES volume)
+- **ES 5-min**: `data/es/ES_combined_5min.parquet` (50.7K bars, Jan 2025 - Apr 2 2026, TRADES volume)
 - **ES 1-min**: `data/es/ES_1min.parquet` (241K bars, Jan 2025 - Mar 2026)
-- **ES daily**: `data/es/ES_daily.parquet` (638 bars, Aug 2023 - Mar 2026)
+- **ES daily**: `data/es/ES_daily.parquet` (649 bars, Aug 2023 - Apr 2 2026)
+- **ES hourly extended**: `data/es/ES_combined_hourly_extended.parquet` (7.1K bars, SPY-converted + real ES)
+- **ML entry signal**: `data/es/ml_entry_signal.csv` (330 daily walk-forward predictions)
 - **Macro**: VIX, HY OAS, DXY, 10Y/2Y yields, copper from macro_2 repo
 - **Sentiment**: `data/news/daily_sentiment.csv` (345 days, WSJ + DJ-N composite)
 - **WSJ subjects**: `data/news/wsj_subjects.json` (298 email subjects)
@@ -218,3 +244,31 @@ python scripts/run_sentiment.py           # Run NLP on IBKR news headlines
 | ES_daily.parquet | 638 | Aug 2023 - Mar 2026 |
 | ES_implied_volatility_daily | 401 | Aug 2024 - Mar 2026 |
 | ES_historical_volatility_daily | 265 | Mar 2025 - Mar 2026 |
+
+---
+
+## Key Documents
+
+### Dashboard
+- [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) — Full dashboard specs: API endpoints, frontend components, WebSocket protocol, IB thread queue, deploy workflow
+
+### VPS & Infrastructure
+- [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) — VPS deployment: Docker IB Gateway, nginx, systemd services/timers, health monitor, Telegram commands, session management
+- [`IB_Docker_VPS/README.md`](IB_Docker_VPS/README.md) — Docker-specific setup and Telegram bot
+
+### Autoresearch
+- [`autoresearch/STRATEGY_CONTEXT.md`](autoresearch/STRATEGY_CONTEXT.md) — Strategy architecture, tunable parameter ranges, active features
+- [`autoresearch/NEXT_STEPS.md`](autoresearch/NEXT_STEPS.md) — Current roadmap, next steps, exhausted approaches
+- [`autoresearch/SCORING.md`](autoresearch/SCORING.md) — Scoring formula + diagnostic flowchart
+- [`autoresearch/SKILL.md`](autoresearch/SKILL.md) — Full iteration protocol
+- [`AR_exp_log.md`](AR_exp_log.md) — Complete experiment history log
+
+### Financial Analysis
+- [`DATA_SOURCES.md`](DATA_SOURCES.md) — FRED series IDs + local CSV data map
+- [`guides/`](guides/) — Interpretation guides, macro framework, TA guide, thresholds, workflows
+- [`guides/market_context.md`](guides/market_context.md) — Latest general market context (from `/digest`)
+- [`guides/market_context_ES.md`](guides/market_context_ES.md) — Latest ES-specific newsletter digest (from `/digest_ES`)
+
+### Data & Backtesting
+- [`docs/BACKTEST_GUIDE.md`](docs/BACKTEST_GUIDE.md) — Backtesting methodology
+- [`docs/ES_DATA_SOURCES.md`](docs/ES_DATA_SOURCES.md) — ES data pipeline documentation
