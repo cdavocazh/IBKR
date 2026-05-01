@@ -47,22 +47,61 @@ Deployed on VPS at `http://187.77.136.160/IBKR_KZ/`.
 - Stop-loss framework (Fidenza 10-rule), macro synthesis with contradiction detection
 - ES sentiment (NLP + newsletter fusion), news streaming from IBKR
 
-### 3. ES Sentiment Pipeline (`scripts/run_sentiment.py`)
+### 3. ES Sentiment Pipeline (Two-tier)
 
-Fuses IBKR news headlines with newsletter context:
+**Tier 1 — 3x daily batch** (`scripts/run_sentiment.py`):
 - Fetches ~4000 headlines from 7 IBKR providers
 - NLP sentiment analysis (bullish/bearish polarity, analyst actions, regime signals)
 - Merges with newsletter context from `/digest_ES` (40% NLP + 60% newsletters)
 - Outputs: `data/news/sentiment_analysis.json` + `data/news/sentiment_timeseries.csv`
 - Scheduled 3x daily (11am, 8pm, 11pm)
 
-### 4. Autoresearch (`autoresearch/`)
+**Tier 2 — continuous + 15-min rolling** (NEW May 2026, deployed on VPS):
+- `tools/news_stream_continuous.py` — long-running daemon (clientId 27) polls
+  `reqHistoricalNews` every 90s, persists to `data/news/headlines.db` (SQLite)
+- `tools/sentiment_intraday.py` — 15-min cron aggregates rolling sentiment over
+  5 windows (15m / 30m / 1h / 4h / 24h) plus topic-mix % (fed / war / inflation / earnings)
+  → `data/news/sentiment_intraday.csv`
+- `tools/sentiment_finbert.py` + `tools/sentiment_hybrid.py` — optional
+  FinBERT/DistilRoBERTa transformer scorer; gracefully falls back to regex
+  when `transformers`/`torch` not installed
+
+### 4. Multi-Input ES Signal Stack (NEW May 2026)
+
+Three additional ES-relevant inputs feeding `verify_strategy.py::_compute_composite()`:
+- `tools/mag7_breadth.py` — MAG7 mega-cap breadth (% above 5/20/50d MA, market-cap-weighted % chg);
+  systemd `ibkr-mag7-breadth.timer` runs every 5 min (clientId 28)
+- `tools/polymarket_signal.py` — read-only consumer of `~/Github/market-tracker/data_cache/all_indicators.json`;
+  extracts Fed cut prob, recession prob, geopolitics escalation, fiscal expansion, etc.
+- `tools/macro_calendar.py` — FOMC/CPI/NFP/PCE/ISM-PMI + mega-cap earnings blackout windows;
+  reads `~/Github/macro_2/historical_data/earnings_calendar.csv`
+
+All four feeds are wired into the backtest behind sweepable config flags (default OFF):
+`INTRADAY_SENTIMENT_*`, `MAG7_BREADTH_*`, `POLYMARKET_*`, `MACRO_BLACKOUT_*`.
+
+### 5. Self-Learning Framework (NEW May 2026, three layers)
+
+- **Layer A** — `tools/sentiment_self_learner.py`: nightly EMA update of
+  macro keyword weights based on per-keyword regression vs forward 1-hour ES returns.
+  Writes `data/news/keyword_weights.json` (read by `news_sentiment_nlp.py` when present).
+  Systemd: `ibkr-keyword-learner.timer` (04:00 UTC daily).
+- **Layer B** — `scripts/sentiment_walkforward.py`: weekly Ridge regression
+  `forward_return_1h ~ {sentiment, breadth, polymarket, vix}` →
+  `data/es/signal_weights_dynamic.json`.
+- **Layer C** — `scripts/sentiment_rl_agent.py`: PPO ensemble agent
+  (Stable-Baselines3) wrapping the new step-callable `BacktestRunner`. 12-dim
+  state, 4-dim continuous action (position size, sentiment weight, MR weight,
+  blackout strict mode). Optional deps: `stable-baselines3`, `gymnasium`.
+
+### 6. Autoresearch (`autoresearch/`)
 
 Automated ES strategy optimization via hill-climbing parameter search:
 - Sequential decision pipeline: Regime classification -> Macro filter -> Daily trend -> Technical composite -> Adaptive entry/exit
 - Single-parameter variations, backtest, score, KEEP or REVERT
-- Current best: +10.61% return, 22.46% max DD, 36% win rate (Jan 2025 - Mar 2026)
+- Current best (extended data, MR-only ATR=1.6): **-0.03% return, 1.99% DD, 6 trades, 83% WR, PF 16.9** (~$32 from breakeven on $100K)
+- Pre-war best: +14.73% return, 28.88% DD, 34% WR, 44 trades
 - Algorithm versioning in `versions/` (immutable snapshots per logical change)
+- Step-callable `BacktestRunner` in `verify_strategy.py` (used by Phase 5C PPO env)
 
 ## Core Market Data Library (`ibkr/`)
 
@@ -80,23 +119,125 @@ Supports: Precious metals (GC, SI, HG, PL, PA), Treasuries (ZN, ZB, ZF, ZT, UB),
 
 ## ES Data Files
 
-| File | Bars | Range |
-|------|------|-------|
-| ES_1min.parquet | 241K | Jan 2025 - Mar 2026 |
-| ES_combined_5min.parquet | 48K | Jan 2025 - Mar 2026 |
-| ES_daily.parquet | 638 | Aug 2023 - Mar 2026 |
+| File | Bars | Range | Notes |
+|------|------|-------|-------|
+| `data/es/ES_1min.parquet` | 241K | Jan 2025 - Mar 2026 | High-resolution intraday |
+| `data/es/ES_combined_5min.parquet` | 50.7K | Jan 31 2025 - Apr 2 2026 | Primary backtest (extended through Iran war) |
+| `data/es/ES_daily.parquet` | 649 | Aug 2023 - Apr 2 2026 | Daily overlay |
+| `data/es/ES_combined_hourly_extended.parquet` | 7.1K | Apr 2023 - Mar 2026 | SPY-converted + real ES hourly |
+| `data/es/ml_entry_signal.csv` | 330 | Dec 2024 - Apr 2026 | Walk-forward LightGBM predictions |
+| `data/es/mag7_breadth.csv` | live | May 2026+ | MAG7 breadth (5-min cadence; gitignored) |
+| `data/es/polymarket_signals.csv` | live | May 2026+ | Polymarket probabilities (gitignored) |
+| `data/news/headlines.db` | 6.4K+ | 2023-2026 | SQLite headline store (gitignored, grows continuously) |
+| `data/news/sentiment_intraday.csv` | live | May 2026+ | 15-min rolling sentiment (gitignored) |
 
 ## Key Commands
 
+### Slash commands (Claude Code skills)
 | Command | Description |
 |---------|-------------|
 | `/fin scan` | Quick macro scan (27 indicators) |
 | `/fin macro` | Macro regime classification |
 | `/fin stress` | Financial stress score (0-10) |
 | `/fin ta ES=F` | Technical analysis (Murphy 13-framework) |
+| `/fin sl ES 6000 long` | Stop-loss framework (Fidenza 10-rule) |
 | `/fin full_report` | 8-step analysis chain |
-| `/digest` | Read newsletters -> market context |
-| `/digest_ES` | Read ES-focused newsletters |
+| `/digest` | Read newsletters → `guides/market_context.md` |
+| `/digest_ES` | Read ES-focused newsletters → `guides/market_context_ES.md` |
+
+### Sentiment + multi-input CLI tools
+```bash
+# 3x daily ES sentiment batch (the existing pipeline)
+python scripts/run_sentiment.py                    # auto-detect IBKR port
+python scripts/run_sentiment.py --port 7496 --days 14
+python scripts/run_sentiment.py --dry-run          # use cached headlines
+
+# Continuous IBKR news polling (the new May 2026 daemon — runs on VPS)
+python tools/news_stream_continuous.py --interval 60      # every 60s
+python tools/news_stream_continuous.py --tickers AAPL,NVDA,SPY --client-id 27
+
+# 15-min rolling sentiment aggregator
+python tools/sentiment_intraday.py --bucket-now            # current bucket
+python tools/sentiment_intraday.py --since 2026-05-01 --until 2026-05-02
+
+# FinBERT/DistilRoBERTa hybrid scorer (Phase 3)
+python tools/sentiment_hybrid.py "Goldman upgrades NVDA to Buy"
+python tools/sentiment_finbert.py --bench                  # benchmark on 20 sample headlines
+HYBRID_DISABLE_FINBERT=1 python tools/sentiment_hybrid.py "..."  # force regex-only mode
+
+# MAG7 mega-cap breadth indicator
+python tools/mag7_breadth.py --source auto --append-csv    # IBKR or yfinance
+python tools/mag7_breadth.py --source yfinance --symbols AAPL,MSFT,NVDA
+
+# Polymarket prediction-market signals (reads market-tracker cache)
+python tools/polymarket_signal.py --append-csv
+python tools/polymarket_signal.py --history --n 20
+
+# Macro release calendar — blackout windows
+python tools/macro_calendar.py --next 10                   # next 10 high-impact releases
+python tools/macro_calendar.py --check NOW                 # is now in a blackout?
+python tools/macro_calendar.py --check 2026-05-12T13:30 --lookback 30 --lookahead 60
+
+# Self-learning layers (Phase 5)
+python tools/sentiment_self_learner.py --report-only       # nightly keyword weight EMA
+python scripts/sentiment_walkforward.py --validate         # weekly Ridge refit + OOS R²
+python scripts/sentiment_rl_agent.py --check               # PPO dependency check
+python scripts/sentiment_rl_agent.py --train --steps 100000 --train-days 90
+python scripts/sentiment_rl_agent.py --inference           # one-shot agent action
+
+# News streaming raw harness (low-level)
+python scripts/ib_news_stream.py verify                    # full IBKR news API check
+python scripts/ib_news_stream.py providers                 # list 7 providers
+python scripts/ib_news_stream.py headlines AAPL --count 50
+python scripts/ib_news_stream.py stream AAPL,NVDA --duration 300
+```
+
+### Backtest commands
+```bash
+# Composite + MR strategy backtest
+cd autoresearch && python verify_strategy.py               # outputs SCORE
+python autoresearch.py status                              # latest iteration state
+python batch_iterate.py 1000 --report-every 50             # run 1000-iter sweep
+
+# Standalone MR scalper
+python scripts/backtest_mr_scalper.py
+python scripts/backtest_mr_scalper.py --sweep              # 47-config grid
+
+# Dual-system equity-curve combiner (composite + MR scalper)
+python scripts/backtest_dual_system.py
+```
+
+### Env variable knobs
+| Var | Effect |
+|-----|--------|
+| `IBKR_HOST` | Override IBKR Gateway host (default `127.0.0.1`) |
+| `IBKR_PORT` | Override IBKR Gateway port (auto-detects 4001/4002/7496/7497) |
+| `IB_NEWS_CLIENT_ID` | clientId for `news_stream_continuous.py` (default 27) |
+| `IB_BREADTH_CLIENT_ID` | clientId for `mag7_breadth.py` (default 28) |
+| `MACRO_DATA_DIR` | Override `~/Github/macro_2/historical_data/` location |
+| `PYTHON_INTERPRETER` | Override Python path used by subprocess calls in scripts |
+| `HYBRID_DISABLE_FINBERT` | Set to `1` to force regex-only sentiment scoring |
+| `DASHBOARD_SECRET` | Override the dashboard auth secret (defaults to file-stored) |
+
+### VPS systemd units (deployed to Hostinger)
+| Unit | Cadence | Purpose |
+|------|---------|---------|
+| `ibkr-dashboard.service` | continuous | Portfolio dashboard (FastAPI + WebSocket, port 8888) |
+| `ibkr-broadtape.service` | continuous (every 90s poll) | Persistent IBKR news polling → `headlines.db` |
+| `ibkr-sentiment.timer` | 03:00, 12:00, 15:00 UTC | 3x daily batch sentiment + NLP |
+| `ibkr-sentiment-15min.timer` | every 15 min | Intraday sentiment aggregation |
+| `ibkr-mag7-breadth.timer` | every 5 min | MAG7 breadth snapshot |
+| `ibkr-keyword-learner.timer` | 04:00 UTC daily | Self-learning keyword weight EMA |
+| `finl-digest-es.timer` | 00:00, 12:00 UTC | ES newsletter digest via Claude Code |
+| `ib-health-monitor.timer` | every 15 min | IB Gateway health check + auto-restart |
+
+To deploy a new unit: `scp systemd/<unit> root@VPS:/etc/systemd/system/ && ssh root@VPS "systemctl daemon-reload && systemctl enable --now <unit>"`. See [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) for full deployment workflow.
+
+### Recent user-impacting changes
+- **2026-05-01** — `tools/news_stream_continuous.py` switched from broadtape subscription to `reqHistoricalNews` polling (legacy broadtape was already broken with current ib_async). Now deployed on VPS as `ibkr-broadtape.service`.
+- **2026-05-01** — Added `BacktestRunner` step-callable interface to `verify_strategy.py` for use by Phase 5C PPO env. `run_backtest()` behavior unchanged.
+- **2026-05-01** — `news_sentiment_nlp.py::classify_macro_sentiment` now reads learned weights from `data/news/keyword_weights.json` when present (file is regenerated nightly by `sentiment_self_learner.py`). Falls back to hardcoded constants if missing.
+- **2026-04-12** — Combined Strategy v2 with independent MR state achieved best result on extended dataset (-0.03% return, 1.99% DD, 83% WR, PF 16.9).
 
 ## Documentation
 

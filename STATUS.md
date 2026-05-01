@@ -106,10 +106,13 @@ Phase 1+2+4 of the multi-input ES signal framework. Foundation work for moving s
 | `tools/polymarket_signal.py` | On-demand (5-min upstream) | `data/es/polymarket_signals.csv` | `~/Github/market-tracker/data_cache/all_indicators.json` |
 | `tools/macro_calendar.py` | In-memory | `MacroCalendar.is_blackout_window(ts)` | `~/Github/macro_2/historical_data/earnings_calendar.csv` + computed BLS/BEA dates |
 
-VPS systemd units (under `systemd/`):
-- `ibkr-broadtape.service` — Restart=always
-- `ibkr-sentiment-15min.{service,timer}` — `OnCalendar=*:0/15`
-- `ibkr-mag7-breadth.{service,timer}` — `OnCalendar=*:0/5`
+VPS systemd units (under `systemd/`) — **DEPLOYED & ACTIVE on Hostinger as of 2026-05-01**:
+- `ibkr-broadtape.service` — `active (running)` since 2026-05-01 05:21 UTC, polling every 90s (clientId 27)
+- `ibkr-sentiment-15min.{service,timer}` — enabled, `OnCalendar=*:0/15`
+- `ibkr-mag7-breadth.{service,timer}` — enabled, `OnCalendar=*:0/5` (clientId 28); first row written 05:25 UTC
+- `ibkr-keyword-learner.{service,timer}` — enabled, `OnCalendar=*-*-* 04:00:00`
+
+Initial state on deploy day: `headlines.db` had 6,100 rows (years of history from prior `ibkr-sentiment.timer` runs); first poll added +290 new headlines that the 3x daily batch had missed.
 
 **ES-trading inputs covered** (per user requirements):
 - Mega-cap movements → `mag7_breadth.py` (% above 5/20/50d MA, market-cap-weighted % chg)

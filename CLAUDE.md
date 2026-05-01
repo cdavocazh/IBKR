@@ -168,19 +168,43 @@ Output CSVs (consumed by `verify_strategy.py` in the Phase 4 backtest integratio
 
 ### File Map
 ```
-tools/                          <- 20 Python analysis tools (macro, equity, TA, pro-trader)
-tools/news_stream.py            <- Multi-provider news aggregation (IBKR, Finnhub, Benzinga, Finlight)
-tools/news_sentiment_nlp.py     <- NLP sentiment engine (headline analysis, regime signals, newsletter merge)
-guides/                         <- 8 interpretation/framework guides
-guides/market_context_ES.md     <- ES-specific newsletter digest (Smashelito, Geo Chen, etc.)
-scripts/run_sentiment.py        <- Standalone ES sentiment pipeline (IBKR news + NLP)
-.claude/skills/fin/             <- /fin skill definition
-.claude/skills/digest/          <- /digest skill definition
-.claude/skills/digest_ES/       <- /digest_ES skill definition (ES-focused newsletters)
-data/news/sentiment_analysis.json    <- Latest full sentiment analysis
-data/news/sentiment_timeseries.csv   <- Historical sentiment signal log
-DATA_SOURCES.md                 <- FRED series + CSV data map
-.env                            <- API keys (FRED, Tavily, Finnhub, Benzinga, Finlight)
+tools/                                <- 20+ Python analysis tools
+tools/news_stream.py                  <- Multi-provider news aggregation (IBKR, Finnhub, Benzinga, Finlight)
+tools/news_stream_continuous.py       <- Continuous IBKR news polling daemon (clientId 27, persistent VPS)
+tools/news_sentiment_nlp.py           <- Regex/lexicon NLP sentiment (now reads keyword_weights.json when present)
+tools/sentiment_intraday.py           <- 15-min rolling sentiment aggregator → sentiment_intraday.csv
+tools/sentiment_finbert.py            <- HuggingFace DistilRoBERTa wrapper (Phase 3 transformer scorer)
+tools/sentiment_hybrid.py             <- Regex+FinBERT orchestrator (drop-in for analyze_headline)
+tools/sentiment_self_learner.py       <- Nightly EMA update of macro keyword weights (Phase 5A)
+tools/macro_calendar.py               <- FOMC/CPI/NFP/PCE/earnings blackout windows (Phase 4)
+tools/polymarket_signal.py            <- Read-only consumer of market-tracker cache (Phase 4)
+tools/mag7_breadth.py                 <- MAG7 mega-cap breadth indicator (clientId 28)
+tools/news_db.py                      <- NewsDB SQLite wrapper (headlines.db schema)
+guides/                               <- 8 interpretation/framework guides
+guides/market_context_ES.md           <- ES-specific newsletter digest (Smashelito, Geo Chen, etc.)
+scripts/run_sentiment.py              <- 3x daily ES sentiment pipeline (IBKR news + NLP, batch)
+scripts/sentiment_walkforward.py      <- Weekly Ridge regression of forward returns vs all signals (Phase 5B)
+scripts/sentiment_rl_agent.py         <- PPO ensemble agent — Stable-Baselines3 (Phase 5C)
+scripts/backtest_mr_scalper.py        <- Standalone MR scalper backtest
+scripts/backtest_dual_system.py       <- Dual-system equity-curve combiner
+scripts/compute_ml_entry_signal.py    <- Walk-forward LightGBM entry classifier
+backtest/engine.py                    <- BacktestEngine (now exposes step_one_bar + finalize for RL env)
+autoresearch/verify_strategy.py       <- Backtest engine + ESAutoResearchStrategy + BacktestRunner (step-callable for PPO)
+systemd/                              <- VPS systemd unit files (broadtape, sentiment-15min, mag7, keyword-learner)
+.claude/skills/fin/                   <- /fin skill definition
+.claude/skills/digest/                <- /digest skill definition
+.claude/skills/digest_ES/             <- /digest_ES skill definition (ES-focused newsletters)
+data/news/headlines.db                <- SQLite headline store (~6.4K rows; broadtape continuously appends)
+data/news/sentiment_intraday.csv      <- 15-min rolling sentiment buckets
+data/news/sentiment_analysis.json     <- Latest full sentiment analysis (3x daily batch)
+data/news/sentiment_timeseries.csv    <- Historical sentiment signal log (3 rows/day)
+data/news/keyword_weights.json        <- Self-learned macro keyword weights (Phase 5A; gitignored)
+data/es/mag7_breadth.csv              <- MAG7 breadth snapshots (5-min cadence)
+data/es/polymarket_signals.csv        <- Polymarket prediction-market probabilities
+data/es/signal_weights_dynamic.json   <- Walk-forward Ridge weights (Phase 5B; gitignored)
+data/rl/ppo_es_ensemble_*.zip         <- PPO model snapshots (Phase 5C; gitignored)
+DATA_SOURCES.md                       <- FRED series + CSV data map
+.env                                  <- API keys (FRED, Tavily, Finnhub, Benzinga, Finlight)
 ```
 
 ### Data Sources
