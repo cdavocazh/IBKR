@@ -1,0 +1,20 @@
+[Unit]
+Description=MAG7 Mega-Cap Breadth Indicator (5-min cadence, persists to mag7_breadth.csv)
+Documentation=https://github.com/kris-zhang/IBKR/blob/main/tools/mag7_breadth.py
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/IBKR
+Environment="PYTHONPATH=/root/IBKR"
+# clientId 28 reserved for breadth puller (see CLAUDE.md clientId map)
+Environment="IB_BREADTH_CLIENT_ID=28"
+
+ExecStart=/usr/bin/python3 /root/IBKR/tools/mag7_breadth.py --source auto --append-csv
+
+StandardOutput=append:/var/log/ibkr-mag7-breadth.log
+StandardError=append:/var/log/ibkr-mag7-breadth.log
+
+[Install]
+WantedBy=multi-user.target

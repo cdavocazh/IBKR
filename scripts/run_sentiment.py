@@ -194,6 +194,23 @@ def run_sentiment(headlines):
     return result
 
 
+def save_to_db(headlines: list, analyzed: list):
+    """
+    Persist raw headlines + NLP scores into data/news/headlines.db.
+    Called after every cron run so the DB accumulates history that
+    sentiment_analysis.json (overwrite-per-run) cannot provide.
+    """
+    try:
+        from tools.news_db import get_db
+        with get_db() as db:
+            n_raw = db.upsert_headlines(headlines)
+            n_scored = db.upsert_analyzed(analyzed)
+        print(f"[DB] +{n_raw} new headlines, {n_scored} scores written → data/news/headlines.db")
+    except Exception as e:
+        # Non-fatal — log and continue; existing JSON/CSV outputs are unaffected
+        print(f"[DB] WARNING: Could not persist to headlines.db: {e}")
+
+
 def save_results(result):
     """Save to JSON and append to CSV timeseries."""
     # JSON
@@ -280,6 +297,10 @@ def main():
         sys.exit(1)
 
     result = run_sentiment(headlines)
+
+    # Persist raw headlines + per-headline NLP scores to DB before overwriting JSON
+    save_to_db(headlines, result.get("analyzed_headlines", []))
+
     save_results(result)
 
     # Print summary

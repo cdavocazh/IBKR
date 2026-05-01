@@ -2,6 +2,17 @@
 
 Dockerized IB Gateway with IBC auto-login for headless VPS deployment. Currently deployed on **Hostinger VPS** (187.77.136.160).
 
+> **Note on `telegram_claude_bot.py` / `telegram_claude_bot.service` in this folder:** those files are the **Financial Agent's Telegram bot**, not part of IB Gateway. They are a *local reference copy* for the Hostinger deployment:
+>
+> - Telegram handle: **`@FAzzh_CC_bot`**
+> - systemd service (VPS): `telegram-claude-bot.service`
+> - Authoritative script (VPS): `/root/Finl_Agent_CC/telegram_claude_bot.py`
+> - Reference copy (this folder, local): `telegram_claude_bot.py` — **not authoritative; edits here do nothing unless deployed**
+> - Owner repo: `~/Github/Finl_Agent_CC/` (see its `README.md` → "VPS Interactive Surface" and its `CLAUDE.md`)
+> - Cross-repo catalog: `~/Github/CLI_OS/AWS_CLI/Hostinger_Setup_Overview.md` → "Bot Identity Mapping"
+>
+> To modify the bot: edit `/root/Finl_Agent_CC/telegram_claude_bot.py` on the VPS (e.g. over SSH) then `systemctl restart telegram-claude-bot.service`. The rest of this README is strictly about IB Gateway.
+
 ## Architecture
 
 ```
@@ -219,6 +230,9 @@ ssh root@187.77.136.160
 cat >> /root/Finl_Agent_CC/.env << 'EOF'
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
+IBKR_PROJECT_DIR=/root/IBKR
+IBKR_BOT_PYTHON=/root/IBKR/venv/bin/python
+IBKR_TELEGRAM_SCRIPT=/root/IBKR/scripts/ibkr_telegram_command.py
 EOF
 ```
 
@@ -268,10 +282,20 @@ systemctl status telegram-claude-bot
 
 **Freeform:**
 - `/ask Why is VIX elevated today?` — Any question
+- `/IBKR portfolio value` — Portfolio/watchlist natural language
 
 **System:**
 - `/health` — IB Gateway + services status
 - `/status` — Bot uptime + RAM
+
+### `/IBKR` Examples
+
+- `/IBKR portfolio value`
+- `/IBKR value of AAPL and NVDA`
+- `/IBKR add AAPL,MSFT,NVDA to my watchlist`
+- `/IBKR show my watchlist prices`
+- `/IBKR top 5 tickers by market value`
+- `/IBKR alert me if my watchlist moves more than 3%`
 
 ### How It Works
 

@@ -1,163 +1,149 @@
 # IBKR Project Status
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-05-01
 
 ## Overview
 
-This repository contains tools for extracting market data from Interactive Brokers (IBKR) TWS API and backtesting trading strategies on futures contracts.
+This repository contains:
+1. **Autoresearch** — Automated parameter optimization for ES futures trading strategies (~24,100 iterations)
+2. **React Dashboard** — Real-time portfolio monitoring + ES sentiment + price charts
+3. **Financial Analysis Agent** — `/fin` skill with 20 analysis tools, `/digest` and `/digest_ES` newsletter readers
+4. **ES Sentiment Pipeline** — IBKR news + newsletter NLP analysis
+5. **VPS Deployment** — Hostinger VPS running IB Gateway + dashboard + Telegram bots
+6. **Higher-Frequency Sentiment Stack** *(NEW — May 2026)* — Persistent broadtape streamer, 15-min rolling sentiment, MAG7 breadth, Polymarket signals, macro release calendar blackouts
 
 ---
 
-## Data Extraction
+## Current Strategy Status (Autoresearch)
 
-### Instruments Covered
-| Symbol | Name | Front Month | Exchange |
-|--------|------|-------------|----------|
-| ES | E-mini S&P 500 | ESH6 | CME |
-| GC | Gold | GCG6 | COMEX |
-| SI | Silver | SIH6 | COMEX |
+### Best Results
 
-### Historical Data Downloaded (~16 MB total)
+| Config | Score | Return | DD | Trades | WR | PF | Period |
+|--------|-------|--------|-----|--------|-----|-----|--------|
+| **Composite (pre-war Mar 2026)** | **10.47** | **+14.73%** | 28.88% | 44 | 34% | — | Jan 2025 – Mar 20 2026 |
+| **Combined v2 (extended)** | -0.03 | -0.03% | **1.99%** | 6 | **83%** | **16.9** | Jan 2025 – Apr 2 2026 |
+| **MR Scalper standalone** | — | +4.25% | 4.4% | 51 | 43% | — | High-vol days only |
+| **Dual-system (20/80 split)** | — | +3.39% | ~3.9% | 57 | — | — | Combined equity curves |
 
-#### ES (E-mini S&P 500)
-| Data Type | File | Size | Rows | Date Range |
-|-----------|------|------|------|------------|
-| 1-min OHLCV | `ES_1min.parquet` | 2.5 MB | 189,042 | 2025-01-31 to 2026-01-27 |
-| 5-min OHLCV | `ES_combined_5min.parquet` | 672 KB | 37,716 | 2025-01-31 to 2026-01-27 |
-| Historical Volatility | `ES_historical_volatility_daily.parquet` | 20 KB | 227 | 2025-03-03 to 2026-01-26 |
-| Implied Volatility | `ES_implied_volatility_daily.parquet` | 24 KB | 365 | 2024-08-23 to 2026-01-28 |
-| Bid/Ask/Mid (hourly) | `ES_*_hourly.parquet` | 24 KB each | 691 | 2025-12-14 to 2026-01-28 |
+### What Happened
+The composite strategy peaked at **+14.73%** on data ending March 20 2026. When data was extended through April 2 2026 (Iran war period, ES dropped ~8%), the strategy collapsed to negative. **21,000+ post-extension iterations across 28 sweep batches yielded 0 positive scores.**
 
-#### GC (Gold)
-| Data Type | File | Size | Rows | Date Range |
-|-----------|------|------|------|------------|
-| 1-min OHLCV | `GC_1min.parquet` | 4.3 MB | 303,366 | 2025-01-24 to 2026-01-27 |
-| 5-min OHLCV | `GC_combined_5mins.parquet` | 1.2 MB | 59,313 | 2024-12-19 to 2026-01-27 |
-| Historical Volatility | `GC_historical_volatility_daily.parquet` | 20 KB | 246 | 2025-02-03 to 2026-01-26 |
-| Implied Volatility | `GC_implied_volatility_daily.parquet` | 24 KB | 364 | 2024-08-23 to 2026-01-27 |
-| Bid/Ask/Mid (hourly) | `GC_*_hourly.parquet` | 28 KB each | 693 | 2025-12-14 to 2026-01-28 |
+The breakthrough came with **Combined Strategy v2** (Apr 6 2026): independent state routing where MR scalper and composite each have their own cooldown, trade counter, and circuit breaker. This achieved **-0.03 score with 83% WR and PF 16.9** on the war-extended dataset.
 
-#### SI (Silver)
-| Data Type | File | Size | Rows | Date Range |
-|-----------|------|------|------|------------|
-| 1-min OHLCV | `SI_1min.parquet` | 3.7 MB | 266,928 | 2025-01-21 to 2026-01-27 |
-| 5-min OHLCV | `SI_combined_5mins.parquet` | 1.1 MB | 53,956 | 2024-12-19 to 2026-01-27 |
-| Historical Volatility | `SI_historical_volatility_daily.parquet` | 20 KB | 227 | 2025-03-03 to 2026-01-26 |
-| Implied Volatility | `SI_implied_volatility_daily.parquet` | 20 KB | 242 | 2025-02-11 to 2026-01-27 |
-| Bid/Ask/Mid (hourly) | `SI_*_hourly.parquet` | 28 KB each | 693 | 2025-12-14 to 2026-01-28 |
-
-### Real-Time Snapshots (2026-01-28)
-| Symbol | Last Price | Bid/Ask | Spread | Volume | Open Interest | IV |
-|--------|------------|---------|--------|--------|---------------|-----|
-| ES | 7,035.75 | 7,035.50 / 7,035.75 | 0.25 | 56,744 | 1,886,728 | 12.71% |
-| GC | 5,251.50 | 5,251.90 / 5,252.40 | 0.50 | 25,925 | 76,948 | 19.10% |
-| SI | 114.91 | 114.91 / 114.94 | 0.04 | 37,283 | 100,680 | 100.33% |
+### Total Iterations
+**~24,100** across 34 sweep batches (Jan – Apr 2026)
 
 ---
 
-## Backtest Strategies
+## Data Inventory
 
-### Original Strategies
+### ES Futures (`data/es/`)
+| File | Bars | Date Range | Notes |
+|------|------|------------|-------|
+| `ES_combined_5min.parquet` | 50,760 | Jan 31 2025 – Apr 2 2026 | Primary backtest |
+| `ES_1min.parquet` | 241,009 | Jan 2025 – Mar 2026 | High-res |
+| `ES_daily.parquet` | 649 | Aug 2023 – Apr 2 2026 | Daily overlay |
+| `ES_combined_hourly_extended.parquet` | 7,119 | Apr 2023 – Mar 2026 | SPY-converted + real |
+| `ES_implied_volatility_daily.parquet` | 401 | Aug 2024 – Mar 2026 | IV |
+| `ES_historical_volatility_daily.parquet` | 265 | Mar 2025 – Mar 2026 | HV |
+| `ml_entry_signal.csv` | 330 | Dec 2024 – Apr 2026 | Walk-forward LightGBM predictions |
+| `tsfresh_daily_features.csv` | — | — | 27 statistically significant features |
+| `garch_daily_forecast.csv` | — | through Mar 20 | GARCH(1,1) conditional variance |
+| `particle_regime_daily.csv` | — | — | Bayesian SMC regime probabilities |
+| `cusum_events.csv` | — | — | Structural break events |
 
-| Strategy | Trades | Win Rate | Return | Profit Factor | Max DD |
-|----------|--------|----------|--------|---------------|--------|
-| ES_scalp_momentum | 21 | 66.67% | -0.09% | 0.95 | 0.68% |
-| ES_4h | 118 | 38.98% | -0.53% | 0.72 | 1.28% |
-| **GC_buy_dip** | **229** | **50.22%** | **+1.48%** | **1.08** | 1.21% |
+### Other Instruments
+- **GC (Gold)**: 1-min, 5-min, IV, HV (data through early 2026)
+- **SI (Silver)**: 1-min, 5-min, IV, HV
+- Less actively used — focus shifted to ES autoresearch
 
-### Optimized ES Strategies (NEW)
-
-Based on trend regime analysis, new optimized strategies were developed:
-
-| Strategy | Trades | Win Rate | Return | Profit Factor | Max DD | Notes |
-|----------|--------|----------|--------|---------------|--------|-------|
-| ES_scalp_optimized | 25 | 36.0% | -0.11% | 0.77 | 1.29% | Stricter filters, fewer trades |
-| ES_4h_optimized | 168 | 37.5% | -0.58% | 0.79 | 3.64% | Regime confirmation required |
-| **ES_trend_follow** | **24** | **41.67%** | **-0.18%** | **1.14** | 3.53% | **Best PF (>1.0)** |
-
-### ES Longer-Term Strategies (1-4 Day Holds)
-
-New strategies based on Kris's trading approach from `ES trading approach.md`:
-
-| Strategy | Trades | Win Rate | Avg P&L | Profit Factor | Max DD | Avg Hold |
-|----------|--------|----------|---------|---------------|--------|----------|
-| ES_kris_approach (Bullish) | 31 | **54.8%** | **+$472** | **1.49** | 11.13% | 23h (1 day) |
-| ES_kris_approach (Neutral) | 41 | 43.9% | -$43 | 0.77 | 13.71% | 21.7h |
-| ES_kris_regime (Auto-switch) | 33 | 48.5% | -$4 | 0.94 | 11.13% | 21.3h |
-
-**Key Features:**
-- **Time horizon:** 1-4 days (matches your actual trading approach)
-- **Stops:** 0.6% (~36 pts) - tight for precision entries
-- **Targets:** 2.5R with breakeven move at 1R, trailing 0.8:1
-- **Multi-timeframe RSI:** Checks 30min, 4H, and daily RSI before entry
-- **Pattern detection:** Double bottoms/tops, failed breakouts
-- **Regime awareness:** Uses ES_stance_history.xlsx for regime switching
-
-### Strategy Details
-
-#### 1. ES Kris Approach - Bullish (BEST ES STRATEGY)
-- **File:** `backtest/strategies/es_kris_approach.py`
-- **Holding Period:** ~23 hours (1 day)
-- **Profit Factor:** 1.49 | **Win Rate:** 54.8% | **Avg P&L:** +$472/trade
-- **Approach:** Pattern-based entries with tight stops and trailing
-- **Key Features (from your trading approach):**
-  - 0.6% stops (~36 pts) with 2.5R targets
-  - Move to breakeven at 1R, then trail 0.8:1
-  - Multi-timeframe RSI (30m, 4H, daily) for confirmation
-  - Double bottom/top and failed breakout patterns
-  - No buying when 4H RSI overbought (>70)
-  - Run with `python es_kris_approach.py bullish`
-
-#### 2. ES Kris Regime (Auto-Switching)
-- **File:** `backtest/strategies/es_kris_regime.py`
-- **Holding Period:** ~21 hours
-- **Approach:** Automatically switches regime based on ES_stance_history.xlsx
-- **Regimes:** Bullish (long-only), Bearish (short-only), Neutral (both)
-
-#### 3. ES Trend Follow
-- **File:** `backtest/strategies/es_trend_follow.py`
-- **Holding Period:** ~110 minutes
-- **Profit Factor:** 1.14
-- **Approach:** Pure trend following with strict filters
-
-#### 4. GC Buy-the-Dip (Most Profitable Overall)
-- **File:** `backtest/strategies/gc_buy_dip.py`
-- **Holding Period:** 1-2 hours
-- **Approach:** Long-only mean reversion in uptrend
-- **Why it works:** Gold has clearer trends than ES
-
-### Regime Analysis Findings
-
-Analysis of 17,961 ES bars revealed:
-- **Bull regime:** 44% of time (trend_strength mean: 0.56)
-- **Bear regime:** 35.5% of time
-- **Neutral regime:** 20.5% of time
-
-Key indicators for regime changes:
-- Bull-to-bear: RSI ~57, trend_strength ~2.6 (overbought in uptrend)
-- Bear-to-bull: RSI ~43, trend_strength ~-0.97 (oversold in downtrend)
-
-### HTML Reports
-Generated reports in `/reports/`:
-- `es_scalp_report.html`
-- `es_4h_report.html`
-- `gc_buy_dip_report.html`
-
-Each report includes: equity curve, drawdown chart, trade log, and performance metrics.
+### News & Sentiment (`data/news/`)
+| File | Content |
+|------|---------|
+| `daily_sentiment.csv` | 345 days WSJ + DJ-N composite sentiment |
+| `wsj_subjects.json` | 298 WSJ Markets A.M./P.M. subjects |
+| `sample_headlines.json` | 291 IBKR DJ-N headlines |
+| `sentiment_analysis.json` | Latest full ES sentiment analysis |
+| `sentiment_timeseries.csv` | Historical signal log (one row per run) |
 
 ---
 
-## Account Data
+## Active Components
 
-### Positions Export
-- **File:** `data/positions_all_accounts_20260128_152400.csv`
-- **Accounts:** U19671856, U6372508
-- **Total Positions:** 92
-- **Note:** Real-time prices show `nan` for US stocks due to API market data subscription requirement (Error 10089)
+### Autoresearch (`autoresearch/`)
+- **Status**: Active hill-climbing, currently exhausted on extended data
+- **Best mutable file**: `es_strategy_config.py` (~470 lines, ~120 params)
+- **Backtest engine**: `verify_strategy.py` (~2,300 lines)
+- **Combined Strategy v2 method**: `_handle_mr_entry_combined()` with independent MR state
+- **Results log**: `autoresearch-results.tsv` (18,101+ rows)
 
-### Account Summary
-- **File:** `data/account_summary_20260128_152225.csv`
-- **Metrics:** 188 account-level metrics
+### React Dashboard (`dashboard/`)
+- **Status**: Production on VPS at `http://187.77.136.160/IBKR_KZ/`
+- **Local**: `bash dashboard/start.sh` → `http://localhost:5173`
+- **Service**: `ibkr-dashboard.service` (port 8888, clientId 30)
+- **Features**: Multi-account portfolio, ES sentiment panel, price charts, news feed, watchlists
+
+### Financial Analysis (`tools/`, `guides/`, `.claude/skills/`)
+- **20 analysis tools**: macro, equity, TA, pro-trader frameworks
+- **Skills**: `/fin`, `/digest`, `/digest_ES`
+- **Scheduled tasks**: ES sentiment runs at 11am, 8pm, 11pm daily
+
+### IBKR Library (`ibkr/`)
+- Connection management (`connection.py`)
+- Contracts factory (`contracts.py`)
+- Market data + streaming (`market_data.py`, `streaming.py`)
+- Historical data (`futures_data.py`, `es_data.py`)
+- Storage (`data_store.py`)
+
+### Higher-Frequency Sentiment Stack (NEW — May 2026)
+Phase 1+2+4 of the multi-input ES signal framework. Foundation work for moving sentiment from 3x daily → 15-min granularity, plus three new ES-relevant inputs:
+
+| Component | Cadence | Output | Source |
+|---|---|---|---|
+| `tools/news_stream_continuous.py` | **Continuous** (clientId 27) | `data/news/headlines.db` (SQLite) | IBKR broadtape (7 providers) |
+| `tools/sentiment_intraday.py` | **Every 15 min** | `data/news/sentiment_intraday.csv` (5 windows × topic %) | Reads `headlines.db` |
+| `tools/mag7_breadth.py` | Every 5 min (clientId 28) | `data/es/mag7_breadth.csv` | IBKR / yfinance |
+| `tools/polymarket_signal.py` | On-demand (5-min upstream) | `data/es/polymarket_signals.csv` | `~/Github/market-tracker/data_cache/all_indicators.json` |
+| `tools/macro_calendar.py` | In-memory | `MacroCalendar.is_blackout_window(ts)` | `~/Github/macro_2/historical_data/earnings_calendar.csv` + computed BLS/BEA dates |
+
+VPS systemd units (under `systemd/`):
+- `ibkr-broadtape.service` — Restart=always
+- `ibkr-sentiment-15min.{service,timer}` — `OnCalendar=*:0/15`
+- `ibkr-mag7-breadth.{service,timer}` — `OnCalendar=*:0/5`
+
+**ES-trading inputs covered** (per user requirements):
+- Mega-cap movements → `mag7_breadth.py` (% above 5/20/50d MA, market-cap-weighted % chg)
+- Sentiment (war, rates, inflation, fiscal): `sentiment_intraday.py` (topic-tagged % per window) + `polymarket_signal.py` (Fed cut/hike, recession, fiscal expansion, geopolitics)
+- Macroeconomic releases: `macro_calendar.py` (FOMC, CPI, NFP, PCE, GDP, ISM PMI + mega-cap earnings)
+- Prediction markets: `polymarket_signal.py` (consumes market-tracker repo's launchd cache)
+
+**Pending**: Phase 3 (FinBERT/DistilRoBERTa NLP upgrade), Phase 5 (self-learning framework — online lexicon, weekly walk-forward refit, RL ensemble agent), backtest integration of new signals into `verify_strategy.py`.
+
+---
+
+## Recent Session Highlights (Apr 2026)
+
+### Combined Strategy v2 Discovery
+Built `_handle_mr_entry_combined()` with fully independent MR state (separate cooldown, trade counter, circuit breaker). Multi-param jump progression:
+
+| Step | Score | Trades | WR | PF |
+|------|-------|--------|-----|-----|
+| Composite only | -0.07 | 6 | 33% | 0.69 |
+| + Combined routing | -0.38 | 35 | 57% | 1.66 |
+| + MR stop 3.0× ATR | -0.20 | 34 | 59% | 1.54 |
+| + MR 1 trade/day | -0.15 | 23 | 70% | 2.43 |
+| + ATR threshold 1.8% | -0.07 | 6 | 33% | 0.69 |
+| + Multi-param jumps | -0.04 | 6 | 33% | 1.56 |
+| **+ ATR=1.6 MR-only** | **-0.03** | **6** | **83%** | **16.9** |
+
+### MR-Only Discovery
+Setting composite thresholds to 0.99 (effectively MR-only) with ATR=1.6 produced 6 trades with 83% WR and PF 16.9 — only $32 from breakeven on the war-extended dataset.
+
+### New Scripts Added
+- `scripts/backtest_mr_scalper.py` — Standalone scalper
+- `scripts/backtest_dual_system.py` — Equity-curve combiner
+- `scripts/compute_ml_entry_signal.py` — Walk-forward LightGBM
+- `scripts/walk_forward_validation.py` — Anchored 3-fold IS/OOS
 
 ---
 
@@ -165,150 +151,113 @@ Each report includes: equity curve, drawdown chart, trade log, and performance m
 
 ```
 IBKR/
-├── ibkr/                          # Core library modules
-│   ├── connection.py              # TWS connection management
-│   ├── contracts.py               # Contract definitions
-│   ├── market_data.py             # Market data requests
-│   ├── futures_data.py            # Futures-specific data handling
-│   ├── es_data.py                 # ES-specific utilities
-│   ├── data_store.py              # Data storage utilities
-│   └── yahoo_data.py              # Yahoo Finance fallback
+├── autoresearch/                  # ES strategy optimization (PRIMARY WORK)
+│   ├── es_strategy_config.py     # ONLY MUTABLE FILE
+│   ├── verify_strategy.py        # Backtest engine
+│   ├── batch_iterate.py          # Sweep runner
+│   ├── autoresearch-results.tsv  # Full iteration log (18K+ rows)
+│   ├── NEXT_STEPS.md             # Curated roadmap
+│   ├── STRATEGY_CONTEXT.md       # Architecture docs
+│   ├── SKILL.md                  # Iteration protocol
+│   └── SCORING.md                # Scoring formula
 │
-├── backtest/                      # Backtesting framework
-│   ├── engine.py                  # Core backtest engine
-│   ├── strategy.py                # Base strategy class + indicators
-│   ├── analytics.py               # Performance analytics
-│   ├── regime.py                  # Market regime detection
-│   ├── regime_strategies.py       # Regime-based strategies
-│   ├── report_generator.py        # HTML report generation
-│   └── strategies/                # Strategy implementations
-│       ├── es_scalp_momentum.py   # ES scalping strategy
-│       ├── es_4h.py               # ES 4-hour swing strategy
-│       └── gc_buy_dip.py          # GC buy-the-dip strategy
+├── dashboard/                     # React + FastAPI
+│   ├── server.py                 # FastAPI backend
+│   ├── frontend/                 # Vite + React + TS
+│   ├── start.sh                  # Auto-port launcher
+│   └── dashboard_specifications.md
+│
+├── tools/                         # 20 financial analysis tools
+│   ├── news_stream.py            # Multi-provider news aggregation
+│   ├── news_sentiment_nlp.py     # NLP sentiment engine
+│   └── (macro, equity, TA, pro-trader tools)
+│
+├── ibkr/                         # Core market data library
+│   ├── connection.py
+│   ├── contracts.py
+│   ├── market_data.py
+│   ├── streaming.py
+│   └── data_store.py
 │
 ├── scripts/                       # Executable scripts
-│   ├── download_futures_data.py   # Download futures OHLCV
-│   ├── extract_all_metrics.py     # Extract all data types
-│   ├── get_realtime_snapshot.py   # Real-time market snapshot
-│   ├── get_account_positions.py   # Export account positions
-│   └── get_positions_delayed.py   # Positions with delayed data
+│   ├── run_sentiment.py          # ES sentiment pipeline
+│   ├── ib_news_stream.py         # News streaming harness
+│   ├── update_es_data.py         # ES data refresher
+│   ├── backtest_mr_scalper.py    # Standalone MR scalper
+│   ├── backtest_dual_system.py   # Dual-system combiner
+│   ├── compute_ml_entry_signal.py # Walk-forward ML
+│   └── walk_forward_validation.py # OOS validation
 │
-├── data/                          # Data storage (~16 MB)
-│   ├── es/                        # ES futures data
-│   ├── gc/                        # GC futures data
-│   ├── si/                        # SI futures data
-│   ├── all_realtime_snapshots.json
-│   ├── extraction_report.txt
-│   └── *.csv                      # Account exports
+├── data/
+│   ├── es/                       # ES OHLCV + ML features
+│   ├── gc/                       # Gold (less active)
+│   ├── si/                       # Silver (less active)
+│   └── news/                     # Sentiment + headlines
 │
-├── reports/                       # Generated HTML reports
-│   ├── es_scalp_report.html
-│   ├── es_4h_report.html
-│   └── gc_buy_dip_report.html
-│
-└── examples/                      # Usage examples
-    ├── get_historical_data.py
-    ├── stream_prices.py
-    └── get_precious_metals.py
+├── guides/                        # Interpretation/framework guides
+├── .claude/skills/               # /fin, /digest, /digest_ES
+├── AR_exp_log.md                 # Complete experiment history
+├── CLAUDE.md                     # Project instructions
+└── STATUS.md                     # This file
 ```
 
 ---
 
-## Data Availability Notes
+## VPS Deployment
 
-### AGGTRADES
-- IBKR API does not provide an "AGGTRADES" data type
-- For aggregated trade data, use `reqHistoricalData` with `TRADES`
-- Tick-by-tick data available via `reqHistoricalTicks` (limited history)
-
-### Open Interest Granularity
-- **Real-time OI:** Point-in-time daily value (tick 588)
-- **Historical OI:** NOT available via IBKR API
-- **Alternatives:**
-  - CME daily OI reports (free at cmegroup.com)
-  - Quandl/Nasdaq Data Link: ~$30-50/month
-  - Barchart: ~$25-100/month
-  - Build your own database from daily snapshots
-
-### API Market Data Subscription
-- Error 10089 indicates API market data subscription is required
-- TWS market data subscription ≠ API market data access
-- Enable API data sharing in Account Management portal
-- Alternative: Use delayed data with `ib.reqMarketDataType(3)`
+- **URL**: `http://187.77.136.160/IBKR_KZ/`
+- **IB Gateway**: Docker container, socat 4003 (not 4001 — VPS quirk)
+- **Dashboard service**: `ibkr-dashboard.service`
+- **Health monitoring**: systemd timer + Telegram alerts
+- **Telegram bots**:
+  - `@FAzzh_CC_bot` (different repo: `Finl_Agent_CC`)
+  - VPS interactive surface for trading commands
+- **Setup docs**: `VPS_Hostinger_setup.md`, `IB_Docker_VPS/README.md`
 
 ---
 
-## Running Scripts
+## Scheduled Tasks (when Claude Code is active)
 
-### Prerequisites
-```bash
-pip install ib_insync pandas numpy
-```
+| Task | Schedule | Purpose |
+|------|----------|---------|
+| `es-sentiment-11am` | 11:03 AM daily | `/digest_ES` + `run_sentiment.py` |
+| `es-sentiment-8pm` | 8:02 PM daily | `/digest_ES` + `run_sentiment.py` |
+| `es-sentiment-11pm` | 11:04 PM daily | `/digest_ES` + `run_sentiment.py` |
 
-### Connect to TWS
-1. Open TWS or IB Gateway
-2. Enable API connections (Edit → Global Configuration → API → Settings)
-3. Note the port (7496 for TWS, 4001 for IB Gateway)
-
-### Download Data
-```bash
-python scripts/download_futures_data.py
-python scripts/extract_all_metrics.py
-python scripts/get_realtime_snapshot.py
-```
-
-### Run Backtests
-```bash
-python backtest/strategies/es_scalp_momentum.py
-python backtest/strategies/es_4h.py
-python backtest/strategies/gc_buy_dip.py
-
-# Generate all HTML reports
-python backtest/report_generator.py
-```
-
-### Export Account Data
-```bash
-python scripts/get_account_positions.py
-python scripts/get_positions_delayed.py  # For delayed data (no subscription needed)
-```
+Output: `data/news/sentiment_analysis.json`, `data/news/sentiment_timeseries.csv`
 
 ---
 
-## Key Findings
+## Key Documents
 
-1. **ES Kris Approach (Bullish) is the best ES strategy** (PF 1.49, +$472/trade)
-   - Based on your actual trading approach with 1-4 day holds
-   - 54.8% win rate with tight stops (0.6%) and trailing
-   - Multi-timeframe RSI confirmation prevents overtrading
-   - Long-only in bullish regime captures the upward drift
+| File | Purpose |
+|------|---------|
+| `AR_exp_log.md` | Complete experiment history (586 lines, 34 sweep batches) |
+| `CLAUDE.md` | Project instructions for Claude Code |
+| `autoresearch/NEXT_STEPS.md` | Current roadmap + exhausted approaches |
+| `autoresearch/STRATEGY_CONTEXT.md` | Strategy architecture + parameter ranges |
+| `autoresearch/SKILL.md` | Iteration protocol |
+| `autoresearch/SCORING.md` | Scoring formula + diagnostic flowchart |
+| `dashboard/dashboard_specifications.md` | Dashboard architecture |
+| `VPS_Hostinger_setup.md` | VPS deployment guide |
+| `DATA_SOURCES.md` | FRED series + CSV data map |
+| `docs/BACKTEST_GUIDE.md` | Backtesting methodology |
+| `docs/ES_DATA_SOURCES.md` | ES data pipeline docs |
 
-2. **GC Buy-the-Dip remains profitable** (+1.48% return, PF 1.08)
-   - Gold has clearer trends than ES
-   - Long-only approach works well in bull markets
+---
 
-3. **Shorts underperform in the test period** (Jan 2025 - Jan 2026)
-   - ES rose 18.8% (5873 → 6980) during this period
-   - Short-only strategies lost money (bearish: PF 0.53)
-   - Neutral mode dragged down by shorts
+## Active Constraints & Bottlenecks
 
-4. **Key strategy parameters from your approach:**
-   - **Stops:** 0.4-0.8% (30-60 pts) from entry
-   - **Targets:** 2-5R (60-150 pts)
-   - **Trailing:** Move to BE at 1R, then trail 1:1
-   - **Hold time:** 1-4 days
-   - **RSI:** Check on ALL timeframes before entry
-   - **Avoid:** Buying when 4H RSI overbought
+1. **War period data ends Apr 2 2026** — strategy collapsed; needs forward data
+2. **Commission drag**: $4.50 round-trip × min 5 trades = ~$30 floor on $100K
+3. **Min trades constraint**: Score formula requires ≥5 trades; pure quality plays (2-3 trades, 100% WR) get penalized
+4. **MR scalper integration friction**: Standalone +4.25%, integrated with shared state -0.30; v2 with independent state -0.03
 
-5. **Regime awareness matters**
-   - Bullish-only approach outperforms neutral
-   - Use ES_stance_history.xlsx for regime tracking
-   - Current stance: Neutral (since Jan 9, 2026)
+---
 
-6. **Data Quality**
-   - ~66% of 1-minute bars have zero volume (outside RTH)
-   - 5-minute data is cleaner and recommended for strategies
+## Next Priority Actions
 
-7. **Market Data Subscriptions**
-   - Error 10089: API market data subscription required separately
-   - Delayed data (15-min) is free and sufficient for position monitoring
+1. **Forward data collection**: Update ES data Apr 3 → present to capture Phase 3 recovery
+2. **Live MR scalper paper trading**: Standalone +4.25% has actionable edge
+3. **Regime-switching capital allocator**: Dynamic % allocation based on ATR/VIX
+4. **Reduce commission floor**: IBKR Pro tier or relax min-trade constraint to 3

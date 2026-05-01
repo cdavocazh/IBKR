@@ -264,6 +264,28 @@ def load_hourly_regime_features():
         return {}
 
 
+def load_ml_entry_signal():
+    """Load ML entry classifier predictions (walk-forward, no lookahead).
+    Returns dict of date -> {ml_long_prob, ml_short_prob, ml_confidence}.
+    """
+    path = PROJECT_ROOT / "data" / "es" / "ml_entry_signal.csv"
+    if not path.exists():
+        return {}
+    try:
+        df = pd.read_csv(path, parse_dates=["date"])
+        signals = {}
+        for _, row in df.iterrows():
+            d = row["date"].date() if hasattr(row["date"], "date") else row["date"]
+            signals[d] = {
+                "ml_long_prob": float(row["ml_long_prob"]),
+                "ml_short_prob": float(row["ml_short_prob"]),
+                "ml_confidence": float(row["ml_confidence"]),
+            }
+        return signals
+    except Exception:
+        return {}
+
+
 def load_cusum_events():
     """Load CUSUM event filter signals.
 
@@ -343,6 +365,21 @@ def load_es_data(use_extended=None, config_path=None):
     return df_5m
 
 
+def load_es_data_4h():
+    """Load ES data resampled to 4-hour bars for multi-timeframe mode."""
+    data_path = PROJECT_ROOT / "data" / "es" / "ES_1min.parquet"
+    if not data_path.exists():
+        return pd.DataFrame()
+    df = pd.read_parquet(data_path)
+    df_4h = df.resample("4h").agg({
+        "open": "first", "high": "max", "low": "min",
+        "close": "last", "volume": "sum",
+    }).dropna()
+    has_range = (df_4h["high"] - df_4h["low"]) > 0
+    df_4h = df_4h[has_range].copy()
+    return df_4h
+
+
 def _load_daily_csv(filename, value_col, date_col="date"):
     """Load a daily CSV from macro_2, return {date: value} dict for fast lookup."""
     path = MACRO_PATH / filename
@@ -359,6 +396,37 @@ def _load_daily_csv(filename, value_col, date_col="date"):
     return result
 
 
+def _load_ohlcv_csv(filename, prefix):
+    """Load an OHLCV CSV from macro_2, return {date: {open, high, low, close, pct_change}} dict."""
+    path = MACRO_PATH / filename
+    if not path.exists():
+        return {}
+    df = pd.read_csv(path)
+    date_col = "date" if "date" in df.columns else df.columns[0]
+    df["_date"] = pd.to_datetime(df[date_col], errors="coerce")
+    df = df.dropna(subset=["_date"])
+    close_col = f"{prefix}_close"
+    if close_col not in df.columns:
+        # Try without prefix
+        for c in df.columns:
+            if "close" in c.lower():
+                close_col = c
+                break
+    if close_col not in df.columns:
+        return {}
+    df["_pct_change"] = df[close_col].astype(float).pct_change() * 100
+    df["_sma5"] = df[close_col].astype(float).rolling(5).mean()
+    result = {}
+    for _, row in df.iterrows():
+        d = row["_date"].date() if hasattr(row["_date"], "date") else row["_date"]
+        result[d] = {
+            "close": float(row[close_col]),
+            "pct_change": float(row["_pct_change"]) if pd.notna(row["_pct_change"]) else 0.0,
+            "sma5": float(row["_sma5"]) if pd.notna(row["_sma5"]) else float(row[close_col]),
+        }
+    return result
+
+
 def load_macro_data():
     """Load all macro data into fast-lookup dicts."""
     return {
@@ -368,6 +436,9 @@ def load_macro_data():
         "copper": _load_daily_csv("copper.csv", "copper_price"),
         "yield_10y": _load_daily_csv("10y_treasury_yield.csv", "10y_yield"),
         "yield_2y": _load_daily_csv("us_2y_yield.csv", "us_2y_yield"),
+        "crude_oil": _load_ohlcv_csv("crude_oil_ohlcv.csv", "crude_oil"),
+        "gold": _load_ohlcv_csv("gold_ohlcv.csv", "gold"),
+        "cboe_skew": _load_daily_csv("cboe_skew.csv", "cboe_skew"),
     }
 
 
@@ -428,7 +499,7 @@ class ESAutoResearchStrategy:
     Step 2: Apply regime-specific parameters for entry/exit
     """
 
-    def __init__(self, cfg, macro_data, nlp_regime=None, digest_ctx=None, daily_trend=None, daily_sentiment=None, garch_forecast=None, particle_regime=None, cusum_events=None, cusum_directions=None, tsfresh_signal=None, hourly_regime=None):
+    def __init__(self, cfg, macro_data, nlp_regime=None, digest_ctx=None, daily_trend=None, daily_sentiment=None, garch_forecast=None, particle_regime=None, cusum_events=None, cusum_directions=None, tsfresh_signal=None, hourly_regime=None, ml_entry_signal=None, trade_only_dates=None):
         self.cfg = cfg
         self.macro = macro_data
         self.nlp_regime = nlp_regime or {"regime": "SIDEWAYS", "net_sentiment": 0.0, "confidence": 0.0}
@@ -441,7 +512,16 @@ class ESAutoResearchStrategy:
         self.cusum_directions = cusum_directions or {}
         self.tsfresh_signal = tsfresh_signal or {}
         self.hourly_regime = hourly_regime or {}
+        self.ml_entry_signal = ml_entry_signal or {}
+        self.trade_only_dates = trade_only_dates  # If set, only enter trades on these dates
         self._cusum_last_event_bar = -999  # Track bars since last CUSUM event
+        self._oil_shock_active = False
+        self._skew_panic = False
+        self._gold_riskoff = False
+        self._mr_mode_active = False
+        self._mr_max_hold = 24
+        self._mr_rsi_exit = 60
+        self._mr_rsi_short_exit = 40
         # Bar scaling: when using hourly data, divide bar-count params by scale factor
         self._bar_scale = getattr(cfg, "BAR_SCALE_FACTOR", 1) if getattr(cfg, "USE_EXTENDED_DATA", False) else 1
         buf_size = max(250, getattr(cfg, "SMA_200", 200) + 50, cfg.SMA_SLOW + 50)
@@ -476,6 +556,13 @@ class ESAutoResearchStrategy:
         # Exp 2: Max trades per day tracking
         self._trades_today = 0
         self._trades_today_date = None
+
+        # Combined strategy: independent MR state (separate from composite)
+        self._mr_bars_since_trade = 999  # MR's own cooldown counter
+        self._mr_trades_today = 0         # MR's own daily trade counter
+        self._mr_trades_today_date = None
+        self._mr_consecutive_losses = 0   # MR's own loss streak
+        self._mr_loss_cooldown = 0        # MR's own circuit breaker cooldown
 
     def _scaled_bars(self, bar_count):
         """Scale bar counts for hourly data (divide by BAR_SCALE_FACTOR)."""
@@ -758,6 +845,98 @@ class ESAutoResearchStrategy:
         elif vix < cfg.VIX_TIER_6:
             return 6, "career"
         return 7, "homerun"
+
+    def _get_vix_model_override(self, timestamp):
+        """VIX Model Switching: return override params based on VIX level."""
+        cfg = self.cfg
+        if not getattr(cfg, "VIX_MODEL_SWITCH_ENABLED", False):
+            return None
+        import datetime as _dtvm
+        d = timestamp.date() if hasattr(timestamp, "date") else timestamp
+        if isinstance(d, _dtvm.datetime):
+            d = d.date()
+        vix = _lookup_macro(self.macro.get("vix", {}), d)
+        if vix is None:
+            return None
+        low_thresh = getattr(cfg, "VIX_MODEL_LOW_THRESHOLD", 20.0)
+        high_thresh = getattr(cfg, "VIX_MODEL_HIGH_THRESHOLD", 30.0)
+        if vix < low_thresh:
+            prefix = "VLOW"
+        elif vix > high_thresh:
+            prefix = "VHIGH"
+        else:
+            prefix = "VMED"
+        return {
+            "composite_threshold": getattr(cfg, f"{prefix}_COMPOSITE_THRESHOLD", 0.40),
+            "stop_atr_mult": getattr(cfg, f"{prefix}_STOP_ATR_MULT", 2.0),
+            "tp_atr_mult": getattr(cfg, f"{prefix}_TP_ATR_MULT", 2.0),
+            "max_hold_bars": getattr(cfg, f"{prefix}_MAX_HOLD_BARS", 288),
+            "risk_mult": getattr(cfg, f"{prefix}_RISK_MULT", 0.4),
+            "allowed_side": getattr(cfg, f"{prefix}_ALLOWED_SIDE", "BOTH"),
+            "cooldown_bars": getattr(cfg, f"{prefix}_COOLDOWN_BARS", 96),
+            "w_rsi": getattr(cfg, f"{prefix}_WEIGHT_RSI", 0.15),
+            "w_trend": getattr(cfg, f"{prefix}_WEIGHT_TREND", 0.20),
+            "w_momentum": getattr(cfg, f"{prefix}_WEIGHT_MOMENTUM", 0.13),
+            "w_bb": getattr(cfg, f"{prefix}_WEIGHT_BB", 0.10),
+            "w_vix": getattr(cfg, f"{prefix}_WEIGHT_VIX", 0.10),
+            "w_macro": getattr(cfg, f"{prefix}_WEIGHT_MACRO", 0.10),
+        }
+
+    def _compute_adaptive_max_hold(self, bar, rp):
+        """Adaptive hold period based on ATR regime + VIX level."""
+        cfg = self.cfg
+        base_hold = self._scaled_bars(rp["max_hold_bars"])
+
+        if not getattr(cfg, "ADAPTIVE_HOLD_ENABLED", False):
+            return base_hold
+
+        import datetime as _dtah
+        ah_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
+        if isinstance(ah_date, _dtah.datetime):
+            ah_date = ah_date.date()
+
+        daily = self.daily_trend.get(ah_date)
+        if daily is None:
+            for off in range(1, 5):
+                daily = self.daily_trend.get(ah_date - _dtah.timedelta(days=off))
+                if daily:
+                    break
+
+        max_hold = base_hold
+
+        # 1. ATR regime scaling
+        if daily and daily.get("daily_atr") and daily.get("close", 0) > 0:
+            atr_pct = daily["daily_atr"] / daily["close"] * 100
+            low_atr = getattr(cfg, "ADAPTIVE_HOLD_LOW_ATR_PCT", 1.0)
+            high_atr = getattr(cfg, "ADAPTIVE_HOLD_HIGH_ATR_PCT", 2.0)
+            if atr_pct < low_atr:
+                max_hold = int(base_hold * getattr(cfg, "ADAPTIVE_HOLD_LOW_ATR_MULT", 1.5))
+            elif atr_pct > high_atr:
+                max_hold = int(base_hold * getattr(cfg, "ADAPTIVE_HOLD_HIGH_ATR_MULT", 0.3))
+
+            # 2. Swing/Scalp mode detection
+            swing_thresh = getattr(cfg, "ADAPTIVE_HOLD_SWING_ATR_PCT", 1.0)
+            scalp_thresh = getattr(cfg, "ADAPTIVE_HOLD_SCALP_ATR_PCT", 2.0)
+            if atr_pct < swing_thresh:
+                max_hold = max(max_hold, self._scaled_bars(144))  # At least 12h in swing
+            elif atr_pct > scalp_thresh:
+                scalp_max = self._scaled_bars(getattr(cfg, "ADAPTIVE_HOLD_SCALP_MAX", 48))
+                max_hold = min(max_hold, scalp_max)
+
+        # 3. VIX-based hold cap
+        vix = _lookup_macro(self.macro.get("vix", {}), ah_date)
+        if vix is not None:
+            vix_low = getattr(cfg, "VIX_MODEL_LOW_THRESHOLD", 20.0)
+            vix_high = getattr(cfg, "VIX_MODEL_HIGH_THRESHOLD", 30.0)
+            if vix < vix_low:
+                vix_cap = self._scaled_bars(getattr(cfg, "ADAPTIVE_HOLD_VIX_LOW_MAX", 576))
+            elif vix > vix_high:
+                vix_cap = self._scaled_bars(getattr(cfg, "ADAPTIVE_HOLD_VIX_HIGH_MAX", 48))
+            else:
+                vix_cap = self._scaled_bars(getattr(cfg, "ADAPTIVE_HOLD_VIX_MED_MAX", 288))
+            max_hold = min(max_hold, vix_cap)
+
+        return max(self._scaled_bars(getattr(cfg, "MIN_HOLD_BARS", 24)), max_hold)
 
     def _compute_vix_score(self, side, vix):
         """VIX-based scoring incorporating mean-reversion framework.
@@ -1123,7 +1302,225 @@ class ESAutoResearchStrategy:
                     elif side == "SHORT" and mom_z < -0.5:
                         score += hourly_mom_boost * min(1.0, abs(mom_z) / 2.0)
 
+        # ML entry classifier signal (walk-forward trained, no lookahead)
+        ml_weight = getattr(cfg, "ML_ENTRY_SIGNAL_WEIGHT", 0.0)
+        if ml_weight > 0 and self.ml_entry_signal:
+            import datetime as _dtml
+            ml_d = timestamp.date() if hasattr(timestamp, "date") else timestamp
+            if isinstance(ml_d, _dtml.datetime):
+                ml_d = ml_d.date()
+            ml_val = self.ml_entry_signal.get(ml_d)
+            if ml_val is None:
+                for off in range(1, 5):
+                    ml_val = self.ml_entry_signal.get(ml_d - _dtml.timedelta(days=off))
+                    if ml_val is not None:
+                        break
+            if ml_val is not None:
+                ml_conf = ml_val["ml_confidence"]
+                ml_conf_gate = getattr(cfg, "ML_ENTRY_CONFIDENCE_GATE", 0.1)
+                if ml_conf >= ml_conf_gate:
+                    if side == "LONG":
+                        ml_score = max(0.0, (ml_val["ml_long_prob"] - 0.5) * 2)
+                    else:
+                        ml_score = max(0.0, (ml_val["ml_short_prob"] - 0.5) * 2)
+                    score += ml_weight * ml_score
+
         return min(1.0, max(0.0, score))
+
+    def _handle_mr_entry(self, engine, bar, atr, cfg, mr_date):
+        """Mean-reversion entry for high-vol days.
+
+        Buy when RSI(12) < 25 (oversold bounce), exit when RSI > 60.
+        Optionally short when RSI > 75 (overbought fade).
+        Quick holds (max 2 hours), small positions.
+        """
+        # Check cooldown
+        effective_cooldown = self._scaled_bars(getattr(cfg, "COOLDOWN_BARS", 36))
+        if self.bars_since_last_trade < effective_cooldown:
+            return
+
+        # Consecutive loss circuit breaker
+        if self._loss_circuit_cooldown_remaining > 0:
+            return
+
+        # Max MR trades per day
+        if getattr(cfg, "MR_MODE_MAX_TRADES_DAY", 3) > 0:
+            if self._trades_today_date != mr_date:
+                self._trades_today_date = mr_date
+                self._trades_today = 0
+            if self._trades_today >= getattr(cfg, "MR_MODE_MAX_TRADES_DAY", 3):
+                return
+
+        if not self._is_entry_allowed(bar.timestamp):
+            return
+
+        # Compute short-period RSI for mean reversion
+        mr_rsi_period = getattr(cfg, "MR_MODE_RSI_PERIOD", 12)
+        if len(self.closes) < mr_rsi_period + 2:
+            return
+        mr_rsi = compute_rsi(list(self.closes), mr_rsi_period)
+        if mr_rsi is None:
+            return
+
+        mr_side = getattr(cfg, "MR_MODE_SIDE", "LONG")
+        mr_entry_rsi = getattr(cfg, "MR_MODE_RSI_ENTRY", 25)
+        mr_short_entry_rsi = getattr(cfg, "MR_MODE_RSI_SHORT_ENTRY", 75)
+        side = None
+
+        # Long entry: RSI oversold
+        if mr_rsi < mr_entry_rsi and mr_side in ("LONG", "BOTH"):
+            side = "LONG"
+        # Short entry: RSI overbought
+        elif mr_rsi > mr_short_entry_rsi and mr_side in ("SHORT", "BOTH"):
+            side = "SHORT"
+
+        if side is None:
+            return
+
+        # Position sizing
+        mr_risk_mult = getattr(cfg, "MR_MODE_RISK_MULT", 0.3)
+        mr_stop_atr = getattr(cfg, "MR_MODE_STOP_ATR", 1.5)
+        stop_distance = atr * mr_stop_atr
+        if stop_distance <= 0:
+            return
+
+        contracts = self._compute_position_size(stop_distance, mr_risk_mult)
+        if contracts <= 0:
+            return
+
+        # Set stop and TP
+        if side == "LONG":
+            stop = bar.close - stop_distance
+            tp = bar.close + stop_distance * 2.0  # 2:1 R:R
+        else:
+            stop = bar.close + stop_distance
+            tp = bar.close - stop_distance * 2.0
+
+        # Execute
+        if side == "LONG":
+            engine.buy(contracts)
+        else:
+            engine.sell(contracts)
+
+        self.entry_price = bar.close
+        self.stop_price = stop
+        self.tp_price = tp
+        self.risk_points = stop_distance
+        self.current_side = side
+        self.bars_since_entry = 0
+        self.bars_since_last_trade = 0
+        self._trades_today += 1
+        self.trailing_active = False
+
+        # Store MR-specific params for position management
+        self._mr_mode_active = True
+        self._mr_max_hold = self._scaled_bars(getattr(cfg, "MR_MODE_MAX_HOLD", 24))
+        self._mr_rsi_exit = getattr(cfg, "MR_MODE_RSI_EXIT", 60)
+        self._mr_rsi_short_exit = getattr(cfg, "MR_MODE_RSI_SHORT_EXIT", 40)
+
+    def _handle_mr_entry_combined(self, engine, bar, atr, cfg, mr_date):
+        """Combined strategy MR entry — uses independent state from composite.
+
+        Key differences from legacy _handle_mr_entry:
+        - Uses self._mr_bars_since_trade (not shared bars_since_last_trade)
+        - Uses self._mr_trades_today (not shared _trades_today)
+        - Uses self._mr_loss_cooldown (not shared _loss_circuit_cooldown_remaining)
+        - Uses COMBINED_MR_ENTRY_UTC hours (US hours, not Asia)
+        - Uses COMBINED_MR_TP_ATR (sweepable)
+        """
+        # MR's own cooldown (independent of composite)
+        mr_cooldown = self._scaled_bars(getattr(cfg, "COMBINED_MR_COOLDOWN_BARS", 6))
+        if self._mr_bars_since_trade < mr_cooldown:
+            return
+
+        # MR's own circuit breaker (independent of composite)
+        if self._mr_loss_cooldown > 0:
+            return
+
+        # MR's own daily trade counter (independent of composite)
+        mr_max_trades = getattr(cfg, "MR_MODE_MAX_TRADES_DAY", 3)
+        if self._mr_trades_today_date != mr_date:
+            self._mr_trades_today_date = mr_date
+            self._mr_trades_today = 0
+        if self._mr_trades_today >= mr_max_trades:
+            return
+
+        # MR entry hours: US hours (not Asia hours used by composite)
+        mr_utc_start = getattr(cfg, "COMBINED_MR_ENTRY_UTC_START", 14)
+        mr_utc_end = getattr(cfg, "COMBINED_MR_ENTRY_UTC_END", 20)
+        ts = bar.timestamp
+        if hasattr(ts, "hour"):
+            # Convert to UTC from Chicago (add 6 for approximate CDT)
+            utc_hour = ts.hour + 6
+            if utc_hour >= 24:
+                utc_hour -= 24
+            if utc_hour < mr_utc_start or utc_hour >= mr_utc_end:
+                return
+
+        # Compute short-period RSI for mean reversion
+        mr_rsi_period = getattr(cfg, "MR_MODE_RSI_PERIOD", 12)
+        if len(self.closes) < mr_rsi_period + 2:
+            return
+        mr_rsi = compute_rsi(list(self.closes), mr_rsi_period)
+        if mr_rsi is None:
+            return
+
+        mr_side = getattr(cfg, "MR_MODE_SIDE", "LONG")
+        mr_entry_rsi = getattr(cfg, "MR_MODE_RSI_ENTRY", 25)
+        mr_short_entry_rsi = getattr(cfg, "MR_MODE_RSI_SHORT_ENTRY", 75)
+        side = None
+
+        if mr_rsi < mr_entry_rsi and mr_side in ("LONG", "BOTH"):
+            side = "LONG"
+        elif mr_rsi > mr_short_entry_rsi and mr_side in ("SHORT", "BOTH"):
+            side = "SHORT"
+
+        if side is None:
+            return
+
+        # Position sizing
+        mr_risk_mult = getattr(cfg, "MR_MODE_RISK_MULT", 0.4)
+        mr_stop_atr = getattr(cfg, "MR_MODE_STOP_ATR", 1.5)
+        stop_distance = atr * mr_stop_atr
+        if stop_distance <= 0:
+            return
+
+        contracts = self._compute_position_size(stop_distance, mr_risk_mult)
+        if contracts <= 0:
+            return
+
+        # Set stop and TP using COMBINED_MR_TP_ATR (sweepable)
+        mr_tp_atr = getattr(cfg, "COMBINED_MR_TP_ATR", 2.0)
+        if side == "LONG":
+            stop = bar.close - stop_distance
+            tp = bar.close + stop_distance * mr_tp_atr / mr_stop_atr
+        else:
+            stop = bar.close + stop_distance
+            tp = bar.close - stop_distance * mr_tp_atr / mr_stop_atr
+
+        # Execute
+        if side == "LONG":
+            engine.buy(contracts)
+        else:
+            engine.sell(contracts)
+
+        self.entry_price = bar.close
+        self.stop_price = stop
+        self.tp_price = tp
+        self.risk_points = stop_distance
+        self.current_side = side
+        self.bars_since_entry = 0
+        self.trailing_active = False
+
+        # Update MR-independent state (NOT shared composite state)
+        self._mr_bars_since_trade = 0
+        self._mr_trades_today += 1
+
+        # Store MR-specific params for position management
+        self._mr_mode_active = True
+        self._mr_max_hold = self._scaled_bars(getattr(cfg, "MR_MODE_MAX_HOLD", 24))
+        self._mr_rsi_exit = getattr(cfg, "MR_MODE_RSI_EXIT", 55)
+        self._mr_rsi_short_exit = getattr(cfg, "MR_MODE_RSI_SHORT_EXIT", 45)
 
     def _compute_position_size(self, stop_distance, risk_mult=1.0):
         if stop_distance <= 0:
@@ -1131,6 +1528,10 @@ class ESAutoResearchStrategy:
         risk_dollars = stop_distance * self.cfg.ES_POINT_VALUE
         adjusted_risk = self.cfg.RISK_PER_TRADE * risk_mult
         contracts = int(adjusted_risk / risk_dollars)
+        # Skip trade if 1 contract risk exceeds max allowed % of capital
+        max_risk_pct = getattr(self.cfg, "MAX_SINGLE_TRADE_RISK_PCT", 10.0)
+        if contracts < 1 and risk_dollars > self.cfg.INITIAL_CAPITAL * max_risk_pct / 100:
+            return 0  # Risk too high relative to capital — skip trade
         return max(1, contracts)
 
     def on_bar(self, engine, bar):
@@ -1141,7 +1542,12 @@ class ESAutoResearchStrategy:
         self.volumes.append(bar.volume)
         self.bars_since_last_trade += 1
 
-        # Consecutive loss circuit breaker cooldown
+        # Independent MR state ticks (always, regardless of position)
+        self._mr_bars_since_trade += 1
+        if self._mr_loss_cooldown > 0:
+            self._mr_loss_cooldown -= 1
+
+        # Consecutive loss circuit breaker cooldown (composite)
         if self._loss_circuit_cooldown_remaining > 0:
             self._loss_circuit_cooldown_remaining -= 1
 
@@ -1180,6 +1586,53 @@ class ESAutoResearchStrategy:
             self._manage_position(engine, bar, atr)
             return
 
+        # ── COMBINED STRATEGY ROUTING ──
+        # Check if this is a high-vol day and route to MR scalper BEFORE
+        # composite gates (vol gate, cooldown, circuit breaker) can block it.
+        # MR has fully independent state — its own cooldown, trade counter,
+        # and circuit breaker, so composite restrictions don't interfere.
+        if getattr(cfg, "COMBINED_STRATEGY_ENABLED", False):
+            import datetime as _dtmr
+            mr_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
+            if isinstance(mr_date, _dtmr.datetime):
+                mr_date = mr_date.date()
+            mr_daily = self.daily_trend.get(mr_date)
+            if mr_daily is None:
+                for _off in range(1, 5):
+                    mr_daily = self.daily_trend.get(mr_date - _dtmr.timedelta(days=_off))
+                    if mr_daily:
+                        break
+            mr_atr_pct = None
+            if mr_daily and mr_daily.get("daily_atr") and mr_daily.get("close", 0) > 0:
+                mr_atr_pct = mr_daily["daily_atr"] / mr_daily["close"] * 100
+
+            mr_thresh = getattr(cfg, "COMBINED_MR_ATR_THRESHOLD", 1.5)
+            if mr_atr_pct is not None and mr_atr_pct >= mr_thresh:
+                # HIGH-VOL DAY → MR scalper with independent state
+                self._handle_mr_entry_combined(engine, bar, atr, cfg, mr_date)
+                return  # Skip composite logic entirely on high-vol days
+
+        # ── Legacy MR mode (if someone still uses MR_MODE_ENABLED directly) ──
+        if getattr(cfg, "MR_MODE_ENABLED", False):
+            import datetime as _dtmr2
+            mr_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
+            if isinstance(mr_date, _dtmr2.datetime):
+                mr_date = mr_date.date()
+            mr_daily = self.daily_trend.get(mr_date)
+            if mr_daily is None:
+                for _off in range(1, 5):
+                    mr_daily = self.daily_trend.get(mr_date - _dtmr2.timedelta(days=_off))
+                    if mr_daily:
+                        break
+            mr_atr_pct = None
+            if mr_daily and mr_daily.get("daily_atr") and mr_daily.get("close", 0) > 0:
+                mr_atr_pct = mr_daily["daily_atr"] / mr_daily["close"] * 100
+            mr_thresh = getattr(cfg, "MR_MODE_ATR_PCT", 1.5)
+            if mr_atr_pct is not None and mr_atr_pct >= mr_thresh:
+                self._handle_mr_entry(engine, bar, atr, cfg, mr_date)
+                return
+
+        # ── Composite strategy gates (only reached on normal-vol days) ──
         effective_cooldown = self._get_adaptive_cooldown()
         if self.bars_since_last_trade < effective_cooldown:
             return
@@ -1212,6 +1665,15 @@ class ESAutoResearchStrategy:
         if self._daily_circuit_tripped:
             return
 
+        # Trade-only-dates gate (multi-TF: only enter on designated days)
+        if self.trade_only_dates is not None:
+            import datetime as _dtgate
+            gate_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
+            if isinstance(gate_date, _dtgate.datetime):
+                gate_date = gate_date.date()
+            if gate_date not in self.trade_only_dates:
+                return
+
         # ── Structural experiment gates ──
         import datetime as _dtexp
         exp_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
@@ -1228,6 +1690,52 @@ class ESAutoResearchStrategy:
                     break
         if _exp_daily and _exp_daily.get("daily_atr") and _exp_daily.get("close", 0) > 0:
             _daily_atr_pct = _exp_daily["daily_atr"] / _exp_daily["close"] * 100
+
+        # ── Oil shock gate: disable shorts when oil surges ──
+        if getattr(cfg, "OIL_SHOCK_GATE_ENABLED", False):
+            oil_data = self.macro.get("crude_oil", {})
+            oil = None
+            for _off in range(0, 5):
+                oil = oil_data.get(exp_date - _dtexp.timedelta(days=_off))
+                if oil:
+                    break
+            if oil is not None:
+                oil_move = abs(oil["pct_change"])
+                oil_thresh = getattr(cfg, "OIL_SHOCK_THRESHOLD_PCT", 3.0)
+                if oil_move > oil_thresh:
+                    if getattr(cfg, "OIL_SHOCK_HALT_ALL", False):
+                        return  # Halt all trading during oil shock
+                    # Otherwise just block shorts — oil shocks cause whipsaw bounces
+                    self._oil_shock_active = True
+                else:
+                    self._oil_shock_active = False
+
+        # ── CBOE Skew gate: institutional panic detection ──
+        if getattr(cfg, "SKEW_GATE_ENABLED", False):
+            skew_data = self.macro.get("cboe_skew", {})
+            skew = _lookup_macro(skew_data, exp_date) if skew_data else None
+            if skew is not None:
+                skew_thresh = getattr(cfg, "SKEW_PANIC_THRESHOLD", 140.0)
+                if skew > skew_thresh:
+                    self._skew_panic = True
+                else:
+                    self._skew_panic = False
+
+        # ── Gold surge gate: risk-off flow detection ──
+        if getattr(cfg, "GOLD_RISKOFF_GATE_ENABLED", False):
+            gold_data = self.macro.get("gold", {})
+            gold = None
+            for _off in range(0, 5):
+                gold = gold_data.get(exp_date - _dtexp.timedelta(days=_off))
+                if gold:
+                    break
+            if gold is not None:
+                gold_move = gold["pct_change"]
+                gold_thresh = getattr(cfg, "GOLD_SURGE_THRESHOLD_PCT", 2.0)
+                if gold_move > gold_thresh:
+                    self._gold_riskoff = True
+                else:
+                    self._gold_riskoff = False
 
         # Exp 1: Volatility regime gate
         _vol_gate_active = False
@@ -1253,6 +1761,11 @@ class ESAutoResearchStrategy:
         regime = self._classify_regime(bar.timestamp)
         rp = self._get_regime_params(regime)
 
+        # VIX Model Switch: override regime params if enabled
+        vix_override = self._get_vix_model_override(bar.timestamp)
+        if vix_override is not None:
+            rp = {**rp, **vix_override}
+
         # Step 1b: REGIME-SPECIFIC ENTRY PHILOSOPHY
         # Bullish → BUY THE DIP (wait for pullbacks, then go long)
         # Bearish → SELL THE RIP (wait for rallies that fail, then go short)
@@ -1262,6 +1775,16 @@ class ESAutoResearchStrategy:
         # In BEAR, we ONLY go short but on bounces (RSI overbought).
         # In SIDEWAYS, we go both ways at BB/RSI extremes.
         allowed = rp["allowed_side"]
+
+        # Oil/Skew/Gold gates — disable shorts during crisis signals
+        if getattr(self, "_oil_shock_active", False):
+            allowed = "LONG"  # No shorts during oil shock
+        if getattr(self, "_skew_panic", False) and getattr(cfg, "SKEW_GATE_ENABLED", False):
+            allowed = "LONG"  # No shorts when institutions are panic-hedging
+            rp = dict(rp)
+            rp["risk_mult"] = rp["risk_mult"] * getattr(cfg, "SKEW_PANIC_RISK_SCALE", 0.5)
+        if getattr(self, "_gold_riskoff", False) and getattr(cfg, "GOLD_RISKOFF_GATE_ENABLED", False):
+            allowed = "LONG"  # No shorts during gold surge (risk-off)
 
         # Exp 1: Vol gate — disable shorts and reduce size
         if _vol_gate_active:
@@ -1678,6 +2201,32 @@ class ESAutoResearchStrategy:
         if self.entry_price is None:
             return
 
+        # ── Mean Reversion mode: simplified exit logic ──
+        if getattr(self, "_mr_mode_active", False):
+            # Stop hit
+            if self.current_side == "LONG" and bar.low <= self.stop_price:
+                self._close_and_reset(engine, bar); return
+            if self.current_side == "SHORT" and bar.high >= self.stop_price:
+                self._close_and_reset(engine, bar); return
+            # TP hit
+            if self.current_side == "LONG" and bar.high >= self.tp_price:
+                self._close_and_reset(engine, bar); return
+            if self.current_side == "SHORT" and bar.low <= self.tp_price:
+                self._close_and_reset(engine, bar); return
+            # RSI-based exit
+            mr_rsi_period = getattr(cfg, "MR_MODE_RSI_PERIOD", 12)
+            if len(self.closes) >= mr_rsi_period + 2:
+                mr_rsi = compute_rsi(list(self.closes), mr_rsi_period)
+                if mr_rsi is not None:
+                    if self.current_side == "LONG" and mr_rsi > self._mr_rsi_exit:
+                        self._close_and_reset(engine, bar); return
+                    if self.current_side == "SHORT" and mr_rsi < self._mr_rsi_short_exit:
+                        self._close_and_reset(engine, bar); return
+            # Max hold
+            if self.bars_since_entry >= self._mr_max_hold:
+                self._close_and_reset(engine, bar); return
+            return  # Skip normal position management for MR trades
+
         # Lookup current macro for in-trade adjustments
         vix = _lookup_macro(self.macro.get("vix", {}), bar.timestamp)
         hy_oas = _lookup_macro(self.macro.get("hy_oas", {}), bar.timestamp)
@@ -1729,19 +2278,8 @@ class ESAutoResearchStrategy:
         elif engine.position.is_short and bar.low <= self.tp_price:
             self._close_and_reset(engine, bar); return
 
-        # ── Max hold (Exp 5: reduced in high-vol) ──
-        max_hold = self._scaled_bars(rp["max_hold_bars"])
-        if getattr(cfg, "HIGH_VOL_HOLD_REDUCTION_ENABLED", False):
-            import datetime as _dthv
-            hv_date = bar.timestamp.date() if hasattr(bar.timestamp, "date") else bar.timestamp
-            if isinstance(hv_date, _dthv.datetime):
-                hv_date = hv_date.date()
-            hv_daily = self.daily_trend.get(hv_date)
-            if hv_daily and hv_daily.get("daily_atr") and hv_daily.get("close", 0) > 0:
-                hv_atr_pct = hv_daily["daily_atr"] / hv_daily["close"] * 100
-                hv_thresh = getattr(cfg, "HIGH_VOL_HOLD_ATR_PCT", 2.0)
-                if hv_atr_pct > hv_thresh:
-                    max_hold = self._scaled_bars(getattr(cfg, "HIGH_VOL_MAX_HOLD_BARS", 48))
+        # ── Max hold (adaptive: ATR + VIX + swing/scalp) ──
+        max_hold = self._compute_adaptive_max_hold(bar, rp)
         if self.bars_since_entry >= max_hold and self.bars_since_entry >= self._scaled_bars(cfg.MIN_HOLD_BARS):
             self._close_and_reset(engine, bar); return
 
@@ -1825,7 +2363,11 @@ class ESAutoResearchStrategy:
                     self.stop_price = min(self.stop_price, bar.close + atr * cfg.STOP_TIGHTEN_ATR_MULT)
 
     def _close_and_reset(self, engine, bar):
-        """Close position and track win/loss for adaptive cooldown."""
+        """Close position and track win/loss for adaptive cooldown.
+
+        Routes loss tracking to MR or composite depending on which system
+        opened the trade (self._mr_mode_active).
+        """
         # Determine win/loss before closing
         if self.entry_price is not None:
             if self.current_side == "LONG":
@@ -1833,21 +2375,32 @@ class ESAutoResearchStrategy:
             else:
                 pnl = self.entry_price - bar.close
             is_win = pnl > 0
-            self._recent_results.append(is_win)
-            # Keep only last N results
-            max_streak = getattr(self.cfg, "STREAK_LOOKBACK", 5)
-            if len(self._recent_results) > max_streak:
-                self._recent_results = self._recent_results[-max_streak:]
 
-            # Consecutive loss circuit breaker
-            if is_win:
-                self._consecutive_losses = 0
+            if getattr(self, "_mr_mode_active", False):
+                # ── MR trade: update MR-independent loss tracking ──
+                if is_win:
+                    self._mr_consecutive_losses = 0
+                else:
+                    self._mr_consecutive_losses += 1
+                    max_consec = getattr(self.cfg, "COMBINED_MR_MAX_CONSECUTIVE_LOSSES", 5)
+                    if self._mr_consecutive_losses >= max_consec:
+                        cooldown = getattr(self.cfg, "CONSECUTIVE_LOSS_COOLDOWN_BARS", 78)
+                        self._mr_loss_cooldown = self._scaled_bars(cooldown)
             else:
-                self._consecutive_losses += 1
-                max_consec = getattr(self.cfg, "MAX_CONSECUTIVE_LOSSES", 3)
-                if self._consecutive_losses >= max_consec:
-                    cooldown = getattr(self.cfg, "CONSECUTIVE_LOSS_COOLDOWN_BARS", 78)
-                    self._loss_circuit_cooldown_remaining = self._scaled_bars(cooldown)
+                # ── Composite trade: update composite loss tracking ──
+                self._recent_results.append(is_win)
+                max_streak = getattr(self.cfg, "STREAK_LOOKBACK", 5)
+                if len(self._recent_results) > max_streak:
+                    self._recent_results = self._recent_results[-max_streak:]
+
+                if is_win:
+                    self._consecutive_losses = 0
+                else:
+                    self._consecutive_losses += 1
+                    max_consec = getattr(self.cfg, "MAX_CONSECUTIVE_LOSSES", 3)
+                    if self._consecutive_losses >= max_consec:
+                        cooldown = getattr(self.cfg, "CONSECUTIVE_LOSS_COOLDOWN_BARS", 78)
+                        self._loss_circuit_cooldown_remaining = self._scaled_bars(cooldown)
 
         engine.close_position()
         self._reset_state()
@@ -1860,6 +2413,7 @@ class ESAutoResearchStrategy:
         self.risk_points = None
         self.current_side = None
         self.bars_since_entry = 0
+        self._mr_mode_active = False
 
     def _get_adaptive_cooldown(self):
         """Adaptive cooldown: shorter after wins, longer after losses."""
@@ -1898,18 +2452,171 @@ def run_backtest(config_path=None):
     cusum_events, cusum_directions = load_cusum_events()
     tsfresh_signal = load_tsfresh_signal()
     hourly_regime = load_hourly_regime_features()
+    ml_entry_signal = load_ml_entry_signal()
 
-    engine = BacktestEngine(
-        data=df,
-        initial_capital=cfg.INITIAL_CAPITAL,
-        commission_per_contract=2.25,
-        slippage_ticks=1,
-        max_position=50,
-    )
+    multi_tf = getattr(cfg, "MULTI_TF_ENABLED", False)
 
-    strategy = ESAutoResearchStrategy(cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime)
-    engine.set_strategy(strategy.on_bar)
-    return engine.run()
+    if not multi_tf:
+        # Single-timeframe mode (original)
+        engine = BacktestEngine(
+            data=df,
+            initial_capital=cfg.INITIAL_CAPITAL,
+            commission_per_contract=2.25,
+            slippage_ticks=1,
+            max_position=50,
+        )
+        strategy = ESAutoResearchStrategy(cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal)
+        engine.set_strategy(strategy.on_bar)
+        return engine.run()
+
+    # ── Multi-Timeframe Mode ──
+    # Split trading days into normal-vol (5-min) and high-vol (4h) sets
+    vol_thresh = getattr(cfg, "MULTI_TF_VOL_THRESHOLD", 1.5)
+    normal_dates = set()
+    highvol_dates = set()
+    for d, info in daily_trend.items():
+        if info.get("daily_atr") and info.get("close", 0) > 0:
+            atr_pct = info["daily_atr"] / info["close"] * 100
+            if atr_pct >= vol_thresh:
+                highvol_dates.add(d)
+            else:
+                normal_dates.add(d)
+        else:
+            normal_dates.add(d)
+
+    # Build filtered DataFrames
+    df_5m = df.copy()
+    df_5m_tz = df_5m.index.tz_localize(None) if df_5m.index.tz is None else df_5m.index.tz_convert("America/Chicago").tz_localize(None)
+    df_5m_dates = pd.Series(df_5m_tz).dt.date.values
+    normal_mask = pd.array([d in normal_dates for d in df_5m_dates])
+    df_normal = df_5m[normal_mask]
+
+    # Load ALL 4h bars (continuous for indicator computation)
+    # Strategy will only ENTER trades on high-vol days
+    df_4h_all = load_es_data_4h()
+    df_highvol = df_4h_all  # Use full continuous data
+
+    # ── Run 5-min backtest on normal-vol days ──
+    # Full capital to 5-min (primary), 4h mode uses small separate allocation
+    capital_split = cfg.INITIAL_CAPITAL * 0.85
+    if len(df_normal) > 200:
+        engine_normal = BacktestEngine(
+            data=df_normal,
+            initial_capital=capital_split,
+            commission_per_contract=2.25,
+            slippage_ticks=1,
+            max_position=50,
+        )
+        strategy_normal = ESAutoResearchStrategy(cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal, trade_only_dates=normal_dates)
+        engine_normal.set_strategy(strategy_normal.on_bar)
+        results_normal = engine_normal.run()
+    else:
+        results_normal = {"total_return_pct": 0, "max_drawdown": 0, "total_trades": 0,
+                          "win_rate": 0, "sharpe_ratio": 0, "profit_factor": 0,
+                          "final_equity": capital_split, "trades": pd.DataFrame()}
+
+    # ── Run 4h backtest on high-vol days with overridden params ──
+    capital_4h = cfg.INITIAL_CAPITAL * 0.15  # Small allocation to 4h mode
+    if len(df_highvol) > 10:
+        # Create a modified config for 4h mode
+        import types
+        cfg_4h = types.SimpleNamespace(**{k: getattr(cfg, k) for k in dir(cfg) if not k.startswith("_")})
+        # Override params for 4h bars
+        cfg_4h.BAR_SCALE_FACTOR = 1  # 4h bars are already the native timeframe
+        cfg_4h.INITIAL_CAPITAL = capital_4h
+        cfg_4h.COOLDOWN_BARS = getattr(cfg, "MULTI_TF_4H_COOLDOWN", 6)
+        cfg_4h.MIN_HOLD_BARS = getattr(cfg, "MULTI_TF_4H_MIN_HOLD", 3)
+        # Override all regime stop/TP/hold with 4h values
+        for attr in ["BULL_STOP_ATR_MULT", "BEAR_STOP_ATR_MULT", "SIDE_STOP_ATR_MULT"]:
+            setattr(cfg_4h, attr, getattr(cfg, "MULTI_TF_4H_STOP_MULT", 2.5))
+        for attr in ["BULL_TP_ATR_MULT", "BEAR_TP_ATR_MULT", "SIDE_TP_ATR_MULT"]:
+            setattr(cfg_4h, attr, getattr(cfg, "MULTI_TF_4H_TP_MULT", 4.0))
+        for attr in ["BULL_MAX_HOLD_BARS", "BEAR_MAX_HOLD_BARS", "SIDE_MAX_HOLD_BARS"]:
+            setattr(cfg_4h, attr, getattr(cfg, "MULTI_TF_4H_MAX_HOLD", 30))
+        for attr in ["BULL_RISK_MULT", "BEAR_RISK_MULT", "SIDE_RISK_MULT"]:
+            setattr(cfg_4h, attr, getattr(cfg, "MULTI_TF_4H_RISK_MULT", 0.3))
+        for attr in ["BULL_COMPOSITE_THRESHOLD", "BEAR_COMPOSITE_THRESHOLD", "SIDE_COMPOSITE_THRESHOLD"]:
+            setattr(cfg_4h, attr, getattr(cfg, "MULTI_TF_4H_COMPOSITE_THRESH", 0.40))
+        # Allowed side
+        allowed_4h = getattr(cfg, "MULTI_TF_4H_ALLOWED_SIDE", "BOTH")
+        cfg_4h.BULL_SIDE = allowed_4h
+        cfg_4h.BEAR_SIDE = allowed_4h
+        cfg_4h.SIDE_SIDE = allowed_4h
+        # Disable sub-features that are 5-min specific
+        cfg_4h.INTRADAY_TREND_FILTER_ENABLED = False
+        cfg_4h.BREAKOUT_ENTRY_ENABLED = False
+        # Disable structural experiment gates (4h has its own regime handling)
+        cfg_4h.VOL_REGIME_GATE_ENABLED = False
+        cfg_4h.CRISIS_SHORT_DISABLE_ENABLED = False
+        cfg_4h.HIGH_VOL_HOLD_REDUCTION_ENABLED = False
+        cfg_4h.DUAL_MODE_ENABLED = False
+        cfg_4h.ADAPTIVE_HOLD_ENABLED = False
+        cfg_4h.VIX_MODEL_SWITCH_ENABLED = False
+        cfg_4h.MULTI_TF_ENABLED = False  # Prevent recursion
+        # Scale down risk per trade for small capital
+        cfg_4h.RISK_PER_TRADE = min(cfg.RISK_PER_TRADE, capital_4h * 0.02)  # Max 2% of 4h capital
+
+        engine_4h = BacktestEngine(
+            data=df_4h_all,  # Full continuous 4h data (trade_only_dates gates entries)
+            initial_capital=capital_4h,
+            commission_per_contract=2.25,
+            slippage_ticks=1,
+            max_position=50,
+        )
+        strategy_4h = ESAutoResearchStrategy(cfg_4h, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal, trade_only_dates=highvol_dates)
+        engine_4h.set_strategy(strategy_4h.on_bar)
+        results_4h = engine_4h.run()
+    else:
+        results_4h = {"total_return_pct": 0, "max_drawdown": 0, "total_trades": 0,
+                      "win_rate": 0, "sharpe_ratio": 0, "profit_factor": 0,
+                      "final_equity": capital_4h, "trades": pd.DataFrame()}
+
+    # ── Merge results ──
+    normal_pnl = results_normal["final_equity"] - capital_split
+    h4_pnl = results_4h["final_equity"] - capital_4h
+    combined_equity = cfg.INITIAL_CAPITAL + normal_pnl + h4_pnl
+    combined_return = (combined_equity / cfg.INITIAL_CAPITAL - 1) * 100
+    combined_trades = results_normal["total_trades"] + results_4h["total_trades"]
+
+    # Conservative DD: max of individual DDs
+    combined_dd = max(results_normal["max_drawdown"], results_4h["max_drawdown"])
+
+    # Merge trades for win rate
+    trades_list = []
+    for r in [results_normal, results_4h]:
+        t = r.get("trades")
+        if t is not None and isinstance(t, pd.DataFrame) and len(t) > 0:
+            trades_list.append(t)
+    if trades_list:
+        all_trades = pd.concat(trades_list, ignore_index=True)
+        combined_wr = (all_trades["pnl"] > 0).mean() * 100 if len(all_trades) > 0 else 0
+        combined_pf = abs(all_trades[all_trades["pnl"] > 0]["pnl"].sum() / all_trades[all_trades["pnl"] < 0]["pnl"].sum()) if (all_trades["pnl"] < 0).any() else 10.0
+    else:
+        all_trades = pd.DataFrame()
+        combined_wr = 0
+        combined_pf = 0
+
+    # Combined Sharpe (approximate)
+    if combined_trades > 0 and len(trades_list) > 0:
+        pnls = all_trades["pnl"]
+        combined_sharpe = pnls.mean() / pnls.std() * (252 ** 0.5) if pnls.std() > 0 else 0
+    else:
+        combined_sharpe = 0
+
+    return {
+        "total_return_pct": round(combined_return, 2),
+        "max_drawdown": round(combined_dd, 2),
+        "total_trades": combined_trades,
+        "win_rate": round(combined_wr, 2),
+        "sharpe_ratio": round(combined_sharpe, 4),
+        "profit_factor": round(combined_pf, 4),
+        "final_equity": round(combined_equity, 2),
+        "trades": all_trades,
+        "_normal_days": len(normal_dates),
+        "_highvol_days": len(highvol_dates),
+        "_normal_return": round(results_normal["total_return_pct"], 2),
+        "_4h_return": round(results_4h["total_return_pct"], 2),
+    }
 
 
 def main():

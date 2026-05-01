@@ -1,7 +1,5 @@
 # IBKR ES Futures — Trading System + Financial Analysis Agent
 
-> **Heads-up — the Telegram bot file in `IB_Docker_VPS/telegram_claude_bot.py` is a REFERENCE COPY, not authoritative.** That script belongs to a different repo's deployment: Telegram handle `@FAzzh_CC_bot` → systemd `telegram-claude-bot.service` → authoritative script `/root/Finl_Agent_CC/telegram_claude_bot.py` on the Hostinger VPS. Do not patch the local copy here expecting behavior to change — edit on the VPS, or edit in `~/Github/Finl_Agent_CC/` and push. Cross-repo bot catalog: `~/Github/CLI_OS/AWS_CLI/Hostinger_Setup_Overview.md` → "Bot Identity Mapping". Full usage: `~/Github/Finl_Agent_CC/README.md` → "VPS Interactive Surface".
-
 ## React Dashboard
 
 ```bash
@@ -9,24 +7,16 @@ bash dashboard/start.sh                # Auto-finds ports, starts backend + fron
 ```
 
 Opens at `http://localhost:5173` (or next available port). Shows:
-- **Multi-Account Portfolio**: Account selector sidebar, per-account pages with positions table (symbol, cost basis, current price, prev close, market value, daily P&L, unrealized P&L, P&L%). Options positions auto-show Put/Call, Strike, Expiry columns. Instrument type filter buttons (ALL/STK/OPT/FUT/FOP). Daily P&L banner shows total.
+- **Multi-Account Portfolio**: Account selector sidebar, per-account pages with positions table (symbol, cost basis, current price, prev close, market value, unrealized P&L, P&L%)
 - **Open Orders**: Pending orders table (symbol, action, type, qty, limit price, status) — read-only via `ib.openOrders()`
 - **ES Sentiment Panel**: Unified trading direction (BEARISH/BULLISH/SIDEWAYS), confidence, sentiment scores (unified/newsletter/NLP), key levels (Smashlevel pivot, support/resistance, VPOCs, MA200), positioning (JPM z-score, NAAIM, VIX tier), expandable themes & insights, signal history timeline
-- **Price Charts**: Click any position symbol to open interactive OHLCV chart (1m/5m/15m/1h/1d/1w). Auto-refresh in live mode (5s for 1m, 10s for 5m, etc.) with LIVE/PAUSED toggle
-- **News Feed**: Real-time IBKR news headlines from 7 providers (BRFG, BRFUPDN, DJ-N, DJ-RT, DJ-RTA, DJ-RTE, DJ-RTG). Click headline to read full article via `reqNewsArticle`
+- **Price Charts**: Click any position symbol to open interactive OHLCV chart (1m/5m/15m/1h/1d/1w), live price updates when live mode enabled
+- **News Feed**: Real-time IBKR news headlines from 7 providers (BRFG, BRFUPDN, DJ-N, DJ-RT, DJ-RTA, DJ-RTE, DJ-RTG)
 - **Watchlists**: Custom instrument watchlists with real-time prices, rename/delete support
-- **Search**: Expandable instrument details with delivery months + open interest for futures
 - **WebSocket**: Live updates every 10s (portfolio) + per-second in live mode + real-time (news)
 
 Backend: FastAPI (`dashboard/server.py`) connects to IBKR TWS/Gateway via `ib_async` with auto-port detection (7496→7497→4001→4002).
 Frontend: Vite + React + TypeScript + Tailwind CSS (`dashboard/frontend/`).
-
-**Full specifications:** See [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) for API endpoints, component architecture, deployment details, and IB thread queue pattern.
-
-### VPS Dashboard Deployment
-- **URL:** `http://187.77.136.160/IBKR_KZ/`
-- **Service:** `ibkr-dashboard.service` (port 8888, clientId 30)
-- **Full VPS setup:** See [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) for Docker config, nginx, health monitoring, Telegram commands, session management
 
 ---
 
@@ -66,7 +56,7 @@ Fetches ~4000 headlines from 7 IBKR news providers, runs NLP sentiment analysis,
 - `data/news/sentiment_analysis.json` — Full analysis with regime signals, key themes, actionable insights, top 100 headlines
 - `data/news/sentiment_timeseries.csv` — Appends one row per run (tracks signal history)
 
-**Scheduled tasks** (run when Claude Code is active):
+**Scheduled tasks** (run when Codex is active):
 - `es-sentiment-11am` — 11:03 AM daily
 - `es-sentiment-8pm` — 8:02 PM daily
 - `es-sentiment-11pm` — 11:04 PM daily
@@ -82,61 +72,6 @@ python scripts/ib_news_stream.py stream AAPL,NVDA         # Real-time stream
 python scripts/ib_news_stream.py broadtape --duration 600 # All headlines
 ```
 
-### Continuous Broadtape Streamer (NEW — Phase 1, May 2026)
-Long-running daemon (clientId 27) that subscribes to IBKR broadtape across 7 providers
-and persists every headline immediately to `data/news/headlines.db` (SQLite).
-Foundation for the 15-min rolling sentiment aggregator below.
-
-```bash
-# Local
-python tools/news_stream_continuous.py --client-id 27
-
-# VPS (systemd)
-systemctl enable --now ibkr-broadtape.service
-journalctl -u ibkr-broadtape.service -f
-```
-
-### 15-Minute Rolling Sentiment Aggregator (NEW — Phase 2)
-Reads `headlines.db` and emits multi-window sentiment (15m / 30m / 1h / 4h / 24h)
-to `data/news/sentiment_intraday.csv`. Run on a 15-min systemd timer.
-
-```bash
-python tools/sentiment_intraday.py --bucket-now    # Current 15-min bucket
-python tools/sentiment_intraday.py --since 2026-05-01 --until 2026-05-02  # Backfill
-```
-
-### Multi-Input ES Signal Stack (NEW — Phase 4)
-Three additional ES-relevant inputs feeding the strategy beyond sentiment:
-
-```bash
-# MAG7 mega-cap breadth (clientId 28; runs every 5 min on VPS)
-python tools/mag7_breadth.py --source auto --append-csv
-
-# Polymarket prediction-market signals (reads ../market-tracker cache)
-python tools/polymarket_signal.py --append-csv
-
-# Macro release calendar — blackout windows around CPI/NFP/FOMC/PCE/earnings
-python tools/macro_calendar.py --next 10              # Next 10 releases
-python tools/macro_calendar.py --check NOW            # Is now in a blackout?
-```
-
-Output CSVs (consumed by `verify_strategy.py` in the Phase 4 backtest integration step):
-- `data/news/sentiment_intraday.csv` — 15-min rolling sentiment (sentiment_15m, fed/war/inflation topic %)
-- `data/es/mag7_breadth.csv` — MAG7 breadth (% above 5/20/50d MA, market-cap-weighted % chg)
-- `data/es/polymarket_signals.csv` — Fed cut prob, recession prob, geopolitics, fiscal expansion
-- macro_calendar — in-memory only; consumed via `MacroCalendar.is_blackout_window(ts)`
-
-### IBKR Gateway clientId reservations
-| ID | Owner | Cadence |
-|---|---|---|
-| 11/20/23 | Local sentiment runs (per scheduled tasks) | 3x daily |
-| 26 | `tools/news_stream.py` (multi-provider news) | On-demand |
-| **27** | `tools/news_stream_continuous.py` (persistent broadtape) | **Continuous** |
-| **28** | `tools/mag7_breadth.py` (5-min breadth) | **Every 5 min (VPS)** |
-| 30 | `ibkr-dashboard.service` | Continuous |
-| 98 | `scripts/run_sentiment.py` (batch) | 3x daily |
-| 99/100/101 | Reserved for Opportunity_scanner | Off-peak overnight |
-
 ### File Map
 ```
 tools/                          <- 20 Python analysis tools (macro, equity, TA, pro-trader)
@@ -145,9 +80,9 @@ tools/news_sentiment_nlp.py     <- NLP sentiment engine (headline analysis, regi
 guides/                         <- 8 interpretation/framework guides
 guides/market_context_ES.md     <- ES-specific newsletter digest (Smashelito, Geo Chen, etc.)
 scripts/run_sentiment.py        <- Standalone ES sentiment pipeline (IBKR news + NLP)
-.claude/skills/fin/             <- /fin skill definition
-.claude/skills/digest/          <- /digest skill definition
-.claude/skills/digest_ES/       <- /digest_ES skill definition (ES-focused newsletters)
+.Codex/skills/fin/             <- /fin skill definition
+.Codex/skills/digest/          <- /digest skill definition
+.Codex/skills/digest_ES/       <- /digest_ES skill definition (ES-focused newsletters)
 data/news/sentiment_analysis.json    <- Latest full sentiment analysis
 data/news/sentiment_timeseries.csv   <- Historical sentiment signal log
 DATA_SOURCES.md                 <- FRED series + CSV data map
@@ -182,7 +117,6 @@ python autoresearch.py status                        # check progress
 
 ### Strategy Architecture
 Sequential decision pipeline with regime-adaptive parameters:
-0. **Combined routing (v2)**: If `COMBINED_STRATEGY_ENABLED` + daily ATR% ≥ `COMBINED_MR_ATR_THRESHOLD` → route to MR scalper with INDEPENDENT state (own cooldown/trade-counter/circuit-breaker, US hours, market orders), bypass composite entirely
 1. **Classify regime** (BULLISH / BEARISH / SIDEWAYS) using SMA crossover + price vs 200 SMA + VIX tier + NLP sentiment + digest context + daily trend
 2. **Sequential gates**: Macro filter → Regime filter → Daily trend gate → Dip-buy/Rip-sell filter → Technical composite → Volume confirmation
 3. **Composite signal**: Weighted RSI + SMA trend + momentum + Bollinger Bands + VIX + macro + volume + WSJ/DJ-N sentiment (per-regime weights)
@@ -193,14 +127,11 @@ Sequential decision pipeline with regime-adaptive parameters:
 
 ### Current Best Results
 ```
-Composite (original data, Mar 2026):    +14.73% return | 28.88% DD | 34% WR | 44 trades | score 10.47
-Combined v2 (extended, MR-only ATR=1.6): -0.03% return |  1.99% DD | 83% WR |  6 trades | score -0.03
-Composite (extended data):               -0.08% return |  6.95% DD | 33% WR |  6 trades | score -0.07
-MR Scalper (standalone):                 +4.25% return |  4.4% DD  | 43% WR | 51 trades
-Dual System (20/80 split):               +3.39% return | ~3.9% DD  |   —    | 57 trades
+Composite (original data):  +14.73% return | 28.88% DD | 34% WR | 44 trades
+Composite (extended data):  -0.08% return  | 6.95% DD  | 33% WR | 6 trades
+MR Scalper (standalone):    +4.25% return  | 4.4% DD   | 43% WR | 51 trades
+Dual System (20/80 split):  +3.37% return  | ~4.9% DD  | —      | 57 trades
 ```
-
-**Combined Strategy v2** (Apr 2026): Independent MR state routing — `_handle_mr_entry_combined()` in verify_strategy.py uses separate cooldown/trade-counter/circuit-breaker so MR scalper edge isn't killed by composite framework. Set via `COMBINED_STRATEGY_ENABLED=True` + `COMBINED_MR_ATR_THRESHOLD=1.6`. MR-only mode achieved by setting composite thresholds to 0.99.
 
 ### Scoring
 ```
@@ -256,8 +187,7 @@ After every major experiment, structural change, or strategy decision:
 3. **Small increments** - 10-20% of parameter range per change
 4. **Rising threshold** - `0.05 * log(1 + iteration)` allows incremental hill-climbing
 5. **KEEP or REVERT** - no partial changes
-6. **Multi-param jumps** between batches — when sweep stalls with many BELOW_THRESHOLD near-misses at the same score, apply top 2-3 non-conflicting near-misses simultaneously, then reinit baseline. Used twice in Apr 2026 session to push -0.07 → -0.04 → -0.03.
-7. **Restore NEXT_STEPS.md after sweeps** — `batch_iterate.py` auto-overwrites NEXT_STEPS.md with a generic template. Keep curated version under version control.
+6. **Multi-param jumps** between batches — apply top 3 near-misses simultaneously
 
 ### Data
 - **ES 5-min**: `data/es/ES_combined_5min.parquet` (50.7K bars, Jan 2025 - Apr 2 2026, TRADES volume)
@@ -304,66 +234,3 @@ python scripts/run_sentiment.py           # Run NLP on IBKR news headlines
 | ES_daily.parquet | 638 | Aug 2023 - Mar 2026 |
 | ES_implied_volatility_daily | 401 | Aug 2024 - Mar 2026 |
 | ES_historical_volatility_daily | 265 | Mar 2025 - Mar 2026 |
-
----
-
-## Key Documents
-
-### Dashboard
-- [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) — Full dashboard specs: API endpoints, frontend components, WebSocket protocol, IB thread queue, deploy workflow
-
-### VPS & Infrastructure
-- [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) — VPS deployment: Docker IB Gateway, nginx, systemd services/timers, health monitor, Telegram commands, session management
-- [`IB_Docker_VPS/README.md`](IB_Docker_VPS/README.md) — Docker-specific setup and Telegram bot
-
-### Autoresearch
-- [`autoresearch/STRATEGY_CONTEXT.md`](autoresearch/STRATEGY_CONTEXT.md) — Strategy architecture, tunable parameter ranges, active features
-- [`autoresearch/NEXT_STEPS.md`](autoresearch/NEXT_STEPS.md) — Current roadmap, next steps, exhausted approaches
-- [`autoresearch/SCORING.md`](autoresearch/SCORING.md) — Scoring formula + diagnostic flowchart
-- [`autoresearch/SKILL.md`](autoresearch/SKILL.md) — Full iteration protocol
-- [`AR_exp_log.md`](AR_exp_log.md) — Complete experiment history log
-
-### Financial Analysis
-- [`DATA_SOURCES.md`](DATA_SOURCES.md) — FRED series IDs + local CSV data map
-- [`guides/`](guides/) — Interpretation guides, macro framework, TA guide, thresholds, workflows
-- [`guides/market_context.md`](guides/market_context.md) — Latest general market context (from `/digest`)
-- [`guides/market_context_ES.md`](guides/market_context_ES.md) — Latest ES-specific newsletter digest (from `/digest_ES`)
-
-### Data & Backtesting
-- [`docs/BACKTEST_GUIDE.md`](docs/BACKTEST_GUIDE.md) — Backtesting methodology
-- [`docs/ES_DATA_SOURCES.md`](docs/ES_DATA_SOURCES.md) — ES data pipeline documentation
-
----
-
-## Downstream consumer: Opportunity_scanner
-
-[`Opportunity_scanner/`](../Opportunity_scanner/) consumes outputs of this repo as a **read-only downstream**, following the **parallel-pipeline contract** (see [`../Opportunity_scanner/CLAUDE.md`](../Opportunity_scanner/CLAUDE.md)):
-
-- **No edits** are made to any script, schema, output path, or timer cadence in this repo by the scanner.
-- The scanner either reads cache files this repo writes anyway, or runs its own IBKR fetcher with a **distinct clientId** on its own non-overlapping schedule.
-- If any of the cache files / schemas listed below change, the per-strategy READMEs in `Opportunity_scanner/strategies/` need updating — this repo's contract does NOT.
-
-### Cache files the scanner reads
-
-| File | Consumed by |
-|---|---|
-| `data/news/sentiment_timeseries.csv` | [strategy 04 — ES newsletter sentiment overlay](../Opportunity_scanner/strategies/04_es_newsletter_sentiment/README.md), [strategy 01 cross-validation](../Opportunity_scanner/strategies/01_news_event_equity_overlay/README.md) |
-| `data/news/sentiment_analysis.json` | strategy 04, strategy 01 cross-validation |
-| `data/es/ES_combined_5min.parquet` | strategy 04 (price for backtest) |
-
-### Functions imported by the scanner (read-only code reuse — no edits)
-
-| Function / module | Imported by |
-|---|---|
-| `tools/news_sentiment_nlp.py::analyze_headlines, get_regime_signal` | strategy 01 (per-ticker aggregation done scanner-side on scanner's own headlines) |
-| `ibkr/contracts.py::ContractFactory` | strategy 05 (treasury futures contracts) |
-
-### Scanner's independent IBKR Gateway clients (shared resource — clientId discipline)
-
-| Existing clientIds in this repo | Reserved by Opportunity_scanner |
-|---|---|
-| 26 (`tools/news_stream.py`), **27** (`tools/news_stream_continuous.py` — persistent broadtape), **28** (`tools/mag7_breadth.py` — 5-min breadth), 30 (`ibkr-dashboard.service`), 98 (`scripts/run_sentiment.py`) | **99** (strategy 01 per-ticker IBKR fetcher; runs locally at 04:00 GMT+8), **100** (strategy 03 HIP-3 cousin live quotes), **101** (strategy 05 treasury futures pull) |
-
-**No conflict** — clientIds are disjoint and timers do not overlap. Scanner's IBKR jobs run during the off-peak overnight window where existing 11/20/23 UTC sentiment runs are not active.
-
-**No expected changes** to this repo from the scanner's side beyond doc-only updates to this section.

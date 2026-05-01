@@ -1,0 +1,15 @@
+[Unit]
+Description=Trigger ibkr-sentiment-15min.service every 15 minutes
+Documentation=https://github.com/kris-zhang/IBKR/blob/main/tools/sentiment_intraday.py
+
+[Timer]
+# Fire at :00, :15, :30, :45 of every hour
+OnCalendar=*:0/15
+# Run missed buckets after a reboot
+Persistent=true
+# Slight randomization to avoid hitting IBKR exactly at the bucket edge
+RandomizedDelaySec=15
+Unit=ibkr-sentiment-15min.service
+
+[Install]
+WantedBy=timers.target

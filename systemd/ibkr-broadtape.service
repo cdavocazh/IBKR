@@ -1,0 +1,34 @@
+[Unit]
+Description=IBKR Broadtape News Streamer (continuous, persists to headlines.db)
+Documentation=https://github.com/kris-zhang/IBKR/blob/main/tools/news_stream_continuous.py
+After=network-online.target ibkr-gateway.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/IBKR
+Environment="PYTHONPATH=/root/IBKR"
+Environment="IBKR_HOST=127.0.0.1"
+# Port left to auto-detect (4001/4002/7496/7497)
+# clientId 27 reserved for this daemon (see CLAUDE.md clientId map)
+Environment="IB_NEWS_CLIENT_ID=27"
+
+ExecStart=/usr/bin/python3 /root/IBKR/tools/news_stream_continuous.py --log-every 300
+
+# Resilience
+Restart=always
+RestartSec=15
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+# Resource limits (modest — daemon is I/O bound)
+MemoryMax=512M
+CPUQuota=50%
+
+# Logging
+StandardOutput=append:/var/log/ibkr-broadtape.log
+StandardError=append:/var/log/ibkr-broadtape.log
+
+[Install]
+WantedBy=multi-user.target

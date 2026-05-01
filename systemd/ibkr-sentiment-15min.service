@@ -1,0 +1,20 @@
+[Unit]
+Description=IBKR Intraday Sentiment Aggregator (15-min rolling windows)
+Documentation=https://github.com/kris-zhang/IBKR/blob/main/tools/sentiment_intraday.py
+After=network.target ibkr-broadtape.service
+Requires=ibkr-broadtape.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/IBKR
+Environment="PYTHONPATH=/root/IBKR"
+
+ExecStart=/usr/bin/python3 /root/IBKR/tools/sentiment_intraday.py --bucket-now
+
+# Logging
+StandardOutput=append:/var/log/ibkr-sentiment-intraday.log
+StandardError=append:/var/log/ibkr-sentiment-intraday.log
+
+[Install]
+WantedBy=multi-user.target

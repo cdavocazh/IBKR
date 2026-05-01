@@ -1,0 +1,14 @@
+[Unit]
+Description=Trigger ibkr-mag7-breadth.service every 5 minutes during US market hours
+Documentation=https://github.com/kris-zhang/IBKR/blob/main/tools/mag7_breadth.py
+
+[Timer]
+# Every 5 minutes (US RTH window covered: 13:30-20:00 UTC = 9:30-16:00 ET)
+# Daily snapshots also catch overnight from yfinance fallback.
+OnCalendar=*:0/5
+Persistent=true
+RandomizedDelaySec=10
+Unit=ibkr-mag7-breadth.service
+
+[Install]
+WantedBy=timers.target

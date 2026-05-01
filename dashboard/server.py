@@ -44,7 +44,33 @@ load_dotenv(PROJECT_ROOT / ".env")
 # ─── SQLite Database + Auth ──────────────────────────────────
 
 _DB_PATH = Path(__file__).parent / "dashboard.db"
-_AUTH_SECRET = os.environ.get("DASHBOARD_SECRET", secrets.token_hex(32))
+_AUTH_SECRET_PATH = Path(__file__).parent / ".dashboard_auth_secret"
+
+
+def _load_auth_secret() -> str:
+    """Return a stable auth secret so browser sessions survive restarts."""
+    env_secret = os.environ.get("DASHBOARD_SECRET", "").strip()
+    if env_secret:
+        return env_secret
+
+    try:
+        if _AUTH_SECRET_PATH.exists():
+            file_secret = _AUTH_SECRET_PATH.read_text().strip()
+            if file_secret:
+                return file_secret
+
+        secret = secrets.token_hex(32)
+        _AUTH_SECRET_PATH.write_text(secret)
+        try:
+            os.chmod(_AUTH_SECRET_PATH, 0o600)
+        except OSError:
+            pass
+        return secret
+    except OSError:
+        return secrets.token_hex(32)
+
+
+_AUTH_SECRET = _load_auth_secret()
 
 
 def _get_db() -> sqlite3.Connection:

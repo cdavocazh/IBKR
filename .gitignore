@@ -59,3 +59,25 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Dashboard runtime state
+dashboard/.dashboard_auth_secret
+dashboard/*.db-shm
+dashboard/*.db-wal
+data/telegram/
+
+# Backup files (timestamped) — never commit
+*.bak
+*.bak-*
+*.bak.*
+
+# Live-streaming data caches (grow unbounded; rebuild from sources)
+data/news/headlines.db
+data/news/headlines.db-shm
+data/news/headlines.db-wal
+data/news/sentiment_intraday.csv
+data/es/mag7_breadth.csv
+data/es/polymarket_signals.csv
+
+# Local sentinel/state files
+data/news/.last_run_*

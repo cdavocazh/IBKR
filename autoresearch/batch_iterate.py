@@ -442,6 +442,123 @@ def generate_sweeps():
     add("TSFRESH_SIGNAL_WEIGHT", getattr(cfg, "TSFRESH_SIGNAL_WEIGHT", 0.0),
         [0.0, 0.05, 0.10, 0.15, 0.20, 0.25])
 
+    # --- VIX Model Switching ---
+    add("VIX_MODEL_SWITCH_ENABLED", getattr(cfg, "VIX_MODEL_SWITCH_ENABLED", False), [True, False])
+    add("VIX_MODEL_LOW_THRESHOLD", getattr(cfg, "VIX_MODEL_LOW_THRESHOLD", 20.0), [16.0, 18.0, 20.0, 22.0])
+    add("VIX_MODEL_HIGH_THRESHOLD", getattr(cfg, "VIX_MODEL_HIGH_THRESHOLD", 30.0), [25.0, 28.0, 30.0, 35.0])
+    for prefix in ["VLOW", "VMED", "VHIGH"]:
+        add(f"{prefix}_COMPOSITE_THRESHOLD", getattr(cfg, f"{prefix}_COMPOSITE_THRESHOLD", 0.40),
+            [0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55])
+        add(f"{prefix}_STOP_ATR_MULT", getattr(cfg, f"{prefix}_STOP_ATR_MULT", 2.0),
+            [1.0, 1.5, 2.0, 2.5, 3.0, 3.5])
+        add(f"{prefix}_TP_ATR_MULT", getattr(cfg, f"{prefix}_TP_ATR_MULT", 3.0),
+            [1.5, 2.0, 3.0, 4.0, 5.0])
+        add(f"{prefix}_MAX_HOLD_BARS", getattr(cfg, f"{prefix}_MAX_HOLD_BARS", 288),
+            [48, 96, 144, 288, 432])
+        add(f"{prefix}_RISK_MULT", getattr(cfg, f"{prefix}_RISK_MULT", 0.4),
+            [0.1, 0.2, 0.3, 0.4, 0.6, 0.8])
+        add(f"{prefix}_COOLDOWN_BARS", getattr(cfg, f"{prefix}_COOLDOWN_BARS", 96),
+            [48, 72, 96, 120, 150])
+        for w in ["RSI", "TREND", "MOMENTUM", "BB", "VIX", "MACRO"]:
+            add(f"{prefix}_WEIGHT_{w}", getattr(cfg, f"{prefix}_WEIGHT_{w}", 0.15),
+                [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30])
+
+    # --- ML Entry Classifier ---
+    add("ML_ENTRY_SIGNAL_WEIGHT", getattr(cfg, "ML_ENTRY_SIGNAL_WEIGHT", 0.0),
+        [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30])
+    add("ML_ENTRY_CONFIDENCE_GATE", getattr(cfg, "ML_ENTRY_CONFIDENCE_GATE", 0.1),
+        [0.05, 0.10, 0.15, 0.20, 0.30])
+
+    # --- Mean Reversion Mode (high-vol days) ---
+    add("MR_MODE_ENABLED", getattr(cfg, "MR_MODE_ENABLED", False), [True, False])
+    add("MR_MODE_ATR_PCT", getattr(cfg, "MR_MODE_ATR_PCT", 1.5),
+        [1.0, 1.2, 1.5, 2.0, 2.5])
+    add("MR_MODE_RSI_PERIOD", getattr(cfg, "MR_MODE_RSI_PERIOD", 12),
+        [6, 8, 10, 12, 14, 18])
+    add("MR_MODE_RSI_ENTRY", getattr(cfg, "MR_MODE_RSI_ENTRY", 25),
+        [15, 20, 25, 30, 35])
+    add("MR_MODE_RSI_EXIT", getattr(cfg, "MR_MODE_RSI_EXIT", 60),
+        [50, 55, 60, 65, 70])
+    add("MR_MODE_MAX_HOLD", getattr(cfg, "MR_MODE_MAX_HOLD", 24),
+        [12, 18, 24, 36, 48])
+    add("MR_MODE_RISK_MULT", getattr(cfg, "MR_MODE_RISK_MULT", 0.3),
+        [0.15, 0.2, 0.3, 0.4, 0.5])
+    add("MR_MODE_STOP_ATR", getattr(cfg, "MR_MODE_STOP_ATR", 1.5),
+        [1.0, 1.5, 2.0, 2.5, 3.0])
+    add("MR_MODE_MAX_TRADES_DAY", getattr(cfg, "MR_MODE_MAX_TRADES_DAY", 3),
+        [1, 2, 3, 5])
+
+    # --- Combined Strategy (MR + Composite routing) ---
+    add("COMBINED_STRATEGY_ENABLED", getattr(cfg, "COMBINED_STRATEGY_ENABLED", False),
+        [True, False])
+    add("COMBINED_MR_ATR_THRESHOLD", getattr(cfg, "COMBINED_MR_ATR_THRESHOLD", 1.5),
+        [1.0, 1.2, 1.5, 1.8, 2.0, 2.5])
+    add("COMBINED_MR_COOLDOWN_BARS", getattr(cfg, "COMBINED_MR_COOLDOWN_BARS", 6),
+        [3, 6, 9, 12])
+    add("COMBINED_MR_ENTRY_UTC_START", getattr(cfg, "COMBINED_MR_ENTRY_UTC_START", 14),
+        [13, 14, 15])
+    add("COMBINED_MR_ENTRY_UTC_END", getattr(cfg, "COMBINED_MR_ENTRY_UTC_END", 20),
+        [19, 20, 21])
+    add("COMBINED_MR_TP_ATR", getattr(cfg, "COMBINED_MR_TP_ATR", 2.0),
+        [1.5, 2.0, 2.5, 3.0])
+    add("COMBINED_MR_MAX_CONSECUTIVE_LOSSES", getattr(cfg, "COMBINED_MR_MAX_CONSECUTIVE_LOSSES", 5),
+        [3, 5, 7, 10])
+
+    # --- Oil Shock Gate ---
+    add("OIL_SHOCK_GATE_ENABLED", getattr(cfg, "OIL_SHOCK_GATE_ENABLED", False), [True, False])
+    add("OIL_SHOCK_THRESHOLD_PCT", getattr(cfg, "OIL_SHOCK_THRESHOLD_PCT", 3.0),
+        [2.0, 3.0, 4.0, 5.0])
+
+    # --- CBOE Skew Gate ---
+    add("SKEW_GATE_ENABLED", getattr(cfg, "SKEW_GATE_ENABLED", False), [True, False])
+    add("SKEW_PANIC_THRESHOLD", getattr(cfg, "SKEW_PANIC_THRESHOLD", 140.0),
+        [130.0, 135.0, 140.0, 145.0, 150.0])
+    add("SKEW_PANIC_RISK_SCALE", getattr(cfg, "SKEW_PANIC_RISK_SCALE", 0.5),
+        [0.2, 0.3, 0.5, 0.7])
+
+    # --- Gold Risk-Off Gate ---
+    add("GOLD_RISKOFF_GATE_ENABLED", getattr(cfg, "GOLD_RISKOFF_GATE_ENABLED", False), [True, False])
+    add("GOLD_SURGE_THRESHOLD_PCT", getattr(cfg, "GOLD_SURGE_THRESHOLD_PCT", 2.0),
+        [1.0, 1.5, 2.0, 3.0])
+
+    # --- Multi-Timeframe Strategy ---
+    add("MULTI_TF_ENABLED", getattr(cfg, "MULTI_TF_ENABLED", False), [True, False])
+    add("MULTI_TF_VOL_THRESHOLD", getattr(cfg, "MULTI_TF_VOL_THRESHOLD", 1.5),
+        [1.0, 1.2, 1.5, 2.0, 2.5])
+    add("MULTI_TF_4H_STOP_MULT", getattr(cfg, "MULTI_TF_4H_STOP_MULT", 2.5),
+        [1.5, 2.0, 2.5, 3.0, 4.0])
+    add("MULTI_TF_4H_TP_MULT", getattr(cfg, "MULTI_TF_4H_TP_MULT", 4.0),
+        [2.0, 3.0, 4.0, 5.0, 6.0])
+    add("MULTI_TF_4H_MAX_HOLD", getattr(cfg, "MULTI_TF_4H_MAX_HOLD", 30),
+        [12, 18, 24, 30, 48])
+    add("MULTI_TF_4H_COOLDOWN", getattr(cfg, "MULTI_TF_4H_COOLDOWN", 6),
+        [3, 6, 9, 12])
+    add("MULTI_TF_4H_RISK_MULT", getattr(cfg, "MULTI_TF_4H_RISK_MULT", 0.3),
+        [0.1, 0.2, 0.3, 0.5, 0.7])
+    add("MULTI_TF_4H_COMPOSITE_THRESH", getattr(cfg, "MULTI_TF_4H_COMPOSITE_THRESH", 0.40),
+        [0.25, 0.30, 0.35, 0.40, 0.50])
+
+    # --- Adaptive Hold Period ---
+    add("ADAPTIVE_HOLD_ENABLED", getattr(cfg, "ADAPTIVE_HOLD_ENABLED", False), [True, False])
+    add("ADAPTIVE_HOLD_LOW_ATR_PCT", getattr(cfg, "ADAPTIVE_HOLD_LOW_ATR_PCT", 1.0),
+        [0.5, 0.8, 1.0, 1.2])
+    add("ADAPTIVE_HOLD_HIGH_ATR_PCT", getattr(cfg, "ADAPTIVE_HOLD_HIGH_ATR_PCT", 2.0),
+        [1.5, 2.0, 2.5, 3.0])
+    add("ADAPTIVE_HOLD_LOW_ATR_MULT", getattr(cfg, "ADAPTIVE_HOLD_LOW_ATR_MULT", 1.5),
+        [1.0, 1.2, 1.5, 2.0, 2.5])
+    add("ADAPTIVE_HOLD_HIGH_ATR_MULT", getattr(cfg, "ADAPTIVE_HOLD_HIGH_ATR_MULT", 0.3),
+        [0.15, 0.25, 0.3, 0.5, 0.7])
+    add("ADAPTIVE_HOLD_VIX_LOW_MAX", getattr(cfg, "ADAPTIVE_HOLD_VIX_LOW_MAX", 576),
+        [288, 432, 576, 864])
+    add("ADAPTIVE_HOLD_VIX_MED_MAX", getattr(cfg, "ADAPTIVE_HOLD_VIX_MED_MAX", 288),
+        [144, 288, 432])
+    add("ADAPTIVE_HOLD_VIX_HIGH_MAX", getattr(cfg, "ADAPTIVE_HOLD_VIX_HIGH_MAX", 48),
+        [24, 36, 48, 72, 96])
+    add("ADAPTIVE_HOLD_SWING_MAX", getattr(cfg, "ADAPTIVE_HOLD_SWING_MAX", 864),
+        [576, 864, 1152])
+    add("ADAPTIVE_HOLD_SCALP_MAX", getattr(cfg, "ADAPTIVE_HOLD_SCALP_MAX", 48),
+        [24, 36, 48, 72])
+
     return sweeps
 
 

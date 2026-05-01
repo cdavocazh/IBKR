@@ -38,13 +38,16 @@ nginx (basic auth: /etc/nginx/.htpasswd)
 
 ## Services
 
-| Service | Type | Port | Description |
-|---------|------|------|-------------|
-| `ibkr-dashboard.service` | long-running | 8888 | Portfolio dashboard (FastAPI + WebSocket) |
-| `ibkr-sentiment.service` | oneshot (timer) | — | ES sentiment pipeline (IBKR news + NLP) |
-| `finl-digest-es.service` | oneshot (timer) | — | ES newsletter digest via Claude Code |
-| `ib-health-monitor.service` | oneshot (timer) | — | IB Gateway health check + auto-restart |
-| IB Gateway Docker | container | 4001→4003, 5900 | Interactive Brokers API |
+| Service | Type | Port | clientId | Description |
+|---------|------|------|----------|-------------|
+| `ibkr-dashboard.service` | long-running | 8888 | 30 | Portfolio dashboard (FastAPI + WebSocket) |
+| `ibkr-sentiment.service` | oneshot (timer) | — | 98 | ES sentiment pipeline (IBKR news batch + NLP) |
+| `ibkr-broadtape.service` *(NEW)* | long-running | — | **27** | Continuous broadtape consumer → `headlines.db` |
+| `ibkr-sentiment-15min.service` *(NEW)* | oneshot (timer) | — | — | 15-min rolling sentiment aggregator (no IBKR call) |
+| `ibkr-mag7-breadth.service` *(NEW)* | oneshot (timer) | — | **28** | MAG7 mega-cap breadth indicator |
+| `finl-digest-es.service` | oneshot (timer) | — | — | ES newsletter digest via Claude Code |
+| `ib-health-monitor.service` | oneshot (timer) | — | — | IB Gateway health check + auto-restart |
+| IB Gateway Docker | container | 4001→4003, 5900 | — | Interactive Brokers API |
 
 ---
 
@@ -53,8 +56,36 @@ nginx (basic auth: /etc/nginx/.htpasswd)
 | Timer | Schedule | What It Does |
 |-------|----------|--------------|
 | `ib-health-monitor.timer` | Every 15 min | Tests API connectivity; restarts if dead (yields if another session active) |
-| `ibkr-sentiment.timer` | 03:00, 12:00, 15:00 UTC | Fetches ~4000 IBKR headlines, runs NLP, saves sentiment analysis |
+| `ibkr-sentiment.timer` | 03:00, 12:00, 15:00 UTC | Fetches ~4000 IBKR headlines (batch), runs NLP, saves sentiment_analysis.json |
+| `ibkr-sentiment-15min.timer` *(NEW)* | Every 15 min (`*:0/15`) | Aggregates intraday sentiment from `headlines.db` → `sentiment_intraday.csv` |
+| `ibkr-mag7-breadth.timer` *(NEW)* | Every 5 min (`*:0/5`) | Pulls MAG7 closes, computes breadth → `mag7_breadth.csv` |
 | `finl-digest-es.timer` | 00:00, 12:00 UTC | Reads ES newsletters (Smashelito, Geo Chen, etc.) via Claude Code |
+
+### Deploying the new units (Phase 1+2+4)
+```bash
+# Copy units from local repo to VPS
+scp systemd/ibkr-broadtape.service \
+    systemd/ibkr-sentiment-15min.{service,timer} \
+    systemd/ibkr-mag7-breadth.{service,timer} \
+    root@VPS:/etc/systemd/system/
+
+# On VPS:
+ssh root@VPS
+systemctl daemon-reload
+
+# Enable and start the long-running broadtape consumer
+systemctl enable --now ibkr-broadtape.service
+journalctl -u ibkr-broadtape.service -f   # Verify headlines arriving
+
+# Enable the timers
+systemctl enable --now ibkr-sentiment-15min.timer ibkr-mag7-breadth.timer
+systemctl list-timers | grep ibkr
+
+# Verify after 1 hour
+sqlite3 /root/IBKR/data/news/headlines.db "SELECT COUNT(*), MIN(published_at), MAX(published_at) FROM headlines"
+wc -l /root/IBKR/data/news/sentiment_intraday.csv
+wc -l /root/IBKR/data/es/mag7_breadth.csv
+```
 
 ---
 
@@ -141,6 +172,17 @@ Available on both Telegram bots:
 **Restricted to chat_id `1130846055` only.** Other users get silent ignore (no response).
 
 **What it does:** Restarts IB Gateway Docker container, waits up to 90s for re-authentication, reports success/failure via Telegram.
+
+### `/IBKR` Command
+
+The Claude bridge bot can also call `/root/IBKR/scripts/ibkr_telegram_command.py` for natural-language portfolio/watchlist requests such as:
+
+- `/IBKR portfolio value`
+- `/IBKR value of AAPL and NVDA`
+- `/IBKR add AAPL,MSFT to my watchlist`
+- `/IBKR show my watchlist prices`
+- `/IBKR top 5 tickers by market value`
+- `/IBKR alert me if my watchlist moves more than 3%`
 
 ---
 
@@ -284,6 +326,7 @@ All in `/etc/systemd/system/`:
 Type=simple
 WorkingDirectory=/root/IBKR
 Environment=DASHBOARD_PORT=8888
+Environment=DASHBOARD_SECRET=replace_with_a_persistent_random_secret
 Environment=IBKR_PORT=4001
 Environment=IBKR_HOST=127.0.0.1
 Environment=DASHBOARD_CLIENT_ID=30
@@ -291,6 +334,8 @@ ExecStart=/root/IBKR/venv/bin/python dashboard/server.py
 Restart=always
 RestartSec=5
 ```
+
+If `DASHBOARD_SECRET` is omitted, `dashboard/server.py` now persists a fallback secret to `dashboard/.dashboard_auth_secret` so login sessions survive service restarts.
 
 ### `ibkr-sentiment.service` + `ibkr-sentiment.timer`
 ```ini

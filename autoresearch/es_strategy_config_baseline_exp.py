@@ -291,6 +291,40 @@ LIMIT_OFFSET_ATR = 0.7
 # Forward-looking conditional variance from GARCH(1,1) on daily ES returns.
 # Replaces backward-looking ATR regime scaling with predictive vol forecast.
 GARCH_ENABLED = True               # Re-enabled: blocks entries during extreme vol
+
+# ─── STRUCTURAL EXPERIMENT FLAGS ─────────────────────────────
+# Exp 1: Volatility regime gate
+VOL_REGIME_GATE_ENABLED = False
+VOL_GATE_REDUCE_ATR_PCT = 2.5       # ATR% threshold: reduce size + disable shorts
+VOL_GATE_HALT_ATR_PCT = 3.5         # ATR% threshold: stop trading entirely
+VOL_GATE_REDUCE_SIZE_SCALE = 0.25   # Position size multiplier in high-vol
+VOL_GATE_REDUCE_COOLDOWN = 150      # Cooldown bars in high-vol
+
+# Exp 2: Max trades per day
+MAX_TRADES_PER_DAY_ENABLED = False
+MAX_TRADES_PER_DAY = 2
+
+# Exp 4: Regime-dependent short disabling
+CRISIS_SHORT_DISABLE_ENABLED = False
+CRISIS_SHORT_DISABLE_VIX = 30.0     # VIX threshold
+CRISIS_SHORT_DISABLE_ATR_PCT = 2.0  # Daily ATR% threshold
+
+# Exp 5: High-vol hold reduction
+HIGH_VOL_HOLD_REDUCTION_ENABLED = False
+HIGH_VOL_MAX_HOLD_BARS = 48         # Reduced max hold in high-vol (vs 432 normal)
+HIGH_VOL_HOLD_ATR_PCT = 2.0         # ATR% threshold to activate
+
+# Exp 6: Intraday trend filter
+INTRADAY_TREND_FILTER_ENABLED = False
+INTRADAY_TREND_LOOKBACK = 12        # 1 hour of 5-min bars
+INTRADAY_TREND_STRENGTH = 0.3       # Min net directional move as % of ATR
+
+# Exp 7: Dual-mode strategy
+DUAL_MODE_ENABLED = False
+CRISIS_MODE_ATR_PCT = 2.0           # 5-day rolling ATR% to switch to crisis mode
+CRISIS_MODE_ONLY_LONGS = True       # Only take long entries in crisis mode
+CRISIS_MODE_RSI_EXTREME = 20        # Only enter on extreme oversold in crisis
+CRISIS_MODE_SIZE_SCALE = 0.3        # Very small positions in crisis
 GARCH_BLEND_WEIGHT = 0.7            # Phase1: 0.7 optimal for 40+ trade regime
 GARCH_VOL_INCREASE_SCALE = 1.2      # Widen stops when GARCH predicts higher vol
 GARCH_VOL_DECREASE_SCALE = 0.85     # Tighten stops when GARCH predicts lower vol

@@ -1,284 +1,166 @@
-# IBKR Market Data Framework
+# IBKR — ES Futures Trading System + Financial Analysis Agent
 
-A Python framework for fetching market prices from Interactive Brokers (IBKR) using the `ib_insync` library.
+A comprehensive trading system built around Interactive Brokers, featuring a React dashboard with real-time portfolio monitoring, an ES sentiment pipeline (NLP + newsletter fusion), automated strategy optimization (autoresearch), and a full financial analysis agent with 20+ tools.
 
-## Features
-
-- Simple connection management to TWS/IB Gateway
-- Pre-defined contracts for common futures (metals, treasuries, indices, energy)
-- Real-time quotes and streaming
-- Historical data retrieval
-- Pandas DataFrame integration
-
-## Supported Instruments
-
-### Precious Metals (COMEX/NYMEX)
-- **GC** - Gold Futures
-- **SI** - Silver Futures
-- **MGC** - Micro Gold Futures
-- **SIL** - Micro Silver Futures
-- **HG** - Copper Futures
-- **PL** - Platinum Futures
-- **PA** - Palladium Futures
-
-### Treasury Futures (CBOT)
-- **ZN** - 10-Year T-Note Futures
-- **ZB** - 30-Year T-Bond Futures
-- **ZF** - 5-Year T-Note Futures
-- **ZT** - 2-Year T-Note Futures
-- **UB** - Ultra T-Bond Futures
-
-### Equity Index Futures (CME/CBOT)
-- **ES** - E-mini S&P 500
-- **NQ** - E-mini Nasdaq 100
-- **YM** - E-mini Dow
-- **RTY** - E-mini Russell 2000
-- **MES/MNQ/MYM/M2K** - Micro versions
-
-### Energy Futures (NYMEX)
-- **CL** - Crude Oil
-- **NG** - Natural Gas
-- **MCL** - Micro Crude Oil
-
-## Installation
+## Quick Start
 
 ```bash
-pip install -r requirements.txt
+# React Dashboard (auto-finds ports, starts backend + frontend)
+bash dashboard/start.sh                   # Opens at http://localhost:5173
+
+# ES Sentiment Pipeline
+python scripts/run_sentiment.py           # Fetch IBKR headlines + run NLP
+python scripts/run_sentiment.py --dry-run # Use cached headlines
+
+# Financial Analysis Agent
+# Use /fin <command> in Claude Code session
+
+# Autoresearch (ES Strategy Optimization)
+cd autoresearch
+python autoresearch.py init               # Establish baseline
+python batch_iterate.py 1000              # Run parameter sweep
 ```
 
-## Configuration
+## Components
 
-Copy `.env.example` to `.env` and configure:
+### 1. React Dashboard (`dashboard/`)
 
-```bash
-cp .env.example .env
-```
+Multi-account portfolio viewer with real-time updates:
+- **Portfolio** — Account selector, positions table with daily P&L, unrealized P&L, P&L%. Options positions show Put/Call, strike, expiry columns automatically. Instrument type filter (STK/OPT/FUT/FOP/etc.)
+- **Open Orders** — Pending orders (symbol, action, type, qty, limit/stop price, status)
+- **ES Sentiment Panel** — Unified direction (BEARISH/BULLISH/SIDEWAYS), Smashlevel pivot, VIX tier, JPM z-score, NAAIM, key levels
+- **Price Charts** — Click any symbol for OHLCV chart (1m/5m/15m/1h/1d/1w). Auto-refreshing in live mode with LIVE/PAUSED toggle
+- **News Feed** — Real-time IBKR headlines from 7 providers. Click any headline to read the full article (via `reqNewsArticle`)
+- **Watchlists** — Custom instrument lists with real-time prices, expandable instrument details with delivery months and open interest
+- **Search** — IBKR symbol search with expandable contract details, delivery month browser for futures, per-contract OI display
 
-Default ports:
-- **7497** - TWS Paper Trading
-- **7496** - TWS Live Trading
-- **4002** - IB Gateway Paper Trading
-- **4001** - IB Gateway Live Trading
+Backend: FastAPI + ib_async with auto-port detection (7496/7497/4001/4002).
+Frontend: Vite + React + TypeScript + Tailwind CSS.
+Deployed on VPS at `http://187.77.136.160/IBKR_KZ/`.
 
-## Prerequisites
+### 2. Financial Analysis Agent (`tools/`, `guides/`)
 
-1. Install TWS (Trader Workstation) or IB Gateway
-2. Enable API connections in TWS: Configure → API → Settings
-   - Enable "Enable ActiveX and Socket Clients"
-   - Set the Socket port (default 7497 for paper)
-   - Add 127.0.0.1 to trusted IPs
-3. Make sure TWS/Gateway is running before using scripts
+20 Python analysis tool modules callable via `/fin <command>`:
+- Macro scan (27 indicators), regime classification, financial stress (0-10), late-cycle detection
+- Equity analysis (~500 S&P 500 companies), Graham value, Murphy TA (13 frameworks)
+- Commodity analysis, BTC futures, pro-trader frameworks (risk premium, cross-asset, PM regime, USD regime)
+- Stop-loss framework (Fidenza 10-rule), macro synthesis with contradiction detection
+- ES sentiment (NLP + newsletter fusion), news streaming from IBKR
 
-## Usage
+### 3. ES Sentiment Pipeline (`scripts/run_sentiment.py`)
 
-### Quick Start
+Fuses IBKR news headlines with newsletter context:
+- Fetches ~4000 headlines from 7 IBKR providers
+- NLP sentiment analysis (bullish/bearish polarity, analyst actions, regime signals)
+- Merges with newsletter context from `/digest_ES` (40% NLP + 60% newsletters)
+- Outputs: `data/news/sentiment_analysis.json` + `data/news/sentiment_timeseries.csv`
+- Scheduled 3x daily (11am, 8pm, 11pm)
+
+### 4. Autoresearch (`autoresearch/`)
+
+Automated ES strategy optimization via hill-climbing parameter search:
+- Sequential decision pipeline: Regime classification -> Macro filter -> Daily trend -> Technical composite -> Adaptive entry/exit
+- Single-parameter variations, backtest, score, KEEP or REVERT
+- Current best: +10.61% return, 22.46% max DD, 36% win rate (Jan 2025 - Mar 2026)
+- Algorithm versioning in `versions/` (immutable snapshots per logical change)
+
+## Core Market Data Library (`ibkr/`)
 
 ```python
 from ibkr import IBKRConnection, ContractFactory, MarketDataService
 
-# Connect and get gold price
 conn = IBKRConnection()
-
 with conn.session() as ib:
     mds = MarketDataService(ib)
-
-    # Get Gold futures quote
-    gold = ContractFactory.gold_future()
-    quote = mds.get_quote(gold)
-
+    quote = mds.get_quote(ContractFactory.gold_future())
     print(f"Gold: ${quote.last:,.2f}")
 ```
 
-### Get Precious Metals Prices
+Supports: Precious metals (GC, SI, HG, PL, PA), Treasuries (ZN, ZB, ZF, ZT, UB), Equity indices (ES, NQ, YM, RTY + micros), Energy (CL, NG, MCL).
 
-```python
-from ibkr import IBKRConnection, ContractFactory, MarketDataService
+## ES Data Files
 
-conn = IBKRConnection()
+| File | Bars | Range |
+|------|------|-------|
+| ES_1min.parquet | 241K | Jan 2025 - Mar 2026 |
+| ES_combined_5min.parquet | 48K | Jan 2025 - Mar 2026 |
+| ES_daily.parquet | 638 | Aug 2023 - Mar 2026 |
 
-with conn.session() as ib:
-    mds = MarketDataService(ib)
+## Key Commands
 
-    gold = ContractFactory.gold_future()
-    silver = ContractFactory.silver_future()
+| Command | Description |
+|---------|-------------|
+| `/fin scan` | Quick macro scan (27 indicators) |
+| `/fin macro` | Macro regime classification |
+| `/fin stress` | Financial stress score (0-10) |
+| `/fin ta ES=F` | Technical analysis (Murphy 13-framework) |
+| `/fin full_report` | 8-step analysis chain |
+| `/digest` | Read newsletters -> market context |
+| `/digest_ES` | Read ES-focused newsletters |
 
-    gold_quote = mds.get_quote(gold)
-    silver_quote = mds.get_quote(silver)
+## Documentation
 
-    print(f"Gold:   ${gold_quote.last:,.2f}")
-    print(f"Silver: ${silver_quote.last:,.2f}")
-```
+### Dashboard
+| Document | Description |
+|----------|-------------|
+| [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) | Full dashboard specs — API endpoints, WebSocket protocol, frontend components, authentication, IB thread queue pattern, deploy workflow |
 
-### Get Treasury Futures
+### VPS & Infrastructure
+| Document | Description |
+|----------|-------------|
+| [`VPS_Hostinger_setup.md`](VPS_Hostinger_setup.md) | Hostinger VPS deployment — Docker IB Gateway config, nginx routing, systemd services/timers, health monitoring, Telegram `/relogin_ibkr` command, 2FA session management |
+| [`IB_Docker_VPS/README.md`](IB_Docker_VPS/README.md) | Docker-specific setup details and Telegram bot configuration |
 
-```python
-from ibkr import IBKRConnection, ContractFactory, MarketDataService
+### Guides (`guides/`)
+Interpretation and framework references used by the `/fin` analysis agent:
 
-conn = IBKRConnection()
+| Guide | Description |
+|-------|-------------|
+| [`guides/macro_framework.md`](guides/macro_framework.md) | Macro regime classification framework — indicator interpretation, regime definitions, cycle positioning |
+| [`guides/ta_guide.md`](guides/ta_guide.md) | Technical analysis guide — Murphy 13-framework methodology for `/fin ta` |
+| [`guides/interpretation.md`](guides/interpretation.md) | How to interpret analysis outputs — reading scores, signals, and regime labels |
+| [`guides/thresholds.md`](guides/thresholds.md) | Threshold values for indicators — what levels trigger bullish/bearish/neutral signals |
+| [`guides/workflows.md`](guides/workflows.md) | Analysis workflows — how to chain `/fin` commands for comprehensive research |
+| [`guides/self_evaluation.md`](guides/self_evaluation.md) | Agent self-evaluation criteria — quality checks for analysis outputs |
+| [`guides/market_context.md`](guides/market_context.md) | Latest general market context (auto-updated by `/digest`) |
+| [`guides/market_context_ES.md`](guides/market_context_ES.md) | Latest ES-specific market context from newsletter digests (auto-updated by `/digest_ES`) |
+| [`guides/news_streaming_requirements.md`](guides/news_streaming_requirements.md) | News streaming architecture and provider requirements |
+| [`guides/ml_quant_tools_evaluation.md`](guides/ml_quant_tools_evaluation.md) | Evaluation of ML/quant tools and libraries for strategy development |
 
-with conn.session() as ib:
-    mds = MarketDataService(ib)
+### Technical Documentation (`docs/`)
+| Document | Description |
+|----------|-------------|
+| [`docs/BACKTEST_GUIDE.md`](docs/BACKTEST_GUIDE.md) | Backtesting methodology — how to run backtests, interpret results, avoid common pitfalls |
+| [`docs/ES_DATA_SOURCES.md`](docs/ES_DATA_SOURCES.md) | ES data pipeline — parquet file schemas, data ranges, how to update/extend historical data |
+| [`docs/ibkr_available_metrics.md`](docs/ibkr_available_metrics.md) | Available IBKR API metrics — account summary tags, market data tick types, contract details fields |
 
-    ten_year = ContractFactory.ten_year_note_future()
-    quote = mds.get_quote(ten_year)
+### Autoresearch
+| Document | Description |
+|----------|-------------|
+| [`autoresearch/STRATEGY_CONTEXT.md`](autoresearch/STRATEGY_CONTEXT.md) | Strategy architecture — decision pipeline, tunable parameter ranges, active features, prior strategy approaches |
+| [`autoresearch/NEXT_STEPS.md`](autoresearch/NEXT_STEPS.md) | Current roadmap — next steps, ideas to try, exhausted/abandoned approaches |
+| [`autoresearch/SCORING.md`](autoresearch/SCORING.md) | Scoring formula — how iterations are scored, diagnostic flowchart for zero-score results |
+| [`autoresearch/SKILL.md`](autoresearch/SKILL.md) | Full iteration protocol — step-by-step procedure for running autoresearch iterations |
+| [`AR_exp_log.md`](AR_exp_log.md) | Complete experiment history — every major experiment, structural change, and strategy decision |
 
-    print(f"10-Year Note: {quote.last:.4f}")
-```
+### Other
+| Document | Description |
+|----------|-------------|
+| [`DATA_SOURCES.md`](DATA_SOURCES.md) | FRED API series IDs and local CSV data map — all 56 economic series + 120+ local CSV files |
+| [`ES Trading Approach.md`](ES%20Trading%20Approach.md) | High-level ES trading approach and philosophy |
 
-### Historical Data
+## Prerequisites
 
-```python
-from ibkr import IBKRConnection, ContractFactory, MarketDataService
+- TWS or IB Gateway running with API enabled (port 7496/7497)
+- Python 3.11+, Node.js (for React dashboard)
+- API keys: FRED_API_KEY, TAVILY_API_KEY (optional), TWITTERAPI_IO_KEY (optional)
 
-conn = IBKRConnection()
+## Downstream consumer: Opportunity_scanner
 
-with conn.session() as ib:
-    mds = MarketDataService(ib)
+[`Opportunity_scanner/`](../Opportunity_scanner/) consumes outputs of this repo read-only under a **parallel-pipeline contract** — no edits to scripts, schemas, output paths, or timers in this repo. Scanner either reads cache files or runs its own IBKR client with a distinct clientId (99/100/101 reserved). See [`Opportunity_scanner/CLAUDE.md`](../Opportunity_scanner/CLAUDE.md) for the full design rule and per-strategy mappings.
 
-    gold = ContractFactory.gold_future()
-
-    # Get daily bars for the last month
-    df = mds.get_historical_bars(
-        gold,
-        duration="1 M",
-        bar_size="1 day",
-        what_to_show="TRADES"
-    )
-
-    print(df)
-```
-
-### Create Custom Futures Contract
-
-```python
-from ibkr import ContractFactory
-
-# Create a specific expiry contract
-gold_dec = ContractFactory.create_future("GC", expiry="202512")
-
-# Create any futures contract
-contract = ContractFactory.create_future(
-    symbol="ES",
-    expiry="202503",
-    exchange="CME",
-    currency="USD"
-)
-```
-
-## Example Scripts
-
-Run from the `examples` directory:
-
-```bash
-# Get Silver and Gold prices
-python examples/get_precious_metals.py
-
-# Get Treasury futures prices
-python examples/get_treasury_futures.py
-
-# Get multiple instruments at once
-python examples/get_multiple_instruments.py
-
-# Get historical data
-python examples/get_historical_data.py
-
-# Stream live prices
-python examples/stream_prices.py
-```
-
-## Project Structure
-
-```
-IBKR/
-├── ibkr/
-│   ├── __init__.py          # Package exports
-│   ├── connection.py         # IBKR connection manager
-│   ├── contracts.py          # Contract factory and definitions
-│   └── market_data.py        # Market data service
-├── examples/
-│   ├── get_precious_metals.py
-│   ├── get_treasury_futures.py
-│   ├── get_multiple_instruments.py
-│   ├── get_historical_data.py
-│   └── stream_prices.py
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
-## API Reference
-
-### IBKRConnection
-
-```python
-conn = IBKRConnection(host="127.0.0.1", port=7497, client_id=1)
-
-# Context manager usage
-with conn.session() as ib:
-    # ib is the connected IB instance
-    pass
-
-# Manual connection
-conn.connect()
-conn.disconnect()
-```
-
-### ContractFactory
-
-```python
-# Pre-built contracts
-gold = ContractFactory.gold_future()
-silver = ContractFactory.silver_future()
-ten_year = ContractFactory.ten_year_note_future()
-sp500 = ContractFactory.sp500_future()
-
-# Generic futures
-contract = ContractFactory.create_future("GC", expiry="202502")
-
-# List all available specs
-specs = ContractFactory.list_available_contracts()
-```
-
-### MarketDataService
-
-```python
-mds = MarketDataService(ib)
-
-# Get single quote
-quote = mds.get_quote(contract)
-
-# Get multiple quotes
-quotes = mds.get_quotes([contract1, contract2])
-
-# Historical data
-df = mds.get_historical_bars(contract, duration="1 M", bar_size="1 day")
-
-# Streaming
-ticker = mds.stream_quotes(contract, callback_function)
-
-# Contract details
-details = mds.get_contract_details(contract)
-```
-
-### Quote Object
-
-```python
-quote.symbol    # Contract symbol
-quote.bid       # Bid price
-quote.ask       # Ask price
-quote.last      # Last trade price
-quote.mid       # Mid price (calculated)
-quote.spread    # Bid-ask spread (calculated)
-quote.high      # Day high
-quote.low       # Day low
-quote.volume    # Volume
-quote.timestamp # Quote timestamp
-```
-
-## Market Data Subscriptions
-
-Note: IBKR requires market data subscriptions for real-time quotes. Without subscriptions, you may receive delayed or limited data. Check your IBKR account for available market data packages.
-
-## License
-
-MIT
+Scanner strategies that depend on this repo:
+- [strategy 01 — news-event equity overlay](../Opportunity_scanner/strategies/01_news_event_equity_overlay/README.md) (own per-ticker fetcher with clientId 99 + read-only sentiment cross-validation)
+- [strategy 03 — HIP-3 ↔ IBKR equity basis](../Opportunity_scanner/strategies/03_hip3_ibkr_basis/README.md) (own live-quote fetcher with clientId 100)
+- [strategy 04 — ES newsletter sentiment overlay](../Opportunity_scanner/strategies/04_es_newsletter_sentiment/README.md) (read-only of `data/news/sentiment_*` and `data/es/ES_combined_5min.parquet`)
+- [strategy 05 — Treasury curve / COT extremes](../Opportunity_scanner/strategies/05_treasury_curve_cot/README.md) (own treasury-futures fetcher with clientId 101)
