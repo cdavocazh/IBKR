@@ -1,31 +1,36 @@
 #!/usr/bin/env python3
 """
-Continuous IBKR Broadtape News Streamer (Phase 1)
+Continuous IBKR News Polling Daemon (Phase 1)
 
-Long-running daemon that subscribes to IBKR news broadtape across all 7 providers
-and persists each headline to data/news/headlines.db immediately as it arrives.
+Long-running daemon that polls reqHistoricalNews across all 7 providers + a
+ticker watchlist every N seconds and persists each headline to
+data/news/headlines.db. The PRIMARY KEY on article_id makes the upsert
+idempotent — duplicates are silently dropped.
 
-Foundation for higher-frequency sentiment aggregation (Phase 2 — 15-min buckets).
+Why polling instead of broadtape subscription:
+  IBKR broadtape via reqMktData(secType=NEWS) requires a `conId` that the API
+  doesn't always return for NEWS contracts. ib_async raises a hashable-key
+  error when subscribing without one (the legacy cmd_broadtape in
+  scripts/ib_news_stream.py hits the same wall). reqHistoricalNews works
+  reliably and returns the same articles, just batched. At a 60-120s poll
+  interval we get near-real-time coverage with proven-working API calls.
 
-Differs from scripts/run_sentiment.py:
-- run_sentiment.py: Batch — fetches historical headlines 3x daily via reqHistoricalNews
-- this script:    Stream — subscribes via reqMktData + tickNews; writes one row per headline
+Differs from scripts/run_sentiment.py (the existing batch job):
+  - run_sentiment.py: 3x daily, multi-day lookback, NLP scoring inline
+  - this daemon:      every 60-120s, last-hour lookback, raw persistence
+                      (NLP scoring done by sentiment_intraday.py at 15-min step)
 
 Designed to run as systemd service `ibkr-broadtape.service` on the VPS:
     Restart=always
-    ExecStart=/usr/bin/python3 /root/IBKR/tools/news_stream_continuous.py
+    ExecStart=/root/IBKR/venv/bin/python /root/IBKR/tools/news_stream_continuous.py
 
 Usage:
     python tools/news_stream_continuous.py
-    python tools/news_stream_continuous.py --client-id 27 --providers BRFG,DJ-N
-    python tools/news_stream_continuous.py --reconnect-on-error --log-every 60
+    python tools/news_stream_continuous.py --interval 60 --lookback-min 30
+    python tools/news_stream_continuous.py --tickers AAPL,NVDA,MSFT,SPY
 
-ClientId allocation (avoid conflicts):
-    11/20/23 — local IBKR sentiment runs (per CLAUDE.md)
-    26      — tools/news_stream.py (multi-provider news aggregation)
-    27      — THIS SCRIPT (persistent broadtape) [reserved by this commit]
-    30      — ibkr-dashboard.service (VPS)
-    98      — scripts/run_sentiment.py (standalone batch)
+ClientId allocation:
+    27 — THIS DAEMON (continuous news polling)
 """
 from __future__ import annotations
 
@@ -41,30 +46,34 @@ from typing import Optional
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# Reuse parse_headline + connection pattern from existing harness
+# Reuse parse_headline from existing harness
 from scripts.ib_news_stream import parse_headline  # noqa: E402
 
 try:
-    from ib_async import IB, Contract
+    from ib_async import IB, Stock, Future
     IB_LIB = "ib_async"
 except ImportError:
-    from ib_insync import IB, Contract
+    from ib_insync import IB, Stock, Future
     IB_LIB = "ib_insync"
 
 from tools.news_db import get_db, NewsDB  # noqa: E402
 
-
-# All 7 providers we have access to (per CLAUDE.md)
+# 7 providers we have access to (per CLAUDE.md)
 DEFAULT_PROVIDERS = ["BRFG", "BRFUPDN", "DJ-N", "DJ-RT", "DJ-RTA", "DJ-RTE", "DJ-RTG"]
+# IBKR concatenates with `+` for multi-provider in one call
+PROVIDER_CODES_STR = "+".join(DEFAULT_PROVIDERS)
 
-# Default IBKR connection — auto-detect ports in priority order
+# Tickers to fetch headlines for (separate from broadtape; ticker-specific feeds)
+DEFAULT_TICKERS = ["SPY", "QQQ", "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA"]
+
 DEFAULT_PORTS = [4001, 4002, 7496, 7497]
 
 
-# ─── Connection ──────────────────────────────────────────────
+def _ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
 
 def _connect(host: str, port: Optional[int], client_id: int) -> Optional[IB]:
-    """Connect to IBKR Gateway. If port is None, auto-detect."""
     ports = [port] if port else DEFAULT_PORTS
     for p in ports:
         ib = IB()
@@ -81,117 +90,152 @@ def _connect(host: str, port: Optional[int], client_id: int) -> Optional[IB]:
     return None
 
 
-def _ts() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+def _qualify_ticker(ib, ticker: str):
+    """Stock first, then futures (ES front month)."""
+    contract = Stock(ticker, "SMART", "USD")
+    qualified = ib.qualifyContracts(contract)
+    if qualified:
+        return qualified[0]
+    # Try as futures front-month
+    now = datetime.now()
+    expiry_months = [3, 6, 9, 12]
+    front = None
+    for m in expiry_months:
+        if now.month <= m:
+            front = f"{now.year}{m:02d}"
+            break
+    if front is None:
+        front = f"{now.year + 1}03"
+    contract = Future(ticker, lastTradeDateOrContractMonth=front, exchange="CME", currency="USD")
+    qualified = ib.qualifyContracts(contract)
+    return qualified[0] if qualified else None
 
 
-# ─── Headline → DB conversion ────────────────────────────────
+def _fetch_provider_headlines(ib, provider_codes_str: str = PROVIDER_CODES_STR,
+                              count: int = 200) -> list[dict]:
+    """reqHistoricalNews with conId=0 returns broad-tape headlines (no ticker filter).
 
-def _news_tick_to_dict(news_tick, provider_fallback: str) -> dict:
-    """Convert an IBKR newsTick event into the dict shape expected by NewsDB.upsert_headlines."""
-    raw_headline = getattr(news_tick, "headline", str(news_tick))
-    parsed = parse_headline(raw_headline)
-    article_id = (
-        getattr(news_tick, "articleId", None)
-        or parsed["metadata"].get("articleId")
-        or f"{provider_fallback}:{int(time.time()*1000)}"  # fallback so PK is never null
-    )
-    provider = getattr(news_tick, "providerCode", provider_fallback) or provider_fallback
-    # IBKR tickNews has a `time` field (epoch ms) on some versions
-    pub_time_raw = getattr(news_tick, "time", None)
-    if pub_time_raw is not None:
-        try:
-            pub_iso = datetime.fromtimestamp(int(pub_time_raw) / 1000, tz=timezone.utc).isoformat()
-        except (TypeError, ValueError):
-            pub_iso = str(pub_time_raw)
-    else:
-        pub_iso = datetime.now(timezone.utc).isoformat()
-
-    return {
-        "articleId": article_id,
-        "headline": parsed["headline"],
-        "provider": provider,
-        "time": pub_iso,
-        "ticker": "",  # broadtape has no specific ticker
-        "metadata": parsed["metadata"],
-    }
+    Some IBKR Gateway versions reject conId=0 — in that case we fall back to
+    per-ticker fetches in _fetch_ticker_headlines.
+    """
+    rows = []
+    try:
+        # IBKR convention: conId=0 means "all news for these providers"
+        headlines = ib.reqHistoricalNews(0, provider_codes_str, "", "", count)
+        for h in headlines:
+            parsed = parse_headline(h.headline if hasattr(h, "headline") else str(h))
+            rows.append({
+                "articleId": getattr(h, "articleId", None) or f"BT:{int(time.time()*1000)}",
+                "headline": parsed["headline"],
+                "provider": getattr(h, "providerCode", "?"),
+                "time": str(getattr(h, "time", datetime.now(timezone.utc).isoformat())),
+                "ticker": "",
+                "metadata": parsed["metadata"],
+            })
+    except Exception as e:
+        # conId=0 not supported — caller will fall back to per-ticker fetches
+        if "conId" not in str(e).lower():
+            print(f"[{_ts()}] broadtape fetch error: {e}", flush=True)
+    return rows
 
 
-# ─── Streaming loop ──────────────────────────────────────────
+def _fetch_ticker_headlines(ib, ticker_contract, ticker: str,
+                            provider_codes_str: str = PROVIDER_CODES_STR,
+                            count: int = 50) -> list[dict]:
+    if ticker_contract is None:
+        return []
+    rows = []
+    try:
+        headlines = ib.reqHistoricalNews(
+            ticker_contract.conId, provider_codes_str, "", "", count
+        )
+        for h in headlines:
+            parsed = parse_headline(h.headline if hasattr(h, "headline") else str(h))
+            rows.append({
+                "articleId": getattr(h, "articleId", None) or f"{ticker}:{int(time.time()*1000)}",
+                "headline": parsed["headline"],
+                "provider": getattr(h, "providerCode", "?"),
+                "time": str(getattr(h, "time", datetime.now(timezone.utc).isoformat())),
+                "ticker": ticker,
+                "metadata": parsed["metadata"],
+            })
+    except Exception as e:
+        print(f"[{_ts()}]   {ticker} fetch error: {e}", flush=True)
+    return rows
 
-class BroadtapeDaemon:
+
+class NewsPollDaemon:
     def __init__(self, host: str, port: Optional[int], client_id: int,
-                 providers: list[str], db: NewsDB, log_every_sec: int = 60):
+                 db: NewsDB, tickers: list[str],
+                 interval_sec: int = 90, log_every_sec: int = 300):
         self.host = host
         self.port = port
         self.client_id = client_id
-        self.providers = providers
         self.db = db
+        self.tickers = tickers
+        self.interval_sec = interval_sec
         self.log_every_sec = log_every_sec
         self.ib: Optional[IB] = None
         self._stop = False
-        self._headline_count = 0
+        self._poll_count = 0
+        self._inserted_total = 0
         self._last_log = time.time()
-        # Buffer headlines briefly to amortize SQLite writes
-        self._buffer: list[dict] = []
-        self._buffer_flush_sec = 5
+        # Cache qualified contracts (refresh hourly to handle ES front-month rolls)
+        self._contracts: dict[str, object] = {}
+        self._contracts_refreshed_at = 0.0
 
     def stop(self, *_):
         print(f"[{_ts()}] Stop signal received — shutting down", flush=True)
         self._stop = True
 
-    def subscribe_all(self) -> list[str]:
-        """Subscribe to broadtape for each configured provider."""
-        subscribed = []
-        for code in self.providers:
-            news_contract = Contract()
-            news_contract.symbol = f"{code}:{code}_ALL"
-            news_contract.secType = "NEWS"
-            news_contract.exchange = code
-            try:
-                self.ib.reqMktData(news_contract, genericTickList="mdoff,292")
-                subscribed.append(code)
-                print(f"[{_ts()}]   Subscribed to broadtape: {code}", flush=True)
-            except Exception as e:
-                print(f"[{_ts()}]   Failed to subscribe to {code}: {e}", flush=True)
-        return subscribed
-
-    def _on_news_tick(self, news_tick):
-        """Callback for each incoming headline."""
-        try:
-            provider = getattr(news_tick, "providerCode", "?") or "?"
-            row = _news_tick_to_dict(news_tick, provider_fallback=provider)
-            self._buffer.append(row)
-            self._headline_count += 1
-        except Exception as e:
-            print(f"[{_ts()}] ERROR parsing news tick: {e}", flush=True)
-
-    def _flush_buffer(self):
-        if not self._buffer:
-            return
-        batch = self._buffer
-        self._buffer = []
-        try:
-            n = self.db.upsert_headlines(batch)
-            if n > 0:
-                print(f"[{_ts()}]   Flushed {len(batch)} headlines, {n} new to DB", flush=True)
-        except Exception as e:
-            print(f"[{_ts()}] ERROR flushing to DB: {e}", flush=True)
-            # Re-buffer on failure so we don't lose them
-            self._buffer = batch + self._buffer
-
-    def _log_status(self):
+    def _refresh_contracts(self):
+        """Re-qualify ticker contracts (hourly)."""
         now = time.time()
-        if now - self._last_log >= self.log_every_sec:
+        if self._contracts and (now - self._contracts_refreshed_at) < 3600:
+            return
+        self._contracts.clear()
+        for tkr in self.tickers:
+            try:
+                c = _qualify_ticker(self.ib, tkr)
+                if c is not None:
+                    self._contracts[tkr] = c
+            except Exception as e:
+                print(f"[{_ts()}]   qualify {tkr} failed: {e}", flush=True)
+        self._contracts_refreshed_at = now
+        print(f"[{_ts()}] Qualified {len(self._contracts)} tickers: "
+              f"{list(self._contracts.keys())}", flush=True)
+
+    def _poll_once(self) -> int:
+        all_rows: list[dict] = []
+        # 1. Try broadtape (conId=0). If unsupported, falls back silently.
+        all_rows.extend(_fetch_provider_headlines(self.ib))
+        # 2. Per-ticker fetches
+        for tkr, contract in self._contracts.items():
+            all_rows.extend(_fetch_ticker_headlines(self.ib, contract, tkr))
+        # Persist (idempotent — article_id PK)
+        if not all_rows:
+            return 0
+        try:
+            n = self.db.upsert_headlines(all_rows)
+            self._inserted_total += n
+            return n
+        except Exception as e:
+            print(f"[{_ts()}] DB upsert error: {e}", flush=True)
+            return 0
+
+    def _log_status(self, force: bool = False):
+        now = time.time()
+        if force or (now - self._last_log) >= self.log_every_sec:
             try:
                 stats = self.db.stats()
-                print(f"[{_ts()}] [HEARTBEAT] received={self._headline_count} "
+                print(f"[{_ts()}] [HEARTBEAT] polls={self._poll_count} "
+                      f"inserted_total={self._inserted_total} "
                       f"db_total={stats.get('total_headlines', '?')} "
-                      f"oldest={stats.get('earliest_published', '?')} "
-                      f"newest={stats.get('latest_published', '?')}",
+                      f"newest={stats.get('newest', '?')}",
                       flush=True)
             except Exception:
-                print(f"[{_ts()}] [HEARTBEAT] received={self._headline_count}", flush=True)
+                print(f"[{_ts()}] [HEARTBEAT] polls={self._poll_count} "
+                      f"inserted_total={self._inserted_total}", flush=True)
             self._last_log = now
 
     def run(self, reconnect_on_error: bool = True):
@@ -202,98 +246,75 @@ class BroadtapeDaemon:
             self.ib = _connect(self.host, self.port, self.client_id)
             if self.ib is None:
                 if not reconnect_on_error:
-                    print(f"[{_ts()}] Connection failed — exiting (reconnect disabled)", flush=True)
+                    print(f"[{_ts()}] Connection failed — exiting", flush=True)
                     return
                 print(f"[{_ts()}] Connect failed — retry in 30s", flush=True)
                 time.sleep(30)
                 continue
 
-            subscribed = self.subscribe_all()
-            if not subscribed:
-                print(f"[{_ts()}] No broadtape subscriptions — disconnecting and retrying", flush=True)
-                try:
-                    self.ib.disconnect()
-                except Exception:
-                    pass
-                time.sleep(30)
-                continue
-
-            # Wire up the news tick event
-            if hasattr(self.ib, "newsTicks"):
-                # ib_async / ib_insync expose .newsTicks ListEvent
-                self.ib.newsTicks.updateEvent += self._on_news_tick
-            elif hasattr(self.ib, "newsTickEvent"):
-                self.ib.newsTickEvent += self._on_news_tick
-            else:
-                print(f"[{_ts()}] WARNING: cannot find news tick event on {IB_LIB}", flush=True)
-
-            print(f"[{_ts()}] Streaming {len(subscribed)} providers — Ctrl+C to stop", flush=True)
-            last_flush = time.time()
             try:
-                while not self._stop:
-                    self.ib.sleep(0.5)
-                    if (time.time() - last_flush) >= self._buffer_flush_sec:
-                        self._flush_buffer()
-                        last_flush = time.time()
-                    self._log_status()
+                self._refresh_contracts()
             except Exception as e:
-                print(f"[{_ts()}] ERROR in stream loop: {e}", flush=True)
+                print(f"[{_ts()}] Initial qualify failed: {e}", flush=True)
 
-            # Cleanup before reconnect
-            self._flush_buffer()
+            print(f"[{_ts()}] Polling every {self.interval_sec}s (Ctrl+C to stop)", flush=True)
+
+            while not self._stop:
+                try:
+                    self._refresh_contracts()  # noop if recently refreshed
+                    n = self._poll_once()
+                    self._poll_count += 1
+                    if n > 0:
+                        print(f"[{_ts()}] poll #{self._poll_count}: +{n} new headlines", flush=True)
+                    self._log_status()
+                except Exception as e:
+                    print(f"[{_ts()}] Poll error: {e}", flush=True)
+                # Sleep responsive to stop signal
+                slept = 0
+                while slept < self.interval_sec and not self._stop:
+                    time.sleep(min(1, self.interval_sec - slept))
+                    slept += 1
+
             try:
                 self.ib.disconnect()
             except Exception:
                 pass
             self.ib = None
-
-            if self._stop:
-                break
-
-            if reconnect_on_error:
+            if not self._stop and reconnect_on_error:
                 print(f"[{_ts()}] Reconnecting in 15s...", flush=True)
                 time.sleep(15)
             else:
                 break
 
-        # Final flush on exit
-        self._flush_buffer()
-        print(f"[{_ts()}] Daemon stopped. Total received: {self._headline_count}", flush=True)
+        self._log_status(force=True)
+        print(f"[{_ts()}] Daemon stopped. Total inserted: {self._inserted_total}", flush=True)
 
-
-# ─── CLI ──────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="Continuous IBKR broadtape news streamer")
+    parser = argparse.ArgumentParser(description="Continuous IBKR news polling daemon")
     parser.add_argument("--host", default=os.environ.get("IBKR_HOST", "127.0.0.1"))
-    parser.add_argument("--port", type=int, default=None,
-                        help="IBKR Gateway port (auto-detect if omitted)")
-    parser.add_argument("--client-id", type=int, default=int(os.environ.get("IB_NEWS_CLIENT_ID", "27")),
-                        help="IBKR client ID (default 27 — reserved for broadtape)")
-    parser.add_argument("--providers", default=",".join(DEFAULT_PROVIDERS),
-                        help="Comma-separated provider codes")
-    parser.add_argument("--reconnect-on-error", action="store_true", default=True,
-                        help="Auto-reconnect on connection loss (default: True)")
+    parser.add_argument("--port", type=int, default=None)
+    parser.add_argument("--client-id", type=int,
+                        default=int(os.environ.get("IB_NEWS_CLIENT_ID", "27")))
+    parser.add_argument("--interval", type=int, default=90,
+                        help="Poll interval in seconds (default 90)")
+    parser.add_argument("--tickers", default=",".join(DEFAULT_TICKERS),
+                        help="Comma-separated ticker watchlist")
+    parser.add_argument("--log-every", type=int, default=300)
+    parser.add_argument("--db-path", type=str, default=None)
+    parser.add_argument("--reconnect-on-error", action="store_true", default=True)
     parser.add_argument("--no-reconnect", dest="reconnect_on_error", action="store_false")
-    parser.add_argument("--log-every", type=int, default=60,
-                        help="Heartbeat log interval in seconds (default 60)")
-    parser.add_argument("--db-path", type=str, default=None,
-                        help="Override SQLite path (default data/news/headlines.db)")
     args = parser.parse_args()
 
-    db_path = Path(args.db_path) if args.db_path else None
-    db = get_db(db_path).connect()
+    db = get_db(Path(args.db_path) if args.db_path else None).connect()
     print(f"[{_ts()}] News DB ready: {db.path}", flush=True)
     print(f"[{_ts()}] Initial stats: {db.stats()}", flush=True)
 
-    providers = [p.strip() for p in args.providers.split(",") if p.strip()]
-    daemon = BroadtapeDaemon(
-        host=args.host,
-        port=args.port,
-        client_id=args.client_id,
-        providers=providers,
-        db=db,
-        log_every_sec=args.log_every,
+    tickers = [t.strip() for t in args.tickers.split(",") if t.strip()]
+    daemon = NewsPollDaemon(
+        host=args.host, port=args.port, client_id=args.client_id,
+        db=db, tickers=tickers,
+        interval_sec=args.interval, log_every_sec=args.log_every,
     )
     try:
         daemon.run(reconnect_on_error=args.reconnect_on_error)

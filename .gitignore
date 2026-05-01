@@ -83,3 +83,4 @@ data/es/polymarket_signals.csv
 data/news/.last_run_*
 data/es/signal_weights_dynamic.json
 data/news/keyword_weights.json
+data/rl/

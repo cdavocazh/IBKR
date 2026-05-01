@@ -2887,6 +2887,259 @@ def run_backtest(config_path=None):
     }
 
 
+# ─── Step-callable BacktestRunner (Phase 5C foundation) ────────────────
+# Wraps engine + strategy + dataframe iterator so a Gym env (or any
+# bar-by-bar consumer) can drive the backtest one step at a time, with
+# per-step "action" multipliers applied to the strategy.
+#
+# Used by scripts/sentiment_rl_agent.py for PPO training.
+
+class BacktestRunner:
+    """Step-callable wrapper around run_backtest's setup.
+
+    Lifecycle:
+        runner = BacktestRunner(config_path=None, cfg_overrides={...})
+        obs = runner.reset()
+        while not done:
+            action = agent.predict(obs)
+            obs, reward, done, info = runner.step(action)
+        results = runner.results()  # final results dict (same shape as run_backtest)
+
+    Action dict (all optional):
+        position_size_mult     : float in [0, 2]   — applied to RISK_PER_TRADE
+        sentiment_weight_adj   : float in [-0.5, +0.5] — added to INTRADAY_SENTIMENT_WEIGHT
+        mr_weight_adj          : float in [-0.5, +0.5] — added to MR_MODE_RISK_MULT
+        blackout_strict_mode   : bool — extends MACRO_BLACKOUT_LOOKAHEAD_MIN by 50%
+    """
+
+    def __init__(self, config_path=None, cfg_overrides=None,
+                 capital_at_risk_floor: float = 1000.0):
+        self.cfg = load_config(config_path)
+        if cfg_overrides:
+            for k, v in cfg_overrides.items():
+                setattr(self.cfg, k, v)
+        # Save original values so each step's overrides can be rolled back
+        self._cfg_originals = {
+            "RISK_PER_TRADE": self.cfg.RISK_PER_TRADE,
+            "INTRADAY_SENTIMENT_WEIGHT": getattr(self.cfg, "INTRADAY_SENTIMENT_WEIGHT", 0.0),
+            "MR_MODE_RISK_MULT": getattr(self.cfg, "MR_MODE_RISK_MULT", 0.4),
+            "MACRO_BLACKOUT_LOOKAHEAD_MIN": getattr(self.cfg, "MACRO_BLACKOUT_LOOKAHEAD_MIN", 60),
+        }
+        self.capital_at_risk_floor = capital_at_risk_floor
+        self.df = None
+        self.engine = None
+        self.strategy = None
+        self._iter = None
+        self._idx = 0
+        self._last_equity = None
+        self._done = False
+
+    def _build(self):
+        from backtest.engine import BacktestEngine
+        cfg = self.cfg
+        self.df = load_es_data()  # reuse same loader as run_backtest
+        macro_data = load_macro_data()
+        nlp_regime = load_nlp_regime()
+        digest_ctx = load_digest_context()
+        daily_trend = load_daily_es_trend()
+        daily_sentiment = load_daily_sentiment()
+        garch_forecast = load_garch_forecast()
+        particle_regime = load_particle_regime()
+        cusum_events, cusum_directions = load_cusum_events()
+        tsfresh_signal = load_tsfresh_signal()
+        hourly_regime = load_hourly_regime_features()
+        ml_entry_signal = load_ml_entry_signal()
+        intraday_sentiment = load_intraday_sentiment()
+        mag7_breadth = load_mag7_breadth()
+        polymarket_signals = load_polymarket_signals()
+        macro_calendar = None
+        if getattr(cfg, "MACRO_BLACKOUT_ENABLED", False):
+            try:
+                from tools.macro_calendar import MacroCalendar
+                macro_calendar = MacroCalendar()
+            except Exception:
+                pass
+
+        self.engine = BacktestEngine(
+            data=self.df,
+            initial_capital=cfg.INITIAL_CAPITAL,
+            commission_per_contract=2.25,
+            slippage_ticks=1,
+            max_position=50,
+        )
+        self.strategy = ESAutoResearchStrategy(
+            cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment,
+            garch_forecast, particle_regime, cusum_events, cusum_directions,
+            tsfresh_signal, hourly_regime, ml_entry_signal,
+            intraday_sentiment=intraday_sentiment, mag7_breadth=mag7_breadth,
+            polymarket_signals=polymarket_signals, macro_calendar=macro_calendar,
+        )
+        self.engine.set_strategy(self.strategy.on_bar)
+
+    def reset(self):
+        self._build()
+        self._iter = iter(self.df.iterrows())
+        self._idx = 0
+        self._last_equity = float(self.engine.initial_capital)
+        self._done = False
+        return self.observation()
+
+    def _apply_action(self, action: dict):
+        """Mutate cfg in-place per the agent's action; rolled back at next step."""
+        if action is None:
+            return
+        if "position_size_mult" in action:
+            mult = float(action["position_size_mult"])
+            self.cfg.RISK_PER_TRADE = max(
+                self.capital_at_risk_floor,
+                self._cfg_originals["RISK_PER_TRADE"] * max(0.0, mult),
+            )
+        if "sentiment_weight_adj" in action:
+            self.cfg.INTRADAY_SENTIMENT_WEIGHT = max(0.0, min(0.5,
+                self._cfg_originals["INTRADAY_SENTIMENT_WEIGHT"]
+                + float(action["sentiment_weight_adj"])))
+        if "mr_weight_adj" in action:
+            self.cfg.MR_MODE_RISK_MULT = max(0.0, min(2.0,
+                self._cfg_originals["MR_MODE_RISK_MULT"]
+                + float(action["mr_weight_adj"])))
+        if action.get("blackout_strict_mode"):
+            self.cfg.MACRO_BLACKOUT_LOOKAHEAD_MIN = int(
+                self._cfg_originals["MACRO_BLACKOUT_LOOKAHEAD_MIN"] * 1.5
+            )
+        else:
+            self.cfg.MACRO_BLACKOUT_LOOKAHEAD_MIN = self._cfg_originals["MACRO_BLACKOUT_LOOKAHEAD_MIN"]
+
+    def step(self, action=None):
+        """Advance one bar. Returns (observation, reward, done, info)."""
+        if self._iter is None:
+            raise RuntimeError("Call reset() before step()")
+        if self._done:
+            return self.observation(), 0.0, True, {"warning": "already done"}
+        self._apply_action(action)
+        try:
+            timestamp, row = next(self._iter)
+        except StopIteration:
+            self._done = True
+            return self.observation(), 0.0, True, {"end_of_data": True}
+        equity_before = self._last_equity
+        equity_after = self.engine.step_one_bar(self._idx, timestamp, row)
+        self._idx += 1
+        # Reward: change in equity (PnL this bar). Caller can shape further.
+        reward = equity_after - (equity_before or self.engine.initial_capital)
+        self._last_equity = equity_after
+        return self.observation(), float(reward), False, {
+            "ts": str(timestamp),
+            "equity": equity_after,
+            "in_position": not self.engine.position.is_flat,
+        }
+
+    def observation(self) -> "list[float]":
+        """12-dim state vector for the RL agent.
+
+        Order:
+            [vix_tier_norm, atr_pct, bull, bear, side, sentiment_15m, sentiment_24h,
+             mag7_breadth, fed_cut_prob, hour_norm, recent_pnl_norm, dd_norm]
+        Empty/missing values default to 0 — agent should be robust to that.
+        """
+        cfg = self.cfg
+        ts = self.engine.current_bar.timestamp if self.engine and self.engine.current_bar else None
+        # 1. VIX tier (1-7) → normalized
+        vix_tier = 2  # default normal
+        try:
+            vix = _lookup_macro(self.strategy.macro.get("vix", {}), ts) if ts else None
+            if vix is not None:
+                tiers = [
+                    getattr(cfg, "VIX_TIER_1", 16),
+                    getattr(cfg, "VIX_TIER_2", 20),
+                    getattr(cfg, "VIX_TIER_3", 28),
+                    getattr(cfg, "VIX_TIER_4", 35),
+                    getattr(cfg, "VIX_TIER_5", 40),
+                    getattr(cfg, "VIX_TIER_6", 50),
+                ]
+                vix_tier = sum(1 for t in tiers if vix > t) + 1
+        except Exception:
+            pass
+        # 2. ATR%
+        atr_pct = 0.0
+        try:
+            if ts is not None:
+                from datetime import timedelta as _td
+                d = ts.date() if hasattr(ts, "date") else None
+                if d is not None and d in self.strategy.daily_trend:
+                    info = self.strategy.daily_trend[d]
+                    if info.get("daily_atr") and info.get("close", 0) > 0:
+                        atr_pct = min(0.05, info["daily_atr"] / info["close"])
+        except Exception:
+            pass
+        # 3. Regime one-hot — best-effort, default SIDE
+        bull = bear = 0.0
+        side = 1.0
+        # 4. Intraday sentiment (15m / 24h)
+        sent_15m = sent_24h = 0.0
+        try:
+            row = _lookup_recent(self.strategy.intraday_sentiment, ts, max_lookback_min=30) if ts else None
+            if row is not None:
+                sent_15m = float(row.get("sentiment_15m", 0) or 0)
+                sent_24h = float(row.get("sentiment_1d", 0) or 0)
+        except Exception:
+            pass
+        # 5. MAG7 breadth
+        mag7 = 0.5
+        try:
+            row = _lookup_recent(self.strategy.mag7_breadth, ts, max_lookback_min=15) if ts else None
+            if row is not None:
+                mag7 = float(row.get("pct_above_5d_ma", 0.5) or 0.5)
+        except Exception:
+            pass
+        # 6. Fed cut prob (Polymarket)
+        fed_cut = 0.0
+        try:
+            row = _lookup_recent(self.strategy.polymarket_signals, ts, max_lookback_min=30) if ts else None
+            if row is not None:
+                fed_cut = float(row.get("fed_cut_prob_next", 0) or 0)
+        except Exception:
+            pass
+        # 7. Hour of day (UTC), normalized to [0, 1]
+        hour_norm = (ts.hour / 24.0) if (ts is not None and hasattr(ts, "hour")) else 0.5
+        # 8. Recent PnL (last bar) — normalized
+        recent_pnl = 0.0
+        try:
+            ec = self.engine.equity_curve
+            if len(ec) >= 2:
+                recent_pnl = (ec[-1][1] - ec[-2][1]) / max(self.engine.initial_capital, 1)
+                recent_pnl = max(-0.05, min(0.05, recent_pnl)) * 20  # scale to ~[-1, +1]
+        except Exception:
+            pass
+        # 9. Drawdown
+        dd = 0.0
+        try:
+            ec = self.engine.equity_curve
+            if ec:
+                eqs = [e for _, e in ec]
+                peak = max(eqs)
+                cur = eqs[-1]
+                if peak > 0:
+                    dd = (peak - cur) / peak
+        except Exception:
+            pass
+        return [
+            float(vix_tier / 7.0),
+            float(atr_pct * 20),  # 5% ATR → 1.0
+            bull, bear, side,
+            sent_15m, sent_24h,
+            mag7,
+            fed_cut,
+            float(hour_norm),
+            float(recent_pnl),
+            float(min(1.0, dd / 0.20)),
+        ]
+
+    def results(self) -> dict:
+        if not self.engine:
+            return {}
+        return self.engine.finalize()
+
+
 def main():
     import argparse as _argparse
     parser = _argparse.ArgumentParser(description="Verify ES strategy and output SCORE.")

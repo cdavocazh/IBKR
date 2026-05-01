@@ -143,13 +143,35 @@ class _BaseEnv:
         return obs
 
 
-def _build_real_env():
-    """Build a Gymnasium env wrapping verify_strategy.py one bar at a time.
+def _action_to_dict(action) -> dict:
+    """Map the 4-dim continuous action vector → BacktestRunner action dict."""
+    a = np.array(action).flatten()
+    return {
+        "position_size_mult":   float((a[0] + 1.0)),       # [-1, 1] → [0, 2]
+        "sentiment_weight_adj": float(a[1] * 0.5),         # [-1, 1] → [-0.5, +0.5]
+        "mr_weight_adj":        float(a[2] * 0.5),
+        "blackout_strict_mode": bool(a[3] > 0),
+    }
 
-    NOTE: This is the place to hook real backtest replay. For initial scaffold
-    we keep it as a stub and rely on _BaseEnv. Implementing the full env
-    requires refactoring verify_strategy.run_backtest() into a step-callable —
-    flagged as a follow-up in NEXT_STEPS.md.
+
+def _shape_reward(raw_pnl: float, info: dict, peak_dd_pct: float = 0.0) -> float:
+    """Risk-adjusted reward.
+
+    raw_pnl:    PnL this bar (dollars)
+    peak_dd_pct: current peak-to-trough drawdown (0..1), surfaced via observation[-1]
+    """
+    dd_penalty = max(0.0, peak_dd_pct / 0.20)  # full penalty at 20% DD
+    # Commission proxy: if we just opened/closed a position this bar, deduct
+    # (BacktestRunner doesn't tag fills, so use a small constant when in_position toggled)
+    commission = 4.5 if info.get("just_traded") else 0.0
+    return float(raw_pnl * max(0.1, 1.0 - dd_penalty) - commission)
+
+
+def _build_real_env():
+    """Build a Gymnasium env wrapping verify_strategy.BacktestRunner.
+
+    Falls back to the toy _BaseEnv when gymnasium/stable_baselines3 missing
+    so this script always runs (e.g., for --check / --inference smoke tests).
     """
     deps = _check_dependencies()
     if not (deps["gymnasium"] and deps["stable_baselines3"]):
@@ -158,22 +180,41 @@ def _build_real_env():
 
     import gymnasium as gym
     from gymnasium import spaces
+    sys.path.insert(0, str(PROJECT_ROOT / "autoresearch"))
+    from verify_strategy import BacktestRunner  # type: ignore
 
     class ESEnsembleEnv(gym.Env):
+        """Real env: each step advances BacktestRunner by one 5-min bar.
+
+        The agent's 4-dim continuous action becomes a dict of cfg multipliers
+        applied for that bar (see _action_to_dict + BacktestRunner._apply_action).
+        """
         metadata = {"render_modes": []}
-        observation_space = spaces.Box(low=-2.0, high=2.0, shape=(OBSERVATION_DIM,), dtype=np.float32)
-        action_space = spaces.Box(low=-1.0, high=1.0, shape=(ACTION_DIM,), dtype=np.float32)
+        observation_space = spaces.Box(
+            low=-2.0, high=2.0, shape=(OBSERVATION_DIM,), dtype=np.float32
+        )
+        action_space = spaces.Box(
+            low=-1.0, high=1.0, shape=(ACTION_DIM,), dtype=np.float32
+        )
 
         def __init__(self):
             super().__init__()
-            self._impl = _BaseEnv()  # TODO: swap for real backtest replay
+            self.runner = BacktestRunner()
 
         def reset(self, seed=None, options=None):
             super().reset(seed=seed)
-            return self._impl.reset()
+            obs = self.runner.reset()
+            return np.asarray(obs, dtype=np.float32), {}
 
         def step(self, action):
-            return self._impl.step(action)
+            adict = _action_to_dict(action)
+            obs, reward, done, info = self.runner.step(adict)
+            obs = np.asarray(obs, dtype=np.float32)
+            shaped = _shape_reward(reward, info, peak_dd_pct=float(obs[-1]))
+            return obs, shaped, bool(done), False, info
+
+        def get_final_results(self):
+            return self.runner.results()
 
     return ESEnsembleEnv()
 

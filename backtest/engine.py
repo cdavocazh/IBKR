@@ -190,33 +190,51 @@ class BacktestEngine:
         print(f"Initial capital: ${self.initial_capital:,.2f}")
 
         for idx, (timestamp, row) in enumerate(self.data.iterrows()):
-            self.current_index = idx
-            self.current_bar = Bar(
-                timestamp=timestamp,
-                open=row["open"],
-                high=row["high"],
-                low=row["low"],
-                close=row["close"],
-                volume=int(row.get("volume", 0)),
-            )
-
-            # Process pending orders
-            self._process_orders()
-
-            # Update unrealized P&L
-            self._update_unrealized_pnl()
-
-            # Call strategy
-            self.strategy_callback(self, self.current_bar)
-
-            # Record equity
-            equity = self.capital + self.position.unrealized_pnl
-            self.equity_curve.append((timestamp, equity))
+            self.step_one_bar(idx, timestamp, row)
 
         # Close any open position at end
         if not self.position.is_flat:
             self._close_position("END_OF_BACKTEST")
 
+        return self._generate_results()
+
+    def step_one_bar(self, idx: int, timestamp, row) -> float:
+        """Process one bar of data — extracted from run() so a step-callable
+        BacktestRunner / Gym env can drive the loop bar-by-bar.
+
+        Returns the bar's equity value (capital + unrealized PnL).
+        Strategy callback IS invoked here exactly as in run().
+        """
+        self.current_index = idx
+        self.current_bar = Bar(
+            timestamp=timestamp,
+            open=row["open"],
+            high=row["high"],
+            low=row["low"],
+            close=row["close"],
+            volume=int(row.get("volume", 0)),
+        )
+
+        # Process pending orders
+        self._process_orders()
+
+        # Update unrealized P&L
+        self._update_unrealized_pnl()
+
+        # Call strategy
+        if self.strategy_callback:
+            self.strategy_callback(self, self.current_bar)
+
+        # Record equity
+        equity = self.capital + self.position.unrealized_pnl
+        self.equity_curve.append((timestamp, equity))
+        return float(equity)
+
+    def finalize(self) -> dict:
+        """Close any open position and return the results dict.
+        Use after driving the loop yourself via step_one_bar()."""
+        if not self.position.is_flat:
+            self._close_position("END_OF_BACKTEST")
         return self._generate_results()
 
     def buy(
