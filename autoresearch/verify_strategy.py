@@ -286,6 +286,122 @@ def load_ml_entry_signal():
         return {}
 
 
+def load_intraday_sentiment():
+    """Load 15-min rolling sentiment from data/news/sentiment_intraday.csv
+    (produced by tools/sentiment_intraday.py).
+
+    Returns dict keyed by 15-min bucket (UTC datetime, floored to :00/:15/:30/:45)
+    with sentiment_15m / sentiment_30m / sentiment_1h / sentiment_4h / sentiment_1d
+    plus topic %.
+    """
+    path = PROJECT_ROOT / "data" / "news" / "sentiment_intraday.csv"
+    if not path.exists():
+        return {}
+    try:
+        df = pd.read_csv(path)
+        out = {}
+        for _, row in df.iterrows():
+            try:
+                ts = pd.to_datetime(row["bucket_ts"], utc=True).to_pydatetime()
+            except Exception:
+                continue
+            out[ts] = {
+                "sentiment_15m": float(row.get("sentiment_15m", 0) or 0),
+                "sentiment_30m": float(row.get("sentiment_30m", 0) or 0),
+                "sentiment_1h":  float(row.get("sentiment_1h", 0)  or 0),
+                "sentiment_4h":  float(row.get("sentiment_4h", 0)  or 0),
+                "sentiment_1d":  float(row.get("sentiment_1d", 0)  or 0),
+                "fed_topic_pct":       float(row.get("fed_topic_pct", 0)       or 0),
+                "war_topic_pct":       float(row.get("war_topic_pct", 0)       or 0),
+                "inflation_topic_pct": float(row.get("inflation_topic_pct", 0) or 0),
+            }
+        return out
+    except Exception:
+        return {}
+
+
+def load_mag7_breadth():
+    """Load MAG7 breadth snapshots from data/es/mag7_breadth.csv
+    (produced by tools/mag7_breadth.py).
+
+    Returns dict keyed by UTC datetime with breadth indicators per snapshot.
+    """
+    path = PROJECT_ROOT / "data" / "es" / "mag7_breadth.csv"
+    if not path.exists():
+        return {}
+    try:
+        df = pd.read_csv(path)
+        out = {}
+        for _, row in df.iterrows():
+            try:
+                ts = pd.to_datetime(row["ts_utc"], utc=True).to_pydatetime()
+            except Exception:
+                continue
+            out[ts] = {
+                "pct_above_5d_ma":      float(row.get("pct_above_5d_ma", 0)  or 0),
+                "pct_above_20d_ma":     float(row.get("pct_above_20d_ma", 0) or 0),
+                "pct_above_50d_ma":     float(row.get("pct_above_50d_ma", 0) or 0),
+                "mag7_market_chg":      float(row.get("mag7_market_chg", 0)  or 0),
+                "breadth_momentum_15m": float(row.get("breadth_momentum_15m", 0) or 0),
+            }
+        return out
+    except Exception:
+        return {}
+
+
+def load_polymarket_signals():
+    """Load Polymarket prediction-market signals from data/es/polymarket_signals.csv
+    (produced by tools/polymarket_signal.py).
+
+    Returns dict keyed by UTC datetime with composite_es_signal + per-topic probs.
+    """
+    path = PROJECT_ROOT / "data" / "es" / "polymarket_signals.csv"
+    if not path.exists():
+        return {}
+    try:
+        df = pd.read_csv(path)
+        out = {}
+        for _, row in df.iterrows():
+            try:
+                ts = pd.to_datetime(row["ts_utc"], utc=True).to_pydatetime()
+            except Exception:
+                continue
+            out[ts] = {
+                "composite_es_signal":     float(row.get("composite_es_signal", 0)    or 0),
+                "fed_cut_prob_next":       float(row.get("fed_cut_prob_next", 0)      or 0),
+                "fed_hike_prob_next":      float(row.get("fed_hike_prob_next", 0)     or 0),
+                "recession_prob_12m":      float(row.get("recession_prob_12m", 0)     or 0),
+                "iran_escalation_prob":    float(row.get("iran_escalation_prob", 0)   or 0),
+                "ukraine_escalation_prob": float(row.get("ukraine_escalation_prob", 0) or 0),
+                "fiscal_expansion_prob":   float(row.get("fiscal_expansion_prob", 0)  or 0),
+                "shutdown_default_prob":   float(row.get("shutdown_default_prob", 0)  or 0),
+            }
+        return out
+    except Exception:
+        return {}
+
+
+def _lookup_recent(d: dict, ts, max_lookback_min: int = 30):
+    """Lookup most recent dict entry at or before ts (within max_lookback_min)."""
+    if not d:
+        return None
+    import datetime as _dtl
+    if hasattr(ts, "to_pydatetime"):
+        ts = ts.to_pydatetime()
+    if ts.tzinfo is None:
+        # Assume UTC for naive timestamps coming from the bar
+        ts = ts.replace(tzinfo=_dtl.timezone.utc)
+    # Walk back in 1-min steps up to max_lookback_min, looking for matching key
+    # (we expect 5/15-min cadence, so max 30 min lookback covers gaps)
+    cutoff = ts - _dtl.timedelta(minutes=max_lookback_min)
+    candidates = [(k, v) for k, v in d.items()
+                  if isinstance(k, _dtl.datetime) and cutoff <= k <= ts]
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    return candidates[0][1]
+
+
 def load_cusum_events():
     """Load CUSUM event filter signals.
 
@@ -499,7 +615,7 @@ class ESAutoResearchStrategy:
     Step 2: Apply regime-specific parameters for entry/exit
     """
 
-    def __init__(self, cfg, macro_data, nlp_regime=None, digest_ctx=None, daily_trend=None, daily_sentiment=None, garch_forecast=None, particle_regime=None, cusum_events=None, cusum_directions=None, tsfresh_signal=None, hourly_regime=None, ml_entry_signal=None, trade_only_dates=None):
+    def __init__(self, cfg, macro_data, nlp_regime=None, digest_ctx=None, daily_trend=None, daily_sentiment=None, garch_forecast=None, particle_regime=None, cusum_events=None, cusum_directions=None, tsfresh_signal=None, hourly_regime=None, ml_entry_signal=None, trade_only_dates=None, intraday_sentiment=None, mag7_breadth=None, polymarket_signals=None, macro_calendar=None):
         self.cfg = cfg
         self.macro = macro_data
         self.nlp_regime = nlp_regime or {"regime": "SIDEWAYS", "net_sentiment": 0.0, "confidence": 0.0}
@@ -514,6 +630,11 @@ class ESAutoResearchStrategy:
         self.hourly_regime = hourly_regime or {}
         self.ml_entry_signal = ml_entry_signal or {}
         self.trade_only_dates = trade_only_dates  # If set, only enter trades on these dates
+        # Phase 4 multi-input feeds (default empty — gracefully no-op when feeds absent)
+        self.intraday_sentiment = intraday_sentiment or {}
+        self.mag7_breadth = mag7_breadth or {}
+        self.polymarket_signals = polymarket_signals or {}
+        self.macro_calendar = macro_calendar  # MacroCalendar instance or None
         self._cusum_last_event_bar = -999  # Track bars since last CUSUM event
         self._oil_shock_active = False
         self._skew_panic = False
@@ -1325,6 +1446,98 @@ class ESAutoResearchStrategy:
                         ml_score = max(0.0, (ml_val["ml_short_prob"] - 0.5) * 2)
                     score += ml_weight * ml_score
 
+        # ─── PHASE 4: Intraday sentiment (15-min rolling) ──────────────
+        if getattr(cfg, "INTRADAY_SENTIMENT_ENABLED", False) and self.intraday_sentiment:
+            window_col = "sentiment_" + getattr(cfg, "INTRADAY_SENTIMENT_WINDOW", "15m")
+            isent_w = getattr(cfg, "INTRADAY_SENTIMENT_WEIGHT", 0.0)
+            isent_thresh = getattr(cfg, "INTRADAY_SENTIMENT_THRESHOLD", 0.10)
+            if isent_w > 0:
+                row = _lookup_recent(self.intraday_sentiment, timestamp, max_lookback_min=30)
+                if row is not None:
+                    sent_val = row.get(window_col, 0.0)
+                    if abs(sent_val) >= isent_thresh:
+                        # +sentiment helps LONG, hurts SHORT (and vice versa)
+                        if side == "LONG" and sent_val > 0:
+                            score += isent_w * min(1.0, sent_val * 2)
+                        elif side == "SHORT" and sent_val < 0:
+                            score += isent_w * min(1.0, abs(sent_val) * 2)
+                        elif side == "LONG" and sent_val < -isent_thresh:
+                            score += isent_w * -0.5  # penalty
+                        elif side == "SHORT" and sent_val > isent_thresh:
+                            score += isent_w * -0.5
+
+        # ─── PHASE 4: MAG7 mega-cap breadth ────────────────────────────
+        if getattr(cfg, "MAG7_BREADTH_ENABLED", False) and self.mag7_breadth:
+            mb_w = getattr(cfg, "MAG7_BREADTH_WEIGHT", 0.0)
+            mb_mom_w = getattr(cfg, "MAG7_BREADTH_MOMENTUM_WEIGHT", 0.0)
+            mb_thresh = getattr(cfg, "MAG7_BREADTH_THRESHOLD", 0.50)
+            if mb_w > 0 or mb_mom_w > 0:
+                row = _lookup_recent(self.mag7_breadth, timestamp, max_lookback_min=15)
+                if row is not None:
+                    breadth = row.get("pct_above_5d_ma", 0.5)
+                    momentum = row.get("breadth_momentum_15m", 0.0)
+                    # LONG benefits when breadth > threshold; SHORT when breadth < (1 - threshold)
+                    if mb_w > 0:
+                        if side == "LONG":
+                            score += mb_w * max(-0.5, min(1.0, (breadth - mb_thresh) * 2))
+                        else:
+                            score += mb_w * max(-0.5, min(1.0, ((1 - mb_thresh) - breadth) * 2))
+                    if mb_mom_w > 0:
+                        # Momentum: positive = breadth improving (favor LONG)
+                        if side == "LONG" and momentum > 0:
+                            score += mb_mom_w * min(1.0, momentum * 5)
+                        elif side == "SHORT" and momentum < 0:
+                            score += mb_mom_w * min(1.0, abs(momentum) * 5)
+
+        # ─── PHASE 4: Polymarket prediction-market signals ─────────────
+        if getattr(cfg, "POLYMARKET_ENABLED", False) and self.polymarket_signals:
+            comp_w = getattr(cfg, "POLYMARKET_COMPOSITE_WEIGHT", 0.0)
+            fed_w = getattr(cfg, "POLYMARKET_FED_WEIGHT", 0.0)
+            rec_w = getattr(cfg, "POLYMARKET_RECESSION_WEIGHT", 0.0)
+            geo_w = getattr(cfg, "POLYMARKET_GEOPOLITICS_WEIGHT", 0.0)
+            fis_w = getattr(cfg, "POLYMARKET_FISCAL_WEIGHT", 0.0)
+            if any(w > 0 for w in (comp_w, fed_w, rec_w, geo_w, fis_w)):
+                row = _lookup_recent(self.polymarket_signals, timestamp, max_lookback_min=15)
+                if row is not None:
+                    # Composite ES signal: positive = risk-on (helps LONG)
+                    if comp_w > 0:
+                        comp = row.get("composite_es_signal", 0.0)
+                        if side == "LONG" and comp > 0:
+                            score += comp_w * min(1.0, comp * 2)
+                        elif side == "SHORT" and comp < 0:
+                            score += comp_w * min(1.0, abs(comp) * 2)
+                    # Fed cut prob: high = liquidity (LONG-friendly), Hike prob = SHORT-friendly
+                    if fed_w > 0:
+                        cut_prob = row.get("fed_cut_prob_next", 0.0)
+                        hike_prob = row.get("fed_hike_prob_next", 0.0)
+                        if side == "LONG":
+                            score += fed_w * (cut_prob - hike_prob)
+                        else:
+                            score += fed_w * (hike_prob - cut_prob)
+                    # Recession prob: helps SHORT, hurts LONG
+                    if rec_w > 0:
+                        rec_prob = row.get("recession_prob_12m", 0.0)
+                        if side == "SHORT":
+                            score += rec_w * rec_prob
+                        else:
+                            score -= rec_w * rec_prob * 0.5  # softer penalty
+                    # Geopolitics escalation: helps SHORT
+                    if geo_w > 0:
+                        geo_max = max(row.get("iran_escalation_prob", 0.0),
+                                      row.get("ukraine_escalation_prob", 0.0))
+                        if side == "SHORT":
+                            score += geo_w * geo_max
+                        else:
+                            score -= geo_w * geo_max * 0.3
+                    # Fiscal expansion: helps LONG; shutdown/default: helps SHORT
+                    if fis_w > 0:
+                        fiscal = row.get("fiscal_expansion_prob", 0.0)
+                        shutdown = row.get("shutdown_default_prob", 0.0)
+                        if side == "LONG":
+                            score += fis_w * (fiscal - shutdown)
+                        else:
+                            score += fis_w * (shutdown - fiscal)
+
         return min(1.0, max(0.0, score))
 
     def _handle_mr_entry(self, engine, bar, atr, cfg, mr_date):
@@ -1673,6 +1886,28 @@ class ESAutoResearchStrategy:
                 gate_date = gate_date.date()
             if gate_date not in self.trade_only_dates:
                 return
+
+        # ─── PHASE 4: Macro release blackout window ──────────────────
+        # Block entries N min before / M min after FOMC/CPI/NFP/PCE/earnings.
+        # Configurable via MACRO_BLACKOUT_LOOKBACK_MIN / LOOKAHEAD_MIN / MIN_IMPACT.
+        if getattr(cfg, "MACRO_BLACKOUT_ENABLED", False) and self.macro_calendar is not None:
+            try:
+                import datetime as _dtblk
+                bts = bar.timestamp
+                if hasattr(bts, "to_pydatetime"):
+                    bts = bts.to_pydatetime()
+                if bts.tzinfo is None:
+                    bts = bts.replace(tzinfo=_dtblk.timezone.utc)
+                is_black, _release = self.macro_calendar.is_blackout_window(
+                    bts,
+                    lookback_min=getattr(cfg, "MACRO_BLACKOUT_LOOKBACK_MIN", 30),
+                    lookahead_min=getattr(cfg, "MACRO_BLACKOUT_LOOKAHEAD_MIN", 60),
+                    min_impact=getattr(cfg, "MACRO_BLACKOUT_MIN_IMPACT", "HIGH"),
+                )
+                if is_black:
+                    return
+            except Exception:
+                pass
 
         # ── Structural experiment gates ──
         import datetime as _dtexp
@@ -2454,6 +2689,19 @@ def run_backtest(config_path=None):
     hourly_regime = load_hourly_regime_features()
     ml_entry_signal = load_ml_entry_signal()
 
+    # Phase 4 multi-input feeds (gracefully empty if files don't exist)
+    intraday_sentiment = load_intraday_sentiment()
+    mag7_breadth = load_mag7_breadth()
+    polymarket_signals = load_polymarket_signals()
+    # Macro calendar — only instantiate if blackout enabled in config (lazy)
+    macro_calendar = None
+    if getattr(cfg, "MACRO_BLACKOUT_ENABLED", False):
+        try:
+            from tools.macro_calendar import MacroCalendar
+            macro_calendar = MacroCalendar()
+        except Exception as e:
+            print(f"Warning: could not load MacroCalendar: {e}", file=sys.stderr)
+
     multi_tf = getattr(cfg, "MULTI_TF_ENABLED", False)
 
     if not multi_tf:
@@ -2465,7 +2713,13 @@ def run_backtest(config_path=None):
             slippage_ticks=1,
             max_position=50,
         )
-        strategy = ESAutoResearchStrategy(cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal)
+        strategy = ESAutoResearchStrategy(
+            cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment,
+            garch_forecast, particle_regime, cusum_events, cusum_directions,
+            tsfresh_signal, hourly_regime, ml_entry_signal,
+            intraday_sentiment=intraday_sentiment, mag7_breadth=mag7_breadth,
+            polymarket_signals=polymarket_signals, macro_calendar=macro_calendar,
+        )
         engine.set_strategy(strategy.on_bar)
         return engine.run()
 
@@ -2507,7 +2761,14 @@ def run_backtest(config_path=None):
             slippage_ticks=1,
             max_position=50,
         )
-        strategy_normal = ESAutoResearchStrategy(cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal, trade_only_dates=normal_dates)
+        strategy_normal = ESAutoResearchStrategy(
+            cfg, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment,
+            garch_forecast, particle_regime, cusum_events, cusum_directions,
+            tsfresh_signal, hourly_regime, ml_entry_signal,
+            trade_only_dates=normal_dates,
+            intraday_sentiment=intraday_sentiment, mag7_breadth=mag7_breadth,
+            polymarket_signals=polymarket_signals, macro_calendar=macro_calendar,
+        )
         engine_normal.set_strategy(strategy_normal.on_bar)
         results_normal = engine_normal.run()
     else:
@@ -2563,7 +2824,14 @@ def run_backtest(config_path=None):
             slippage_ticks=1,
             max_position=50,
         )
-        strategy_4h = ESAutoResearchStrategy(cfg_4h, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment, garch_forecast, particle_regime, cusum_events, cusum_directions, tsfresh_signal, hourly_regime, ml_entry_signal, trade_only_dates=highvol_dates)
+        strategy_4h = ESAutoResearchStrategy(
+            cfg_4h, macro_data, nlp_regime, digest_ctx, daily_trend, daily_sentiment,
+            garch_forecast, particle_regime, cusum_events, cusum_directions,
+            tsfresh_signal, hourly_regime, ml_entry_signal,
+            trade_only_dates=highvol_dates,
+            intraday_sentiment=intraday_sentiment, mag7_breadth=mag7_breadth,
+            polymarket_signals=polymarket_signals, macro_calendar=macro_calendar,
+        )
         engine_4h.set_strategy(strategy_4h.on_bar)
         results_4h = engine_4h.run()
     else:

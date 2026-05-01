@@ -117,7 +117,22 @@ VPS systemd units (under `systemd/`):
 - Macroeconomic releases: `macro_calendar.py` (FOMC, CPI, NFP, PCE, GDP, ISM PMI + mega-cap earnings)
 - Prediction markets: `polymarket_signal.py` (consumes market-tracker repo's launchd cache)
 
-**Pending**: Phase 3 (FinBERT/DistilRoBERTa NLP upgrade), Phase 5 (self-learning framework — online lexicon, weekly walk-forward refit, RL ensemble agent), backtest integration of new signals into `verify_strategy.py`.
+**Phase 3 (NEW — May 2026)**: FinBERT/DistilRoBERTa hybrid scorer
+- `tools/sentiment_finbert.py` — DistilRoBERTa wrapper (150 hl/sec CPU)
+- `tools/sentiment_hybrid.py` — regex + transformer orchestrator
+- Optional dependency (`transformers`/`torch`); falls back to regex when missing
+
+**Phase 4 backtest integration (NEW — May 2026)**: All four signals wired into `verify_strategy.py`
+- New loaders: `load_intraday_sentiment()`, `load_mag7_breadth()`, `load_polymarket_signals()`
+- New strategy attributes: `self.intraday_sentiment`, `self.mag7_breadth`, `self.polymarket_signals`, `self.macro_calendar`
+- `_compute_composite()` extended with intraday-sentiment, MAG7-breadth, Polymarket terms
+- `on_bar()` extended with `MacroCalendar.is_blackout_window()` early gate
+- `batch_iterate.py` got 18 new sweep entries for the new params
+
+**Phase 5 (NEW — May 2026)**: Self-learning framework, three layers
+- **Layer A** (`tools/sentiment_self_learner.py`): nightly EMA update of macro keyword weights → `data/news/keyword_weights.json` (read by `news_sentiment_nlp.py` when present). Systemd: `ibkr-keyword-learner.timer`.
+- **Layer B** (`scripts/sentiment_walkforward.py`): weekly Ridge regression `forward_return_1h ~ signals` → `data/es/signal_weights_dynamic.json`
+- **Layer C** (`scripts/sentiment_rl_agent.py`): PPO ensemble agent (Stable-Baselines3) — 12-dim state, 4-dim action, scaffolded with stub env until `verify_strategy.run_backtest()` is refactored into a step-callable. Optional deps: `stable-baselines3`, `gymnasium`.
 
 ---
 

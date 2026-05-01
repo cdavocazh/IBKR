@@ -1,6 +1,15 @@
 # ES Autoresearch — Complete Backtest Record
 
-> Last updated: 2026-04-12 | Total iterations: ~24,100 across 34 sweep batches
+> Last updated: 2026-05-01 | Total iterations: ~24,100 across 34 sweep batches
+>
+> May 2026 infrastructure additions (Phases 1+2+3+4+5):
+> - Persistent broadtape streamer + 15-min rolling sentiment + MAG7 breadth +
+>   Polymarket signals + macro release blackouts (all wired into verify_strategy.py
+>   as sweepable params, default OFF — pending VPS deployment of streamers to
+>   accumulate data before sweeping)
+> - FinBERT/DistilRoBERTa hybrid scorer (drop-in upgrade for regex)
+> - Self-learning: nightly keyword weight EMA, weekly Ridge signal refit,
+>   PPO ensemble agent (Stable-Baselines3, scaffold)
 > Best result (original data): +14.73% return, 28.88% DD, 34% WR, 44 trades (score 10.47)
 > Best result (extended data, combined v2): -0.03% return, 1.99% DD, 6 trades, **83% WR, PF 16.9** (score -0.03)
 > Best result (extended data, composite only): -0.07% return, 6.95% DD, 33% WR, 6 trades (score -0.07)

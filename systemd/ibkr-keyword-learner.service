@@ -1,0 +1,18 @@
+[Unit]
+Description=Online Lexicon Weight Learner (nightly EMA update of keyword_weights.json)
+Documentation=https://github.com/cdavocazh/IBKR/blob/main/tools/sentiment_self_learner.py
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/IBKR
+Environment="PYTHONPATH=/root/IBKR"
+
+ExecStart=/usr/bin/python3 /root/IBKR/tools/sentiment_self_learner.py --window-days 30
+
+StandardOutput=append:/var/log/ibkr-keyword-learner.log
+StandardError=append:/var/log/ibkr-keyword-learner.log
+
+[Install]
+WantedBy=multi-user.target

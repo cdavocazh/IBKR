@@ -34,6 +34,29 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
+# Phase 5A: Self-learned keyword weights override the hardcoded constants when present.
+_LEARNED_WEIGHTS_PATH = Path(__file__).resolve().parent.parent / "data" / "news" / "keyword_weights.json"
+_LEARNED_WEIGHTS_CACHE: Optional[dict] = None
+_LEARNED_WEIGHTS_MTIME: Optional[float] = None
+
+
+def _get_active_lexicons():
+    """Return (bearish_dict, bullish_dict) — learned weights if fresh, else constants."""
+    global _LEARNED_WEIGHTS_CACHE, _LEARNED_WEIGHTS_MTIME
+    if not _LEARNED_WEIGHTS_PATH.exists():
+        return BEARISH_MACRO_KEYWORDS, BULLISH_MACRO_KEYWORDS
+    try:
+        mtime = _LEARNED_WEIGHTS_PATH.stat().st_mtime
+        if _LEARNED_WEIGHTS_CACHE is None or mtime != _LEARNED_WEIGHTS_MTIME:
+            with _LEARNED_WEIGHTS_PATH.open() as f:
+                _LEARNED_WEIGHTS_CACHE = json.load(f)
+            _LEARNED_WEIGHTS_MTIME = mtime
+        bearish = _LEARNED_WEIGHTS_CACHE.get("bearish", BEARISH_MACRO_KEYWORDS) or BEARISH_MACRO_KEYWORDS
+        bullish = _LEARNED_WEIGHTS_CACHE.get("bullish", BULLISH_MACRO_KEYWORDS) or BULLISH_MACRO_KEYWORDS
+        return bearish, bullish
+    except (json.JSONDecodeError, OSError):
+        return BEARISH_MACRO_KEYWORDS, BULLISH_MACRO_KEYWORDS
+
 # ─── Analyst Action Patterns ─────────────────────────────────
 
 # Upgrades / positive actions
@@ -211,8 +234,10 @@ def classify_macro_sentiment(headline: str) -> dict:
             "category": "macro" | "geopolitical" | "earnings" | "market_structure" | "none",
         }
     """
-    bear_score, bear_kw = _keyword_score(headline, BEARISH_MACRO_KEYWORDS)
-    bull_score, bull_kw = _keyword_score(headline, BULLISH_MACRO_KEYWORDS)
+    # Phase 5A: prefer learned weights from data/news/keyword_weights.json (if present)
+    bear_lex, bull_lex = _get_active_lexicons()
+    bear_score, bear_kw = _keyword_score(headline, bear_lex)
+    bull_score, bull_kw = _keyword_score(headline, bull_lex)
 
     total = bear_score + bull_score
     if total > 0:

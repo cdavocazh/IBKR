@@ -81,3 +81,5 @@ data/es/polymarket_signals.csv
 
 # Local sentinel/state files
 data/news/.last_run_*
+data/es/signal_weights_dynamic.json
+data/news/keyword_weights.json

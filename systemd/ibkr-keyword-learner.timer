@@ -1,0 +1,12 @@
+[Unit]
+Description=Trigger ibkr-keyword-learner.service nightly at 04:00 UTC
+Documentation=https://github.com/cdavocazh/IBKR/blob/main/tools/sentiment_self_learner.py
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+RandomizedDelaySec=600   # spread by up to 10 min
+Unit=ibkr-keyword-learner.service
+
+[Install]
+WantedBy=timers.target

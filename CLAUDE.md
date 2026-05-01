@@ -120,6 +120,35 @@ python tools/macro_calendar.py --next 10              # Next 10 releases
 python tools/macro_calendar.py --check NOW            # Is now in a blackout?
 ```
 
+All four feeds are wired into `verify_strategy.py::_compute_composite()`
+and gated by sweepable config params (default OFF):
+```python
+INTRADAY_SENTIMENT_ENABLED, INTRADAY_SENTIMENT_WEIGHT, INTRADAY_SENTIMENT_WINDOW
+MAG7_BREADTH_ENABLED, MAG7_BREADTH_WEIGHT, MAG7_BREADTH_MOMENTUM_WEIGHT
+POLYMARKET_ENABLED, POLYMARKET_COMPOSITE_WEIGHT, POLYMARKET_FED_WEIGHT,
+  POLYMARKET_RECESSION_WEIGHT, POLYMARKET_GEOPOLITICS_WEIGHT, POLYMARKET_FISCAL_WEIGHT
+MACRO_BLACKOUT_ENABLED, MACRO_BLACKOUT_LOOKBACK_MIN, MACRO_BLACKOUT_LOOKAHEAD_MIN
+```
+
+### FinBERT/DistilRoBERTa Sentiment Upgrade (NEW — Phase 3)
+Optional transformer-based scorer that supplements (doesn't replace) regex.
+- `tools/sentiment_finbert.py` — DistilRoBERTa wrapper, 150 hl/sec on CPU
+- `tools/sentiment_hybrid.py` — regex (high precision on analyst actions) + FinBERT (better recall on macro nuance)
+- Disable via env var: `HYBRID_DISABLE_FINBERT=1` (defaults to fallback if `transformers` missing)
+- Install: `pip install transformers torch --extra-index-url https://download.pytorch.org/whl/cpu`
+
+### Self-Learning Framework (NEW — Phase 5, three layers)
+- **Layer A** — `tools/sentiment_self_learner.py`: nightly EMA update of macro keyword weights
+  based on which keywords' appearances correlated with subsequent ES forward returns. Writes
+  `data/news/keyword_weights.json` (read by `news_sentiment_nlp.py` when present).
+  Systemd: `ibkr-keyword-learner.timer` (04:00 UTC daily).
+- **Layer B** — `scripts/sentiment_walkforward.py`: weekly Ridge regression of
+  `forward_return_1h ~ all_signals` → `data/es/signal_weights_dynamic.json`.
+- **Layer C** — `scripts/sentiment_rl_agent.py`: PPO ensemble agent (Stable-Baselines3).
+  Decides per-bar `position_size_mult / sentiment_weight_adj / mr_weight_adj / blackout_strict`
+  given a 12-dim state (vix tier, atr%, regime, sentiment, breadth, fed prob, etc.).
+  Optional dep: `pip install stable-baselines3 gymnasium`.
+
 Output CSVs (consumed by `verify_strategy.py` in the Phase 4 backtest integration step):
 - `data/news/sentiment_intraday.csv` — 15-min rolling sentiment (sentiment_15m, fed/war/inflation topic %)
 - `data/es/mag7_breadth.csv` — MAG7 breadth (% above 5/20/50d MA, market-cap-weighted % chg)

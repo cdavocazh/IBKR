@@ -504,6 +504,50 @@ def generate_sweeps():
     add("COMBINED_MR_MAX_CONSECUTIVE_LOSSES", getattr(cfg, "COMBINED_MR_MAX_CONSECUTIVE_LOSSES", 5),
         [3, 5, 7, 10])
 
+    # --- Phase 4: Intraday sentiment (15-min rolling) ---
+    add("INTRADAY_SENTIMENT_ENABLED", getattr(cfg, "INTRADAY_SENTIMENT_ENABLED", False),
+        [True, False])
+    add("INTRADAY_SENTIMENT_WEIGHT", getattr(cfg, "INTRADAY_SENTIMENT_WEIGHT", 0.10),
+        [0.05, 0.10, 0.15, 0.20, 0.25])
+    add("INTRADAY_SENTIMENT_WINDOW", getattr(cfg, "INTRADAY_SENTIMENT_WINDOW", "15m"),
+        ["15m", "30m", "1h", "4h"])
+    add("INTRADAY_SENTIMENT_THRESHOLD", getattr(cfg, "INTRADAY_SENTIMENT_THRESHOLD", 0.10),
+        [0.05, 0.10, 0.15, 0.20])
+
+    # --- Phase 4: MAG7 mega-cap breadth ---
+    add("MAG7_BREADTH_ENABLED", getattr(cfg, "MAG7_BREADTH_ENABLED", False),
+        [True, False])
+    add("MAG7_BREADTH_WEIGHT", getattr(cfg, "MAG7_BREADTH_WEIGHT", 0.10),
+        [0.05, 0.10, 0.15, 0.20])
+    add("MAG7_BREADTH_THRESHOLD", getattr(cfg, "MAG7_BREADTH_THRESHOLD", 0.50),
+        [0.40, 0.50, 0.60])
+    add("MAG7_BREADTH_MOMENTUM_WEIGHT", getattr(cfg, "MAG7_BREADTH_MOMENTUM_WEIGHT", 0.05),
+        [0.0, 0.05, 0.10, 0.15])
+
+    # --- Phase 4: Polymarket prediction-market signals ---
+    add("POLYMARKET_ENABLED", getattr(cfg, "POLYMARKET_ENABLED", False),
+        [True, False])
+    add("POLYMARKET_COMPOSITE_WEIGHT", getattr(cfg, "POLYMARKET_COMPOSITE_WEIGHT", 0.10),
+        [0.05, 0.10, 0.15, 0.20])
+    add("POLYMARKET_FED_WEIGHT", getattr(cfg, "POLYMARKET_FED_WEIGHT", 0.05),
+        [0.0, 0.05, 0.10, 0.15])
+    add("POLYMARKET_RECESSION_WEIGHT", getattr(cfg, "POLYMARKET_RECESSION_WEIGHT", 0.05),
+        [0.0, 0.05, 0.10])
+    add("POLYMARKET_GEOPOLITICS_WEIGHT", getattr(cfg, "POLYMARKET_GEOPOLITICS_WEIGHT", 0.05),
+        [0.0, 0.05, 0.10])
+    add("POLYMARKET_FISCAL_WEIGHT", getattr(cfg, "POLYMARKET_FISCAL_WEIGHT", 0.05),
+        [0.0, 0.05, 0.10])
+
+    # --- Phase 4: Macro release blackout ---
+    add("MACRO_BLACKOUT_ENABLED", getattr(cfg, "MACRO_BLACKOUT_ENABLED", False),
+        [True, False])
+    add("MACRO_BLACKOUT_LOOKBACK_MIN", getattr(cfg, "MACRO_BLACKOUT_LOOKBACK_MIN", 30),
+        [15, 30, 45, 60])
+    add("MACRO_BLACKOUT_LOOKAHEAD_MIN", getattr(cfg, "MACRO_BLACKOUT_LOOKAHEAD_MIN", 60),
+        [30, 60, 90, 120])
+    add("MACRO_BLACKOUT_MIN_IMPACT", getattr(cfg, "MACRO_BLACKOUT_MIN_IMPACT", "HIGH"),
+        ["HIGH", "MEDIUM"])
+
     # --- Oil Shock Gate ---
     add("OIL_SHOCK_GATE_ENABLED", getattr(cfg, "OIL_SHOCK_GATE_ENABLED", False), [True, False])
     add("OIL_SHOCK_THRESHOLD_PCT", getattr(cfg, "OIL_SHOCK_THRESHOLD_PCT", 3.0),
