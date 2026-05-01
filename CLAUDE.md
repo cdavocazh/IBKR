@@ -362,6 +362,9 @@ python scripts/run_sentiment.py           # Run NLP on IBKR news headlines
 
 ## Key Documents
 
+### Start here (every new session)
+- [`STATUS.md`](STATUS.md) — operator briefing: what's currently deployed, what's in flight, known infrastructure quirks. Read FIRST when opening this repo in a new session — auto-maintained by `/update-session-status`.
+
 ### Dashboard
 - [`dashboard/dashboard_specifications.md`](dashboard/dashboard_specifications.md) — Full dashboard specs: API endpoints, frontend components, WebSocket protocol, IB thread queue, deploy workflow
 

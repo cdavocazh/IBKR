@@ -1,4 +1,54 @@
-# IBKR Project Status
+# STATUS — Github/IBKR
+
+_Auto-maintained by `/update-session-status`. Last updated: 2026-05-01 — VPS broadtape deployment + step-callable BacktestRunner for PPO env._
+
+Operator briefing for this repository. Read FIRST when opening this repo in a new session — it reflects what's deployed, what's in flight, and what gotchas exist. For deeper context see "What to read first" below.
+
+## Production state
+
+| Component | Where it runs | Last verified | Notes |
+|---|---|---|---|
+| `ibkr-broadtape.service` | VPS (Hostinger), clientId 27 | 2026-05-01 | `active (running)`; polls `reqHistoricalNews` every 90s → `data/news/headlines.db` (6,390 rows) |
+| `ibkr-mag7-breadth.timer` | VPS, clientId 28 | 2026-05-01 | First CSV row written 05:25 UTC: 57% above 5d MA, 86% above 20d MA |
+| `ibkr-sentiment-15min.timer` | VPS | 2026-05-01 | Enabled, fires every `*:0/15` (not yet seen first fire at write time) |
+| `ibkr-keyword-learner.timer` | VPS | 2026-05-01 | Enabled, fires nightly 04:00 UTC (Phase 5A self-learner) |
+| `ibkr-sentiment.timer` | VPS, clientId 98 | 2026-05-01 | 3x daily batch (03/12/15 UTC); `headlines.db` had 6,100 rows pre-session |
+| `ibkr-dashboard.service` | VPS, port 8888, clientId 30 | 2026-04-12 | `http://187.77.136.160/IBKR_KZ/`; not touched this session |
+| `ib-health-monitor.timer` | VPS, every 15 min | 2026-04-12 | Existing; not touched this session |
+| IB Gateway Docker | VPS, port 4001→4003 (socat) | 2026-05-01 | Reachable from broadtape connect at 05:21 UTC |
+| `BacktestRunner` step-callable | local (`autoresearch/verify_strategy.py`) | 2026-05-01 | Smoke: 50/200 random-action steps clean; PPO 4096 steps trained, model saved to `data/rl/ppo_es_ensemble_2026-05-01.zip` |
+
+## Open threads
+
+- **Real PPO training run** — scaffold + smoke test done; full 1M-step training on 90-day window not yet executed. Location: `scripts/sentiment_rl_agent.py --train --steps 1000000`. Needs `pip install stable-baselines3 gymnasium` on the training machine (now installed locally; not yet on VPS).
+- **Forward ES data collection (Apr 3 → present)** — backtest dataset still cuts off at the war Phase 1/2 boundary; strategy can't see Phase 3 recovery. Location: `scripts/update_es_data.py`. Run after broadtape has accumulated ~2 weeks of intraday-sentiment data (mid-May 2026).
+- **Autoresearch sweep on Phase 4 weights** — 18 new sweep entries added to `batch_iterate.py` (`INTRADAY_SENTIMENT_*`, `MAG7_BREADTH_*`, `POLYMARKET_*`, `MACRO_BLACKOUT_*`), all defaulting OFF. Location: `cd autoresearch && python batch_iterate.py 1000`. Wait until live CSVs accumulate ~2 weeks of data first.
+- **Live MR scalper paper trading** — standalone `scripts/backtest_mr_scalper.py` shows +4.25% / 4.4% DD / 51 trades; needs real-time RSI(12) monitor + IBKR alert wiring before paper trading.
+- **Lexicon weight learner has no data yet** — `tools/sentiment_self_learner.py --report-only` returns "nothing to learn" because `sentiment_intraday.csv` is empty. Will activate naturally as the 15-min aggregator timer accumulates buckets.
+
+## Known infrastructure quirks
+
+- **IBKR NEWS contracts can't be hashed by current ib_async** — `reqMktData(secType=NEWS, ...)` raises `"can't be hashed because no 'conId' value exists"` because IBKR doesn't return a conId for NEWS contracts. The legacy `scripts/ib_news_stream.py::cmd_broadtape` was already broken. **Workaround in `tools/news_stream_continuous.py`**: poll `reqHistoricalNews` every 90s instead of subscribing to broadtape ticks. Cost ~30s of latency for huge reliability gain. Don't try to "fix" the broadtape path.
+- **VPS uses `/root/IBKR/venv/bin/python`, not `/usr/bin/python3`** — system Python doesn't have `ib_async`/`pandas`. All systemd unit `ExecStart` lines must reference the venv binary. Caught at deploy via `sed -i 's|/usr/bin/python3 /root/IBKR/|/root/IBKR/venv/bin/python /root/IBKR/|g'`.
+- **`autoresearch/NEXT_STEPS.md` is auto-overwritten by `batch_iterate.py`** — the sweep runner clobbers it with a generic template at the end of every batch. Curated content must be re-applied after each sweep. Per-CLAUDE.md rule 7. Don't waste time wondering why curated text disappeared after a sweep.
+- **Min-trades scoring constraint creates commission floor** — score formula requires ≥5 trades; with $4.50/trade round-trip, that's ~$30 floor on $100K. Pure-quality configs (2-3 trades, 100% WR, PF=∞) score 0 due to `too_few_trades` flag. Why the current best is stuck at -0.03% return.
+- **Backtest dataset ends Apr 2 2026 at war Phase 1/2 boundary** — strategy collapsed mid-crisis; forward data would likely show Phase 3 recovery. Don't trust composite-strategy results on this dataset until extended.
+- **macro_2 and market-tracker are SEPARATE repos** — read-only consumers. `MACRO_DATA_DIR` env var defaults to `~/Github/macro_2/historical_data/` (local) or `/root/macro_2/historical_data/` (VPS). Polymarket cache lives at `~/Github/market-tracker/data_cache/all_indicators.json`.
+
+## What to read first (cold-start orientation)
+
+1. `CLAUDE.md` — session anchor: clientId map, file map, autoresearch rules, sentiment pipeline overview
+2. `STATUS.md` — this file
+3. `autoresearch/NEXT_STEPS.md` — current roadmap + exhausted approaches (warning: auto-overwritten by batch_iterate.py — see quirks above)
+4. `AR_exp_log.md` — complete experiment history across 34 sweep batches
+5. `VPS_Hostinger_setup.md` — deployment commands for adding/restarting systemd units
+
+---
+
+_Sections above this line are auto-maintained; "Manual notes" below is hand-edited._
+
+## Manual notes
+
 
 **Last Updated:** 2026-05-01
 
